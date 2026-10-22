@@ -1,362 +1,1110 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Aduan Kerosakan Asrama | TVETMARA Lenggong</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --color-brand: #b91c1c;
-      --color-brand-hover: #991b1b;
-      --color-brand-light: #fef2f2;
-      --color-bg: #f8f9fa;
-      --color-surface: #ffffff;
-      --color-text-main: #111827;
-      --color-text-muted: #4b5563;
-      --color-border: #e5e7eb;
-      --color-border-dark: #111827;
-      --status-pending: #d97706;
-      --status-pending-bg: #fef3c7;
-      --status-process: #2563eb;
-      --status-process-bg: #dbeafe;
-      --status-done: #16a34a;
-      --status-done-bg: #dcfce7;
-      --font-heading: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      --font-body: 'Inter', -apple-system, sans-serif;
-      --container-max: 1200px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Aduan Kerosakan Asrama | TVETMARA Lenggong</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Space Grotesk & Inter (Modern Swiss Typography) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-body);
-      background-color: var(--color-bg);
-      color: var(--color-text-main);
-      line-height: 1.5;
-    }
-
-    .container {
-      width: 100%;
-      max-width: var(--container-max);
-      margin: 0 auto;
-      padding-left: clamp(1.25rem, 4vw, 2.5rem);
-      padding-right: clamp(1.25rem, 4vw, 2.5rem);
-    }
-
-    .site-header {
-      background-color: var(--color-surface);
-      border-bottom: 2px solid var(--color-border-dark);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 80px;
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: var(--color-text-main);
-    }
-
-    .logo-svg { height: 38px; width: auto; }
-    .logo-divider { height: 28px; width: 2px; background-color: var(--color-border-dark); }
-    .logo-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; }
-    .logo-text span { font-size: 0.75rem; color: var(--color-brand); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.75rem 1.25rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      cursor: pointer;
-      border: 2px solid var(--color-border-dark);
-      background-color: var(--color-surface);
-      color: var(--color-text-main);
-      user-select: none;
-    }
-
-    .btn-primary { background-color: var(--color-brand); color: white; border-color: var(--color-brand); }
-    .btn-outline { background-color: transparent; }
-    .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
-
-    .hero { padding: 3.5rem 0; background: white; border-bottom: 1px solid var(--color-border); }
-    .hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: center; }
-    
-    @media(max-width: 768px) {
-      .hero-grid { grid-template-columns: 1fr; }
-    }
-
-    .hero-title { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
-    .hero-image-box { border: 2px solid var(--color-border-dark); aspect-ratio: 4/3; }
-    .hero-image-box img { width: 100%; height: 100%; object-fit: cover; }
-
-    .form-wrapper { background: white; border: 2px solid var(--color-border-dark); padding: 2rem; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group.full { grid-column: span 2; }
-    @media(max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .form-group.full { grid-column: span 1; } }
-
-    input, select, textarea {
-      width: 100%; padding: 0.75rem; border: 2px solid var(--color-border-dark); font-family: inherit;
-    }
-
-    .category-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-    .cat-btn { padding: 0.75rem; border: 2px solid var(--color-border); text-align: center; cursor: pointer; font-weight: 600; }
-    .cat-btn.active { border-color: var(--color-brand); background: var(--color-brand-light); color: var(--color-brand); }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-content { background: white; border: 2px solid var(--color-border-dark); padding: 2rem; width: 100%; max-width: 500px; position: relative; }
-    .modal-dashboard { max-width: 1100px; max-height: 90vh; overflow-y: auto; }
-    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-
-    .status-badge { padding: 0.2rem 0.5rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .status-pending { background: var(--status-pending-bg); color: var(--status-pending); }
-    .status-process { background: var(--status-process-bg); color: var(--status-process); }
-    .status-done { background: var(--status-done-bg); color: var(--status-done); }
-
-    .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
-    .admin-table th, .admin-table td { border: 1px solid var(--color-border-dark); padding: 0.75rem; text-align: left; }
-    .admin-table th { background: var(--color-bg); }
-  </style>
-</head>
-<body>
-
-  <header class="site-header">
-    <div class="container">
-      <div class="header-inner">
-        <a href="#" class="logo-container">
-          <svg class="logo-svg" viewBox="0 0 550 90" fill="none">
-            <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
-            <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
-            <path d="M92 28L134 12H105L92 28Z" fill="#E63946"/>
-            <path d="M138 12H195V28H157V38H190V53H157V68H195V84H138V12Z" fill="#1D3557"/>
-            <path d="M200 12H265V28H241V84H224V28H200V12Z" fill="#1D3557"/>
-          </svg>
-          <div class="logo-divider"></div>
-          <div class="logo-text">TVETMARA <span>LENGGONG</span></div>
-        </a>
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-outline btn-sm" id="btnAdminLogin">Log Masuk Admin</button>
-          <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div>
-          <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
-          <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda secara mudah.</p>
-          <a href="#hantar-aduan" class="btn btn-primary">Hantar Aduan Sekarang</a>
-        </div>
-        <div class="hero-image-box">
-          <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80" alt="Asrama">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="hantar-aduan" style="padding: 3rem 0;">
-    <div class="container">
-      <div class="form-wrapper">
-        <h2 style="margin-bottom: 1.5rem; font-family: var(--font-heading);">Borang Laporan Kerosakan</h2>
-        <form id="aduanForm">
-          <div class="form-grid">
-            <div>
-              <label>Nama Penuh *</label>
-              <input type="text" id="nama" required placeholder="Contoh: Ali">
-            </div>
-            <div>
-              <label>No. Matrik *</label>
-              <input type="text" id="matrik" required placeholder="Contoh: TVET-2024-001">
-            </div>
-            <div>
-              <label>Blok & Bilik *</label>
-              <input type="text" id="blok" required placeholder="Contoh: Blok A-102">
-            </div>
-            <div>
-              <label>No. Phone WhatsApp *</label>
-              <input type="tel" id="telefon" required placeholder="Contoh: 0123456789">
-            </div>
-            <div class="form-group full">
-              <label>Kategori *</label>
-              <input type="hidden" id="kategori" value="Fasiliti">
-              <div class="category-options">
-                <div class="cat-btn active" onclick="setCat(this, 'Fasiliti')">Fasiliti</div>
-                <div class="cat-btn" onclick="setCat(this, 'Kebersihan')">Kebersihan</div>
-                <div class="cat-btn" onclick="setCat(this, 'Utiliti')">Utiliti</div>
-              </div>
-            </div>
-            <div class="form-group full">
-              <label>Keterangan *</label>
-              <textarea id="keterangan" rows="3" required placeholder="Aduan anda..."></textarea>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">HANTAR ADUAN</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- MODAL LOGIN ADMIN -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal-content">
-      <button class="modal-close" id="btnCloseLogin">✕</button>
-      <h3 style="margin-bottom: 1rem;">Log Masuk Admin</h3>
-      <form id="loginForm">
-        <div style="margin-bottom: 1rem;">
-          <label>Username</label>
-          <input type="text" id="adminUser" required placeholder="TVETMARA@ASRAMA">
-        </div>
-        <div style="margin-bottom: 1rem;">
-          <label>Password</label>
-          <input type="password" id="adminPass" required placeholder="ASRAMA2026">
-        </div>
-        <p id="loginErr" style="color: red; display: none; font-size: 0.8rem; margin-bottom: 0.5rem;">❌ Akses ditolak! Maklumat salah.</p>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">MASUK DASHBOARD</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DASHBOARD -->
-  <div class="modal-overlay" id="dashboardModal">
-    <div class="modal-content modal-dashboard">
-      <button class="modal-close" id="btnCloseDash">✕</button>
-      <h3 style="margin-bottom: 1rem;">Dashboard Admin Aduan</h3>
-      <div style="overflow-x: auto;">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>ID Tiket</th>
-              <th>Nama</th>
-              <th>Lokasi</th>
-              <th>Kategori</th>
-              <th>Keterangan</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="dashBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Memastikan skrip berjalan sepenuhnya selepas elemen wujud
-    document.addEventListener('DOMContentLoaded', function() {
-      
-      const loginModal = document.getElementById('loginModal');
-      const dashboardModal = document.getElementById('dashboardModal');
-      const btnAdminLogin = document.getElementById('btnAdminLogin');
-      const btnCloseLogin = document.getElementById('btnCloseLogin');
-      const btnCloseDash = document.getElementById('btnCloseDash');
-
-      // TETINGKAP LOG MASUK
-      btnAdminLogin.addEventListener('click', function(e) {
-        e.preventDefault();
-        loginModal.classList.add('active');
-      });
-
-      btnCloseLogin.addEventListener('click', function() {
-        loginModal.classList.remove('active');
-      });
-
-      btnCloseDash.addEventListener('click', function() {
-        dashboardModal.classList.remove('active');
-      });
-
-      // PROSES LOG MASUK
-      document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const u = document.getElementById('adminUser').value.trim();
-        const p = document.getElementById('adminPass').value.trim();
-        const err = document.getElementById('loginErr');
-
-        if(u === "TVETMARA@ASRAMA" && p === "ASRAMA2026") {
-          err.style.display = 'none';
-          loginModal.classList.remove('active');
-          renderDash();
-          dashboardModal.classList.add('active');
-        } else {
-          err.style.display = 'block';
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        swiss: {
+                            red: '#E50914',
+                            redhover: '#C10710',
+                            black: '#111111',
+                            offwhite: '#F5F5F7',
+                            gray: '#E5E5E7',
+                            darkgray: '#6E6E73',
+                            border: '#111111'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
         }
-      });
+    </script>
+    <style>
+        /* Custom Swiss Graphic Grid Lines & Shadows */
+        .swiss-border {
+            border: 2px solid #111111;
+        }
+        .swiss-border-b {
+            border-bottom: 2px solid #111111;
+        }
+        .swiss-border-r {
+            border-right: 2px solid #111111;
+        }
+        .swiss-shadow {
+            box-shadow: 5px 5px 0px #111111;
+        }
+        .swiss-shadow-lg {
+            box-shadow: 8px 8px 0px #111111;
+        }
+        .swiss-shadow-sm {
+            box-shadow: 3px 3px 0px #111111;
+        }
+        .swiss-btn-active:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #111111;
+        }
+        .grid-bg {
+            background-size: 24px 24px;
+            background-image: linear-gradient(to right, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-swiss-offwhite text-swiss-black font-sans antialiased selection:bg-swiss-red selection:text-white">
 
-      // HANTAR ADUAN
-      document.getElementById('aduanForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const num = Math.floor(1000 + Math.random() * 9000);
-        const ticketId = '#TVET-' + num;
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-swiss-black text-white text-xs font-mono py-2 px-4 border-b-2 border-swiss-black flex justify-between items-center overflow-hidden">
+        <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>SISTEM DALAM TALIAN 24/7 — PORTAL ADUAN RASMI ASRAMA TVETMARA LENGGONG</span>
+        </div>
+        <div class="hidden sm:block font-bold tracking-wider">
+            SISTEM ADUAN REAL-TIME v2.6
+        </div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white swiss-border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <!-- BRANDING LOGO (DIPERBAIKI DENGAN SVG VEKTOR RASMI) -->
+                <div class="flex items-center gap-3">
+                    <svg class="h-10 w-auto" viewBox="0 0 550 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#111111"/>
+                        <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#111111"/>
+                        <path d="M92 28L134 12H105L92 28Z" fill="#E50914"/>
+                        <path d="M138 12H195V28H157V38H190V53H157V68H195V84H138V12Z" fill="#111111"/>
+                        <path d="M200 12H265V28H241V84H224V28H200V12Z" fill="#111111"/>
+                        <path d="M270 12H294L313 52L332 12H356V84H339V36L320 84H306L287 36V84H270V12Z" fill="#111111"/>
+                        <path d="M365 12H395L418 84H399L394 68H369L364 84H345L368 12ZM374 51H389L381 22L374 51Z" fill="#111111"/>
+                        <circle cx="381" cy="58" r="4.5" fill="#E50914"/>
+                        <path d="M422 12H450C468 12 480 21 480 34C480 44 472 51 462 54L482 84H461L444 58H440V84H422V12ZM440 26V44H451C459 44 463 40 463 35C463 30 459 26 451 26H440Z" fill="#111111"/>
+                        <path d="M485 12H515L538 84H519L514 68H489L484 84H465L488 12ZM494 51H509L501 22L494 51Z" fill="#111111"/>
+                        <circle cx="501" cy="58" r="4.5" fill="#E50914"/>
+                    </svg>
+                    <div>
+                        <div class="font-display font-bold text-lg leading-tight uppercase tracking-tight flex items-center gap-2">
+                            TVETMARA <span class="bg-swiss-black text-white text-xs px-1.5 py-0.5 font-mono">LENGGONG</span>
+                        </div>
+                        <div class="text-xs text-swiss-darkgray font-medium tracking-wide">
+                            PORTAL ADUAN KEROSAKAN ASRAMA
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NAVIGATION BUTTONS -->
+                <div class="flex items-center gap-3">
+                    <button onclick="scrollToSection('semakan')" class="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-white text-swiss-black font-bold text-sm uppercase border-2 border-swiss-black hover:bg-swiss-gray transition swiss-shadow-sm swiss-btn-active">
+                        <i data-lucide="search" class="w-4 h-4"></i> Semak Tiket
+                    </button>
+                    <button onclick="scrollToSection('borang-aduan')" class="px-4 py-2.5 bg-swiss-red text-white font-bold text-sm uppercase border-2 border-swiss-black hover:bg-swiss-redhover transition swiss-shadow-sm swiss-btn-active flex items-center gap-2">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>Buat Aduan</span>
+                    </button>
+                    <button id="navAdminBtn" onclick="openAdminModal()" class="px-4 py-2.5 bg-swiss-black text-white font-bold text-sm uppercase border-2 border-swiss-black hover:bg-gray-800 transition swiss-shadow-sm swiss-btn-active flex items-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <span id="navAdminBtnText">Log Masuk Admin</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN WRAPPER -->
+    <main id="mainContent" class="grid-bg">
+
+        <!-- ALERT BANNER FOR NEW UNRESOLVED TICKETS -->
+        <div id="newTicketAlert" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            <div class="bg-amber-100 border-2 border-swiss-black p-4 swiss-shadow flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-500 text-white p-2 swiss-border">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold font-display uppercase">Notifikasi Penting Aduan Baharu!</div>
+                        <div class="text-sm text-gray-800">Terdapat <span id="pendingAlertCount" class="font-bold text-swiss-red">0</span> aduan berstatus 'PENDING' yang memerlukan tindakan admin.</div>
+                    </div>
+                </div>
+                <button onclick="openAdminDashboardWithFilter('Pending')" class="px-3 py-1.5 bg-swiss-black text-white text-xs font-bold uppercase swiss-border">
+                    Lihat Aduan
+                </button>
+            </div>
+        </div>
+
+        <!-- HERO SECTION (SPLIT LAYOUT) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                
+                <!-- LEFT COLUMN: TEXT & STATS -->
+                <div class="lg:col-span-7 flex flex-col justify-between space-y-8 bg-white p-6 sm:p-10 swiss-border swiss-shadow-lg">
+                    <div>
+                        <div class="inline-block bg-swiss-red text-white text-xs font-mono font-bold px-3 py-1 uppercase tracking-widest mb-4 swiss-border">
+                            Sistem Pengurusan Fasiliti Pelajar
+                        </div>
+                        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-swiss-black leading-none uppercase tracking-tight mb-6">
+                            ADUAN KEROSAKAN <br><span class="text-swiss-red">ASRAMA TVETMARA</span>
+                        </h1>
+                        <p class="text-base sm:text-lg text-swiss-darkgray font-medium leading-relaxed max-w-xl">
+                            Penyelesaian pantas & telus untuk sebarang kerosakan utiliti, perabot, dan kebersihan di Blok Asrama TVETMARA Lenggong. Laporkan segera untuk tindakan warden dan pasukan penyelenggaraan.
+                        </p>
+                    </div>
+
+                    <!-- SWISS STATISTICAL COUNTERS -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 swiss-border-t border-swiss-black">
+                        <div class="p-3 sm:p-4 bg-swiss-offwhite swiss-border">
+                            <div class="font-display font-black text-2xl sm:text-4xl text-swiss-black" id="statTotal">0</div>
+                            <div class="text-[10px] sm:text-xs font-mono font-bold uppercase text-swiss-darkgray mt-1">Jumlah Aduan</div>
+                        </div>
+                        <div class="p-3 sm:p-4 bg-amber-50 swiss-border border-amber-900">
+                            <div class="font-display font-black text-2xl sm:text-4xl text-amber-600" id="statPending">0</div>
+                            <div class="text-[10px] sm:text-xs font-mono font-bold uppercase text-amber-800 mt-1">Dalam Barisan</div>
+                        </div>
+                        <div class="p-3 sm:p-4 bg-emerald-50 swiss-border border-emerald-900">
+                            <div class="font-display font-black text-2xl sm:text-4xl text-emerald-600" id="statSelesai">0</div>
+                            <div class="text-[10px] sm:text-xs font-mono font-bold uppercase text-emerald-800 mt-1">Telah Selesai</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="scrollToSection('borang-aduan')" class="px-6 py-3.5 bg-swiss-black text-white font-display font-bold text-sm uppercase swiss-border swiss-shadow hover:bg-swiss-red transition swiss-btn-active flex items-center gap-2">
+                            <span>Hantar Borang Aduan</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="scrollToSection('semakan')" class="px-6 py-3.5 bg-white text-swiss-black font-display font-bold text-sm uppercase swiss-border swiss-shadow hover:bg-swiss-gray transition swiss-btn-active">
+                            Semak Status Tiket
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE & DIRECT ACTIONS -->
+                <div class="lg:col-span-5 flex flex-col justify-between bg-swiss-black text-white p-6 sm:p-8 swiss-border swiss-shadow-lg relative overflow-hidden min-h-[380px]">
+                    <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1000&q=80');"></div>
+                    
+                    <div class="relative z-10 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-swiss-red text-white text-xs font-mono px-2 py-1 font-bold border border-white">
+                                NOTIS UTAMA
+                            </span>
+                            <i data-lucide="shield-alert" class="w-8 h-8 text-swiss-red"></i>
+                        </div>
+                        <h2 class="font-display text-2xl font-bold uppercase tracking-tight">
+                            Tindakan Segera Bagi Kerosakan Kritikal
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-light">
+                            Sila pastikan aduan difailkan dengan bukti gambar yang jelas. Bagi kes kecemasan seperti kebocoran gas, paip utama pecah, atau litar pintas berisiko kebakaran, sila hubungi Talian Kecemasan Rasmi di bawah dengan kadar SEGERA.
+                        </p>
+                    </div>
+
+                    <div class="relative z-10 pt-6 mt-6 border-t border-gray-700">
+                        <div class="text-xs font-mono text-gray-400 mb-2">STATUS OPERASI HARI INI:</div>
+                        <div class="flex items-center gap-2 text-emerald-400 font-mono text-sm font-bold">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            PETUAGAS & WARDEN BERTUGAS AKTIF
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- OFFICIAL EMERGENCY HOTLINES SECTION (DIPERBAIKI NOMBOR RASMI) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-swiss-red text-white p-6 sm:p-8 swiss-border swiss-shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-red-400 pb-4">
+                    <div>
+                        <span class="bg-white text-swiss-red text-xs font-mono font-bold px-2 py-0.5 uppercase tracking-wider">
+                            24 JAM BOLEH DIHUBUNGI
+                        </span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">
+                            TALIAN KECEMASAN RASMI ASRAMA
+                        </h2>
+                    </div>
+                    <p class="text-xs sm:text-sm text-red-100 max-w-md">
+                        Gunakan talian khas di bawah untuk bantuan segera daripada AJK Pelajar dan Barisan Warden bertugas.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    
+                    <!-- HOTLINE 1: AJK KEBAJIKAN -->
+                    <a href="tel:+601129661251" class="bg-white text-swiss-black p-4 swiss-border flex justify-between items-center hover:bg-gray-100 transition group">
+                        <div>
+                            <div class="text-xs font-mono font-bold text-swiss-red uppercase">AJK KEBAJIKAN</div>
+                            <div class="font-display font-black text-lg tracking-wider mt-0.5">+60 11-2966-1251</div>
+                        </div>
+                        <div class="bg-swiss-black text-white p-2.5 group-hover:bg-swiss-red transition">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </div>
+                    </a>
+
+                    <!-- HOTLINE 2: AJK DISIPLIN -->
+                    <a href="tel:+601111259682" class="bg-white text-swiss-black p-4 swiss-border flex justify-between items-center hover:bg-gray-100 transition group">
+                        <div>
+                            <div class="text-xs font-mono font-bold text-swiss-red uppercase">AJK DISIPLIN</div>
+                            <div class="font-display font-black text-lg tracking-wider mt-0.5">+6011-1125-9682</div>
+                        </div>
+                        <div class="bg-swiss-black text-white p-2.5 group-hover:bg-swiss-red transition">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </div>
+                    </a>
+
+                    <!-- HOTLINE 3: WARDEN -->
+                    <a href="tel:+60172479411" class="bg-white text-swiss-black p-4 swiss-border flex justify-between items-center hover:bg-gray-100 transition group">
+                        <div>
+                            <div class="text-xs font-mono font-bold text-swiss-red uppercase">WARDEN</div>
+                            <div class="font-display font-black text-lg tracking-wider mt-0.5">+6017-247-9411</div>
+                        </div>
+                        <div class="bg-swiss-black text-white p-2.5 group-hover:bg-swiss-red transition">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: COMPLAINT FORM & QUICK TRACKING -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- COMPLAINT FORM (LEFT - 8 COLS) -->
+                <div id="borang-aduan" class="lg:col-span-8 bg-white p-6 sm:p-10 swiss-border swiss-shadow-lg">
+                    <div class="border-b-2 border-swiss-black pb-4 mb-6 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-mono font-bold text-swiss-red uppercase tracking-widest">[ BORANG ADUAN RASMI ]</span>
+                            <h2 class="font-display text-3xl font-black uppercase text-swiss-black mt-1">Borang Aduan Kerosakan</h2>
+                        </div>
+                        <span class="hidden sm:inline-block bg-swiss-black text-white text-xs font-mono px-3 py-1 font-bold">
+                            IDENTITI DIVERIFIKASI
+                        </span>
+                    </div>
+
+                    <form id="complaintForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        
+                        <!-- ROW 1: NAMA & NO MATRIK -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                    1. Nama Penuh Pelajar <span class="text-swiss-red">*</span>
+                                </label>
+                                <input type="text" id="inputNama" required placeholder="Contoh: Muhammad Amirul Bin Rosli" 
+                                    class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm focus:outline-none focus:ring-2 focus:ring-swiss-red font-medium">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                    2. Nombor Matrik <span class="text-swiss-red">*</span>
+                                </label>
+                                <input type="text" id="inputMatrik" required placeholder="Contoh: DTM20248819" 
+                                    class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm focus:outline-none focus:ring-2 focus:ring-swiss-red font-medium font-mono">
+                            </div>
+                        </div>
+
+                        <!-- ROW 2: BLOK & BILIK + NO TEL -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                    3. Blok & No. Bilik <span class="text-swiss-red">*</span>
+                                </label>
+                                <input type="text" id="inputLokasi" required placeholder="Contoh: Blok A, Bilik A-2-11" 
+                                    class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm focus:outline-none focus:ring-2 focus:ring-swiss-red font-medium">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                    4. No. Telefon WhatsApp <span class="text-swiss-red">*</span>
+                                </label>
+                                <input type="tel" id="inputTel" required placeholder="Contoh: 013-8871920" 
+                                    class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm focus:outline-none focus:ring-2 focus:ring-swiss-red font-medium font-mono">
+                            </div>
+                        </div>
+
+                        <!-- ROW 3: KATEGORI KEROSAKAN -->
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                5. Kategori Kerosakan <span class="text-swiss-red">*</span>
+                            </label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="kategori" value="Fasiliti" checked class="peer sr-only">
+                                    <div class="border-2 border-swiss-black p-3 text-center text-xs font-bold uppercase peer-checked:bg-swiss-black peer-checked:text-white transition">
+                                        <i data-lucide="armchair" class="w-4 h-4 mx-auto mb-1"></i>
+                                        Fasiliti
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="kategori" value="Kebersihan" class="peer sr-only">
+                                    <div class="border-2 border-swiss-black p-3 text-center text-xs font-bold uppercase peer-checked:bg-swiss-black peer-checked:text-white transition">
+                                        <i data-lucide="sparkles" class="w-4 h-4 mx-auto mb-1"></i>
+                                        Kebersihan
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="kategori" value="Utiliti" class="peer sr-only">
+                                    <div class="border-2 border-swiss-black p-3 text-center text-xs font-bold uppercase peer-checked:bg-swiss-black peer-checked:text-white transition">
+                                        <i data-lucide="zap" class="w-4 h-4 mx-auto mb-1"></i>
+                                        Utiliti
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ROW 4: KETERANGAN KEROSAKAN -->
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                6. Keterangan Kerosakan Terperinci <span class="text-swiss-red">*</span>
+                            </label>
+                            <textarea id="inputKeterangan" rows="4" required placeholder="Terangkan lokasi fizikal, punca, atau keadaan kerosakan (Cth: Tombol pintu bilik air tidak boleh dikunci dari dalam)..." 
+                                class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm focus:outline-none focus:ring-2 focus:ring-swiss-red font-medium"></textarea>
+                        </div>
+
+                        <!-- ROW 5: GAMBAR BUKTI -->
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-swiss-black uppercase mb-2">
+                                7. Gambar Bukti Kerosakan
+                            </label>
+                            <div class="border-2 border-dashed border-swiss-black bg-swiss-offwhite p-4 text-center">
+                                <input type="file" id="inputGambar" accept="image/*" onchange="previewImage(event)" class="hidden">
+                                <label for="inputGambar" class="cursor-pointer flex flex-col items-center justify-center">
+                                    <i data-lucide="upload-cloud" class="w-8 h-8 text-swiss-black mb-2"></i>
+                                    <span class="text-xs font-bold uppercase">Muat Naik Gambar Kerosakan</span>
+                                    <span class="text-[10px] text-swiss-darkgray mt-1">PNG, JPG atau WEBP (Max 5MB)</span>
+                                </label>
+                                <div id="imagePreviewContainer" class="hidden mt-4 relative inline-block">
+                                    <img id="imagePreview" src="" alt="Bukti" class="h-32 w-auto border-2 border-swiss-black object-cover">
+                                    <button type="button" onclick="removeImage()" class="absolute -top-2 -right-2 bg-swiss-red text-white p-1 rounded-full border border-black">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT BUTTON -->
+                        <button type="submit" class="w-full py-4 bg-swiss-red text-white font-display font-black text-base uppercase tracking-wider border-2 border-swiss-black swiss-shadow hover:bg-swiss-redhover transition swiss-btn-active flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span>HANTAR ADUAN KEROSAKAN SEGERA</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- RIGHT SIDE: SEARCH TICKET (RIGHT - 4 COLS) -->
+                <div id="semakan" class="lg:col-span-4 space-y-6">
+                    
+                    <!-- REAL-TIME TICKET CHECKER CARD -->
+                    <div class="bg-white p-6 swiss-border swiss-shadow-lg">
+                        <div class="border-b-2 border-swiss-black pb-3 mb-4">
+                            <span class="text-xs font-mono font-bold text-swiss-red uppercase tracking-widest">[ COBA SEMAK ]</span>
+                            <h3 class="font-display text-xl font-bold uppercase text-swiss-black mt-0.5">Semakan Status Real-Time</h3>
+                        </div>
+                        <p class="text-xs text-swiss-darkgray mb-4">
+                            Masukkan ID Tiket Aduan anda untuk semakan kemajuan langsung oleh pihak penyelenggara.
+                        </p>
+
+                        <form onsubmit="handleSearchTicket(event)" class="space-y-3">
+                            <div>
+                                <input type="text" id="searchTicketId" placeholder="Contoh: #TVET-9921" required
+                                    class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm font-mono font-bold uppercase focus:outline-none focus:ring-2 focus:ring-swiss-red">
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-swiss-black text-white font-bold text-xs uppercase border-2 border-swiss-black hover:bg-gray-800 transition swiss-shadow-sm swiss-btn-active flex items-center justify-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                                <span>Cari Tiket Aduan</span>
+                            </button>
+                        </form>
+
+                        <!-- RESULT DISPLAY CONTAINER -->
+                        <div id="searchResult" class="hidden mt-6 pt-4 border-t-2 border-swiss-black">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- RECENT PUBLIC TICKETS BOARD -->
+                    <div class="bg-swiss-black text-white p-6 swiss-border swiss-shadow-lg">
+                        <div class="flex items-center justify-between border-b border-gray-700 pb-3 mb-4">
+                            <h4 class="font-display text-sm font-bold uppercase tracking-wider">Aduan Terkini Disemak</h4>
+                            <span class="text-[10px] font-mono bg-swiss-red text-white px-2 py-0.5">LIVE</span>
+                        </div>
+                        <div id="recentTicketsList" class="space-y-3">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ADMIN LOGIN MODAL (DIPERKETATKAN KEPADA TVETMARA@ASRAMA & ASRAMA2026) -->
+    <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md p-6 sm:p-8 swiss-border swiss-shadow-lg relative animate-in fade-in zoom-in duration-150">
+            
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 p-1 text-swiss-black hover:bg-swiss-gray swiss-border">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="border-b-2 border-swiss-black pb-3 mb-6">
+                <span class="text-xs font-mono font-bold text-swiss-red uppercase">[ AKSES KHAS PENTADBIR ]</span>
+                <h3 class="font-display text-2xl font-black uppercase tracking-tight text-swiss-black mt-1">
+                    Log Masuk Admin
+                </h3>
+            </div>
+
+            <!-- ERROR ALERT -->
+            <div id="loginErrorAlert" class="hidden mb-4 p-3 bg-red-100 border-2 border-swiss-red text-swiss-red text-xs font-bold font-mono">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+                    <span>GAGAL LOG MASUK: Username atau Kata Laluan Salah! Akses Ditolak.</span>
+                </div>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase mb-1">Nama Pengguna (Username)</label>
+                    <input type="text" id="adminUsername" required placeholder="TVETMARA@ASRAMA" 
+                        class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-swiss-red">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase mb-1">Kata Laluan (Password)</label>
+                    <input type="password" id="adminPassword" required placeholder="••••••••" 
+                        class="w-full bg-swiss-offwhite border-2 border-swiss-black p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-swiss-red">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 bg-swiss-black text-white font-display font-bold text-sm uppercase border-2 border-swiss-black swiss-shadow hover:bg-gray-800 transition swiss-btn-active flex items-center justify-center gap-2">
+                        <i data-lucide="key-round" class="w-4 h-4"></i>
+                        <span>Sahkan Akses Pentadbir</span>
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-4 text-center">
+                <span class="text-[10px] font-mono text-swiss-darkgray">
+                    Pengesahan Keselamatan TVETMARA Lenggong Sistem Portal v2026
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD CONTAINER (MODAL / OVERLAY VIEW) -->
+    <div id="adminDashboardView" class="fixed inset-0 bg-swiss-offwhite z-50 overflow-y-auto hidden">
         
-        const data = {
-          id: ticketId,
-          nama: document.getElementById('nama').value,
-          matrik: document.getElementById('matrik').value,
-          blok: document.getElementById('blok').value,
-          kategori: document.getElementById('kategori').value,
-          keterangan: document.getElementById('keterangan').value,
-          status: 'Pending'
-        };
+        <!-- DASHBOARD HEADER -->
+        <header class="bg-swiss-black text-white swiss-border-b sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-swiss-red text-white font-display font-black text-lg flex items-center justify-center swiss-border border-white">
+                        ADM
+                    </div>
+                    <div>
+                        <h1 class="font-display text-lg font-bold uppercase tracking-tight">DASHBOARD PENTADBIR ADUAN</h1>
+                        <p class="text-xs text-gray-400 font-mono">ASRAMA TVETMARA LENGGONG</p>
+                    </div>
+                </div>
 
-        let list = JSON.parse(localStorage.getItem('aduan_data') || '[]');
-        list.unshift(data);
-        localStorage.setItem('aduan_data', JSON.stringify(list));
+                <div class="flex items-center gap-3">
+                    <span class="hidden sm:inline-block text-xs font-mono bg-emerald-900 text-emerald-300 px-3 py-1 border border-emerald-500">
+                        LOGGED IN: TVETMARA@ASRAMA
+                    </span>
+                    <button onclick="handleAdminLogout()" class="px-4 py-2 bg-swiss-red text-white text-xs font-bold uppercase border border-white hover:bg-swiss-redhover transition swiss-shadow-sm">
+                        Log Keluar
+                    </button>
+                </div>
+            </div>
+        </header>
 
-        alert('Aduan Berjaya Dihantar!\nID TIKET ANDA: ' + ticketId);
-        document.getElementById('aduanForm').reset();
-      });
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            
+            <!-- DASHBOARD STATS OVERVIEW -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 swiss-border swiss-shadow">
+                    <div class="text-xs font-mono font-bold text-swiss-darkgray uppercase">JUMLAH KESELURUHAN</div>
+                    <div class="font-display font-black text-3xl sm:text-4xl text-swiss-black mt-1" id="dashStatTotal">0</div>
+                </div>
+                <div class="bg-amber-100 p-5 swiss-border border-amber-900 swiss-shadow">
+                    <div class="text-xs font-mono font-bold text-amber-900 uppercase">PENDING (BAHARU)</div>
+                    <div class="font-display font-black text-3xl sm:text-4xl text-amber-700 mt-1" id="dashStatPending">0</div>
+                </div>
+                <div class="bg-blue-100 p-5 swiss-border border-blue-900 swiss-shadow">
+                    <div class="text-xs font-mono font-bold text-blue-900 uppercase">DALAM TINDAKAN</div>
+                    <div class="font-display font-black text-3xl sm:text-4xl text-blue-700 mt-1" id="dashStatProses">0</div>
+                </div>
+                <div class="bg-emerald-100 p-5 swiss-border border-emerald-900 swiss-shadow">
+                    <div class="text-xs font-mono font-bold text-emerald-900 uppercase">SELESAI</div>
+                    <div class="font-display font-black text-3xl sm:text-4xl text-emerald-700 mt-1" id="dashStatSelesai">0</div>
+                </div>
+            </div>
 
-    });
+            <!-- CONTROLS & FILTER TABS + EXPORT EXCEL/CSV BUTTON -->
+            <div class="bg-white p-6 swiss-border swiss-shadow space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-swiss-black pb-4">
+                    <div>
+                        <h2 class="font-display text-xl font-bold uppercase">Senarai Pengurusan Aduan Pelajar</h2>
+                        <p class="text-xs text-swiss-darkgray">Pilih tab, penapis, atau muat turun data aduan ke Excel/CSV.</p>
+                    </div>
 
-    function setCat(el, val) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('kategori').value = val;
-    }
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <!-- BUTTON EKSPORT CSV / EXCEL -->
+                        <button onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold uppercase border-2 border-swiss-black hover:bg-emerald-700 transition swiss-shadow-sm flex items-center gap-1.5 shrink-0">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                            <span>Eksport CSV / Excel</span>
+                        </button>
+                        <!-- SEARCH BAR IN DASHBOARD -->
+                        <div class="w-full md:w-64">
+                            <input type="text" id="dashSearchInput" onkeyup="renderAdminTable()" placeholder="Cari Nama, Matrik, Tiket..." 
+                                class="w-full bg-swiss-offwhite border-2 border-swiss-black p-2 text-xs font-mono focus:outline-none">
+                        </div>
+                    </div>
+                </div>
 
-    function renderDash() {
-      const list = JSON.parse(localStorage.getItem('aduan_data') || '[]');
-      const tbody = document.getElementById('dashBody');
-      tbody.innerHTML = '';
+                <!-- FILTER BUTTON TABS -->
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <button onclick="setDashFilter('Semua')" id="filterBtn-Semua" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-swiss-black text-white">
+                        Semua
+                    </button>
+                    <button onclick="setDashFilter('Pending')" id="filterBtn-Pending" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Pending
+                    </button>
+                    <button onclick="setDashFilter('Dalam Tindakan')" id="filterBtn-Dalam Tindakan" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Dalam Tindakan
+                    </button>
+                    <button onclick="setDashFilter('Selesai')" id="filterBtn-Selesai" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Selesai
+                    </button>
+                    <div class="h-6 w-0.5 bg-swiss-black self-center mx-1 hidden sm:block"></div>
+                    <button onclick="setDashFilter('Fasiliti')" id="filterBtn-Fasiliti" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Fasiliti
+                    </button>
+                    <button onclick="setDashFilter('Kebersihan')" id="filterBtn-Kebersihan" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Kebersihan
+                    </button>
+                    <button onclick="setDashFilter('Utiliti')" id="filterBtn-Utiliti" class="dash-filter-btn px-3 py-1.5 text-xs font-bold font-mono uppercase border-2 border-swiss-black bg-white text-swiss-black">
+                        Utiliti
+                    </button>
+                </div>
+            </div>
 
-      if(list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Tiada aduan direkodkan.</td></tr>';
-        return;
-      }
+            <!-- ADUAN TABLE (DENGAN KOLUM BUKTI GAMBAR JELAS) -->
+            <div class="bg-white swiss-border swiss-shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-swiss-black text-white text-xs font-mono uppercase border-b-2 border-swiss-black">
+                                <th class="p-3 border-r border-gray-700">Tiket ID</th>
+                                <th class="p-3 border-r border-gray-700">Maklumat Pelajar</th>
+                                <th class="p-3 border-r border-gray-700">Lokasi / Tel</th>
+                                <th class="p-3 border-r border-gray-700">Kategori & Butiran</th>
+                                <th class="p-3 border-r border-gray-700">Bukti Gambar</th>
+                                <th class="p-3 border-r border-gray-700">Status</th>
+                                <th class="p-3">Tindakan Admin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y-2 divide-swiss-black text-xs font-medium">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-      list.forEach(i => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${i.id}</strong></td>
-          <td>${i.nama} (${i.matrik})</td>
-          <td>${i.blok}</td>
-          <td>${i.kategori}</td>
-          <td>${i.keterangan}</td>
-          <td><span class="status-badge status-pending">${i.status}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-  </script>
-</body>
-</html>
+        </div>
+    </div>
+
+    <!-- TINGKAP POP-UP NOTIFIKASI ID TIKET DI TENGAH-TENGAH SKRIN -->
+    <div id="ticketPopupModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md p-6 sm:p-8 swiss-border swiss-shadow-lg text-center animate-in zoom-in-95 duration-150">
+            <div class="w-16 h-16 bg-emerald-100 border-2 border-swiss-black rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+            </div>
+            <span class="text-xs font-mono font-bold text-swiss-red uppercase">[ ADUAN BERJAYA DIREKODKAN ]</span>
+            <h3 class="font-display text-2xl font-black uppercase text-swiss-black mt-1 mb-2">Tiket Anda Telah Dijana</h3>
+            <p class="text-xs text-swiss-darkgray mb-4">Sila simpan nombor ID Tiket ini untuk semakan status kemajuan aduan pada bila-bila masa.</p>
+            
+            <div class="bg-swiss-offwhite border-2 border-swiss-black p-4 mb-6">
+                <div class="text-[10px] font-mono text-swiss-darkgray uppercase">ID TIKET RASMI ANDA:</div>
+                <div id="popupTicketIdText" class="font-display font-black text-3xl text-swiss-red tracking-wider mt-1">#TVET-0000</div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="copyTicketId()" class="flex-1 py-3 bg-white text-swiss-black font-bold text-xs uppercase border-2 border-swiss-black hover:bg-swiss-gray transition swiss-shadow-sm flex items-center justify-center gap-1.5">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Salin ID
+                </button>
+                <button onclick="closeTicketPopup()" class="flex-1 py-3 bg-swiss-black text-white font-bold text-xs uppercase border-2 border-swiss-black hover:bg-gray-800 transition swiss-shadow-sm">
+                    Tutup & Teruskan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ZOOM GAMBAR BUKTI -->
+    <div id="imageZoomModal" onclick="closeImageZoom()" class="fixed inset-0 bg-black/80 z-[70] hidden flex items-center justify-center p-4 cursor-pointer">
+        <div class="relative max-w-3xl max-h-[90vh]">
+            <img id="zoomedImg" src="" class="max-w-full max-h-[85vh] border-4 border-white object-contain" alt="Zoom Bukti">
+            <div class="absolute -top-10 right-0 text-white text-xs font-mono uppercase bg-swiss-red px-2 py-1">Klik di mana-mana untuk tutup</div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-swiss-black text-white p-4 swiss-border swiss-shadow-lg hidden transition-all duration-300">
+        <div class="flex items-center gap-3">
+            <div id="toastIcon" class="p-1 bg-swiss-red text-white">
+                <i data-lucide="check-circle" class="w-5 h-5"></i>
+            </div>
+            <div id="toastMessage" class="text-xs font-mono font-bold uppercase">
+                Mesej Maklumbalas
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // =========================================================================
+        // 1. INTEGRASI GOOGLE SHEETS & LOCALSTORAGE
+        // =========================================================================
+        /* 
+           CARA SAMBUNG KE GOOGLE SHEETS (GOOGLE APPS SCRIPT WEBHOOK):
+           1. Buka Google Sheets baharu, namakan kolumbisnes (ID, Tarikh, Nama, Matrik, Lokasi, Tel, Kategori, Keterangan, Status).
+           2. Pergi ke Extensions > Apps Script dan masukkan kod penerima data (e.g. doPost(e) { ... }).
+           3. Deploy sebagai Web App (akses oleh 'Anyone').
+           4. Salin URL Web App tersebut dan letakkan di dalam pembolehubah 'GOOGLE_SHEETS_WEBHOOK_URL' di bawah.
+        */
+        const GOOGLE_SHEETS_WEBHOOK_URL = ""; // Contoh: "https://script.google.com/macros/s/AKfycby.../exec"
+
+        async function sendToGoogleSheets(ticketData) {
+            if (!GOOGLE_SHEETS_WEBHOOK_URL) return; // Teruskan secara tempatan jika URL kosong
+            try {
+                await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ticketData)
+                });
+            } catch (err) {
+                console.error("Ralat menyambung ke Google Sheets:", err);
+            }
+        }
+
+        // INITIAL DATASET (Termasuk ID Tiket khas #TVET-9921 dan #TVET-8821)
+        const initialTickets = [
+            {
+                id: '#TVET-9921',
+                nama: 'Ahmad Faiz Bin Zalman',
+                matrik: 'DTM20231002',
+                lokasi: 'Blok B, Bilik B-3-04',
+                tel: '011-23910291',
+                kategori: 'Utiliti',
+                keterangan: 'Kipas angin bilik mengeluarkan bunyi bising bergesel dan berbau hangit secara tiba-tiba.',
+                gambar: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80',
+                status: 'Pending',
+                tarikh: '2026-10-22 09:30 AM'
+            },
+            {
+                id: '#TVET-8821',
+                nama: 'Siti Sarah Binti Ismail',
+                matrik: 'DTM20245011',
+                lokasi: 'Blok A, Bilik A-1-02',
+                tel: '017-8829102',
+                kategori: 'Fasiliti',
+                keterangan: 'Engsel pintu almari pakaian tercabut dan cermin meja solek retak.',
+                gambar: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+                status: 'Dalam Tindakan',
+                tarikh: '2026-10-21 02:15 PM'
+            },
+            {
+                id: '#TVET-7710',
+                nama: 'Muhamad Danial Farhan',
+                matrik: 'DTM20239912',
+                lokasi: 'Blok C, Aras 2 (Bilik Air Mawar)',
+                tel: '019-3829100',
+                kategori: 'Kebersihan',
+                keterangan: 'Saluran paip mandi tersumbat menyebabkan air melimpah ke luar laluan utama.',
+                gambar: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+                status: 'Selesai',
+                tarikh: '2026-10-20 11:00 AM'
+            }
+        ];
+
+        // LOCAL STORAGE MANAGEMENT
+        function getTickets() {
+            const saved = localStorage.getItem('tvetmara_aduan_list');
+            if (!saved) {
+                localStorage.setItem('tvetmara_aduan_list', JSON.stringify(initialTickets));
+                return initialTickets;
+            }
+            return JSON.parse(saved);
+        }
+
+        function saveTickets(tickets) {
+            localStorage.setItem('tvetmara_aduan_list', JSON.stringify(tickets));
+            updateUI();
+        }
+
+        // STATE VARIABLES
+        let currentFilter = 'Semua';
+        let uploadedImageBase64 = null;
+        let isAdminLoggedIn = false;
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            updateUI();
+            checkAdminSession();
+        });
+
+        // SCROLL HELPER
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // IMAGE PREVIEW HANDLER
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImageBase64 = e.target.result;
+                    document.getElementById('imagePreview').src = uploadedImageBase64;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            uploadedImageBase64 = null;
+            document.getElementById('inputGambar').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+        }
+
+        // FORM SUBMISSION (NEW ADUAN)
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('inputNama').value.trim();
+            const matrik = document.getElementById('inputMatrik').value.trim();
+            const lokasi = document.getElementById('inputLokasi').value.trim();
+            const tel = document.getElementById('inputTel').value.trim();
+            const kategori = document.querySelector('input[name="kategori"]:checked').value;
+            const keterangan = document.getElementById('inputKeterangan').value.trim();
+
+            // Generate Ticket ID (#TVET-XXXX)
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const ticketId = `#TVET-${randomNum}`;
+
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0] + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const newTicket = {
+                id: ticketId,
+                nama: nama,
+                matrik: matrik,
+                lokasi: lokasi,
+                tel: tel,
+                kategori: kategori,
+                keterangan: keterangan,
+                gambar: uploadedImageBase64 || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80',
+                status: 'Pending',
+                tarikh: dateStr
+            };
+
+            const tickets = getTickets();
+            tickets.unshift(newTicket);
+            saveTickets(tickets);
+
+            // Sync ke Google Sheets (jika URL web app diisi)
+            sendToGoogleSheets(newTicket);
+
+            // Reset Form
+            document.getElementById('complaintForm').reset();
+            removeImage();
+
+            // 4. PAPARKAN NOTIFIKASI TIKET DI TENGAH-TENGAH SKRIN
+            document.getElementById('popupTicketIdText').innerText = ticketId;
+            document.getElementById('ticketPopupModal').classList.remove('hidden');
+
+            // Auto set search
+            document.getElementById('searchTicketId').value = ticketId;
+            handleSearchTicket(new Event('submit'));
+        }
+
+        function closeTicketPopup() {
+            document.getElementById('ticketPopupModal').classList.add('hidden');
+            scrollToSection('semakan');
+        }
+
+        function copyTicketId() {
+            const ticketText = document.getElementById('popupTicketIdText').innerText;
+            navigator.clipboard.writeText(ticketText).then(() => {
+                showToast(`ID TIKET ${ticketText} BERJAYA DISALIN!`);
+            });
+        }
+
+        // SEARCH TICKET
+        function handleSearchTicket(e) {
+            e.preventDefault();
+            const query = document.getElementById('searchTicketId').value.trim().toUpperCase();
+            const tickets = getTickets();
+            const result = tickets.find(t => t.id.toUpperCase() === query);
+
+            const container = document.getElementById('searchResult');
+            container.classList.remove('hidden');
+
+            if (result) {
+                let statusBadgeClass = 'bg-amber-100 text-amber-900 border-amber-900';
+                if (result.status === 'Dalam Tindakan') statusBadgeClass = 'bg-blue-100 text-blue-900 border-blue-900';
+                if (result.status === 'Selesai') statusBadgeClass = 'bg-emerald-100 text-emerald-900 border-emerald-900';
+
+                container.innerHTML = `
+                    <div class="bg-swiss-offwhite p-4 swiss-border space-y-3">
+                        <div class="flex justify-between items-start border-b border-swiss-black pb-2">
+                            <div>
+                                <span class="text-[10px] font-mono text-swiss-darkgray">ID TIKET RASMI</span>
+                                <div class="font-display font-black text-xl text-swiss-black">${result.id}</div>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-mono font-bold uppercase border ${statusBadgeClass}">
+                                ${result.status}
+                            </span>
+                        </div>
+                        <div class="text-xs space-y-1">
+                            <div><strong class="font-bold">Pengadu:</strong> ${result.nama} (${result.matrik})</div>
+                            <div><strong class="font-bold">Lokasi:</strong> ${result.lokasi}</div>
+                            <div><strong class="font-bold">Kategori:</strong> ${result.kategori}</div>
+                            <div><strong class="font-bold">Masa Aduan:</strong> ${result.tarikh}</div>
+                            <div class="pt-2 text-swiss-darkgray border-t border-gray-300">
+                                <strong class="text-swiss-black font-bold">Keterangan:</strong> ${result.keterangan}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="p-4 bg-red-50 border-2 border-swiss-red text-swiss-red text-xs font-bold font-mono">
+                        <i data-lucide="x-circle" class="w-4 h-4 inline mr-1"></i> TIKET ADUAN '${query}' TIDAK DIJUMPAI.
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // UPDATE UI & STATS
+        function updateUI() {
+            const tickets = getTickets();
+            
+            // Numbers
+            const total = tickets.length;
+            const pending = tickets.filter(t => t.status === 'Pending').length;
+            const proses = tickets.filter(t => t.status === 'Dalam Tindakan').length;
+            const selesai = tickets.filter(t => t.status === 'Selesai').length;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statPending').innerText = pending;
+            document.getElementById('statSelesai').innerText = selesai;
+
+            document.getElementById('dashStatTotal').innerText = total;
+            document.getElementById('dashStatPending').innerText = pending;
+            document.getElementById('dashStatProses').innerText = proses;
+            document.getElementById('dashStatSelesai').innerText = selesai;
+
+            // Alert Banner for Pending Tickets
+            const alertBanner = document.getElementById('newTicketAlert');
+            const alertCount = document.getElementById('pendingAlertCount');
+            if (pending > 0) {
+                alertBanner.classList.remove('hidden');
+                alertCount.innerText = pending;
+            } else {
+                alertBanner.classList.add('hidden');
+            }
+
+            // Render Recent Public List
+            const recentContainer = document.getElementById('recentTicketsList');
+            recentContainer.innerHTML = '';
+            tickets.slice(0, 3).forEach(t => {
+                let badgeColor = 'bg-amber-400 text-black';
+                if (t.status === 'Dalam Tindakan') badgeColor = 'bg-blue-400 text-black';
+                if (t.status === 'Selesai') badgeColor = 'bg-emerald-400 text-black';
+
+                recentContainer.innerHTML += `
+                    <div onclick="fillSearchAndCheck('${t.id}')" class="p-3 bg-gray-900 hover:bg-gray-800 border border-gray-700 cursor-pointer transition flex justify-between items-center">
+                        <div>
+                            <div class="font-mono font-bold text-xs text-swiss-red">${t.id}</div>
+                            <div class="text-xs text-gray-300 font-medium truncate max-w-[180px]">${t.lokasi} - ${t.kategori}</div>
+                        </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 font-bold uppercase ${badgeColor}">
+                            ${t.status}
+                        </span>
+                    </div>
+                `;
+            });
+
+            // Re-render admin table if dashboard active
+            if (isAdminLoggedIn) {
+                renderAdminTable();
+            }
+        }
+
+        function fillSearchAndCheck(ticketId) {
+            document.getElementById('searchTicketId').value = ticketId;
+            handleSearchTicket(new Event('submit'));
+            scrollToSection('semakan');
+        }
+
+        // ADMIN LOGIN / LOGOUT (DIPERKETATKAN KEPADA TVETMARA@ASRAMA & ASRAMA2026)
+        function openAdminModal() {
+            if (isAdminLoggedIn) {
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                renderAdminTable();
+            } else {
+                document.getElementById('adminModal').classList.remove('hidden');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('loginErrorAlert').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('adminUsername').value.trim();
+            const pass = document.getElementById('adminPassword').value.trim();
+
+            if (user === 'TVETMARA@ASRAMA' && pass === 'ASRAMA2026') {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem('tvet_admin_auth', 'true');
+                closeAdminModal();
+                
+                document.getElementById('navAdminBtnText').innerText = 'Dashboard Admin';
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                renderAdminTable();
+                showToast('LOG MASUK PENTADBIR BERHASIL!');
+            } else {
+                document.getElementById('loginErrorAlert').classList.remove('hidden');
+            }
+        }
+
+        function checkAdminSession() {
+            if (sessionStorage.getItem('tvet_admin_auth') === 'true') {
+                isAdminLoggedIn = true;
+                document.getElementById('navAdminBtnText').innerText = 'Dashboard Admin';
+            }
+        }
+
+        function handleAdminLogout() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('tvet_admin_auth');
+            document.getElementById('adminDashboardView').classList.add('hidden');
+            document.getElementById('navAdminBtnText').innerText = 'Log Masuk Admin';
+            showToast('LOG KELUAR BERHASIL');
+        }
+
+        function openAdminDashboardWithFilter(filterName) {
+            if (!isAdminLoggedIn) {
+                openAdminModal();
+            } else {
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+                setDashFilter(filterName);
+            }
+        }
+
+        // ADMIN DASHBOARD FILTERING & RENDER TABLE (DENGAN PAPARAN BUKTI GAMBAR JELAS)
+        function setDashFilter(filterName) {
+            currentFilter = filterName;
+            
+            document.querySelectorAll('.dash-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-swiss-black', 'text-white');
+                btn.classList.add('bg-white', 'text-swiss-black');
+            });
+
+            const activeBtn = document.getElementById(`filterBtn-${filterName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-swiss-black');
+                activeBtn.classList.add('bg-swiss-black', 'text-white');
+            }
+
+            renderAdminTable();
+        }
+
+        function renderAdminTable() {
+            const tickets = getTickets();
+            const searchVal = document.getElementById('dashSearchInput').value.toLowerCase().trim();
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+
+            let filtered = tickets;
+
+            if (currentFilter === 'Pending' || currentFilter === 'Dalam Tindakan' || currentFilter === 'Selesai') {
+                filtered = filtered.filter(t => t.status === currentFilter);
+            } else if (currentFilter === 'Fasiliti' || currentFilter === 'Kebersihan' || currentFilter === 'Utiliti') {
+                filtered = filtered.filter(t => t.kategori === currentFilter);
+            }
+
+            if (searchVal) {
+                filtered = filtered.filter(t => 
+                    t.id.toLowerCase().includes(searchVal) ||
+                    t.nama.toLowerCase().includes(searchVal) ||
+                    t.matrik.toLowerCase().includes(searchVal) ||
+                    t.lokasi.toLowerCase().includes(searchVal)
+                );
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="p-8 text-center text-swiss-darkgray font-mono uppercase">
+                            Tiada aduan dijumpai bagi kategori/penapis ini.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(t => {
+                let statusSelectBg = 'bg-amber-100 text-amber-900 border-amber-900';
+                if (t.status === 'Dalam Tindakan') statusSelectBg = 'bg-blue-100 text-blue-900 border-blue-900';
+                if (t.status === 'Selesai') statusSelectBg = 'bg-emerald-100 text-emerald-900 border-emerald-900';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-swiss-offwhite transition">
+                        <td class="p-3 font-mono font-bold text-swiss-red border-r border-gray-200">
+                            ${t.id}
+                            <div class="text-[10px] text-gray-500 font-normal">${t.tarikh}</div>
+                        </td>
+                        <td class="p-3 border-r border-gray-200">
+                            <div class="font-bold text-swiss-black">${t.nama}</div>
+                            <div class="text-[10px] font-mono text-swiss-darkgray">NO. MATRIK: ${t.matrik}</div>
+                        </td>
+                        <td class="p-3 border-r border-gray-200">
+                            <div class="font-bold">${t.lokasi}</div>
+                            <div class="text-[10px] font-mono text-swiss-darkgray">TEL: ${t.tel}</div>
+                        </td>
+                        <td class="p-3 border-r border-gray-200 max-w-xs">
+                            <span class="inline-block px-1.5 py-0.5 bg-swiss-black text-white text-[10px] font-mono uppercase mb-1">
+                                ${t.kategori}
+                            </span>
+                            <p class="text-xs text-gray-700 line-clamp-2">${t.keterangan}</p>
+                        </td>
+                        <td class="p-3 border-r border-gray-200 text-center">
+                            <button onclick="zoomImage('${t.gambar}')" class="p-1 bg-swiss-gray border-2 border-swiss-black hover:bg-gray-300 transition inline-block">
+                                <img src="${t.gambar}" class="w-1
