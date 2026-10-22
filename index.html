@@ -1007,8 +1007,8 @@
 
   <!-- JAVASCRIPT -->
   <script>
-    // MASUKKAN WEBHOOK URL GOOGLE SHEETS ANDA JIKA ADA
-    const GOOGLE_SHEETS_WEBHOOK_URL = ""; 
+    // WEBHOOK URL GOOGLE SHEETS RASMI LENGGONG
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz5huDtSf_K5mJum-xFniRdlzvoIoCRTERHn8qDzgDZAxFg26qqEq1gdlfI9aK_wuP5/exec"; 
 
     async function sendToGoogleSheets(aduanData) {
       if (!GOOGLE_SHEETS_WEBHOOK_URL) return;
@@ -1089,7 +1089,7 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // FUNGSI AUTO-RESIZE & AUTO-COMPRESS GAMBAR PHONE SUPAYA TAK ERROR
+    // AUTO-COMPRESS GAMBAR KAMERA PHONE
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -1111,7 +1111,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 800; // Mencegah saiz terlalu besar pada telefon
+          const maxDim = 800; 
 
           if (width > height && width > maxDim) {
             height *= maxDim / width;
@@ -1126,7 +1126,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Tukar saiz fail kepada ~70% JPEG kualiti supaya muat storage
           currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
           preview.src = currentUploadedImageBase64;
           preview.style.display = 'block';
