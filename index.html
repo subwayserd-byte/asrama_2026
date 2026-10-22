@@ -59,19 +59,45 @@
       display: flex; justify-content: space-between; align-items: center; height: 75px;
     }
 
+    /* DIKEMAS KINI: TETAPAN LOGO SUPAYA TIDAK BERTINDIH */
     .logo-container {
-      display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--color-text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--color-text-main);
     }
 
-    .logo-svg { height: 36px; width: auto; }
-    .logo-divider { height: 24px; width: 2px; background-color: var(--color-border-dark); }
+    .logo-svg {
+      height: 26px;
+      width: auto;
+      max-width: 140px;
+      display: block;
+    }
+
+    .logo-divider {
+      height: 22px;
+      width: 2px;
+      background-color: var(--color-border-dark);
+    }
 
     .logo-text {
-      font-family: var(--font-heading); font-weight: 800; font-size: 1rem;
-      letter-spacing: -0.02em; line-height: 1.1; display: flex; flex-direction: column;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      display: flex;
+      flex-direction: column;
     }
 
-    .logo-text span { font-size: 0.7rem; color: var(--color-brand); font-weight: 700; letter-spacing: 0.05em; }
+    .logo-text span {
+      font-size: 0.65rem;
+      color: var(--color-brand);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
     .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
 
     .btn {
@@ -230,7 +256,8 @@
     <div class="container">
       <div class="header-inner">
         <a href="#" class="logo-container">
-          <svg class="logo-svg" viewBox="0 0 550 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- SVG LOGO TERJAJAR PROPOSIONAL -->
+          <svg class="logo-svg" viewBox="0 0 540 90" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
             <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
             <path d="M92 28L134 12H105L92 28Z" fill="#E63946"/>
@@ -473,8 +500,7 @@
   </div>
 
   <script>
-    // LINK GOOGLE APPS SCRIPT WEB APP TERKINI
-    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyOLxLag_isnTAzm3nj4kas6UXZ2bLsWZkJA6XGHXHHW-PH7-QJB-F-ssqARYY2UHz5/exec"; 
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzNSSTDFGW0igU1z-NEannSorfn3TvUZOFLBSRxqnIWQ9dNfuuENfWkQdIe59dpa6qt/exec"; 
 
     let globalComplaintsList = [];
     let currentFilter = 'ALL';
