@@ -49,7 +49,6 @@
       padding-right: clamp(1rem, 3vw, 2.5rem);
     }
 
-    /* HEADER */
     .site-header {
       background-color: var(--color-surface);
       border-bottom: 2px solid var(--color-border-dark);
@@ -75,7 +74,6 @@
     .logo-text span { font-size: 0.7rem; color: var(--color-brand); font-weight: 700; letter-spacing: 0.05em; }
     .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
 
-    /* BUTTONS */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.65rem 1.25rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
@@ -88,15 +86,9 @@
     .btn-primary { background-color: var(--color-brand); color: white; border-color: var(--color-brand); }
     .btn-primary:hover { background-color: var(--color-brand-hover); }
     .btn-outline { background-color: transparent; color: var(--color-text-main); }
-
-    .btn-danger {
-      background-color: #dc2626; color: white; border-color: #991b1b;
-      padding: 0.3rem 0.6rem; font-size: 0.75rem; box-shadow: none;
-    }
-
+    .btn-danger { background-color: #dc2626; color: white; border-color: #991b1b; padding: 0.3rem 0.6rem; font-size: 0.75rem; box-shadow: none; }
     .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.75rem; }
 
-    /* HERO */
     .hero {
       padding: 3.5rem 0 4rem; background-color: var(--color-surface);
       border-bottom: 2px solid var(--color-border-dark);
@@ -135,13 +127,11 @@
 
     .hero-image-box img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* SECTION */
     .section-padding { padding: 4rem 0; }
     .section-header { margin-bottom: 2.5rem; }
     .section-subtitle { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-brand); letter-spacing: 0.05em; }
     .section-title { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.25rem; }
 
-    /* EMERGENCY */
     .emergency-banner {
       background-color: #fef2f2; border: 2px solid #ef4444; padding: 1.5rem 2rem;
       margin-top: -1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between;
@@ -154,14 +144,12 @@
     .contact-card strong { display: block; font-size: 0.7rem; color: #991b1b; text-transform: uppercase; }
     .contact-card a { color: var(--color-text-main); text-decoration: none; font-weight: 700; }
 
-    /* FEATURES */
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     .feature-card { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); padding: 1.75rem; box-shadow: 4px 4px 0px var(--color-border-dark); }
     .feature-num { font-family: var(--font-heading); font-size: 2.25rem; font-weight: 800; color: #d1d5db; line-height: 1; margin-bottom: 1rem; }
     .feature-title { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
     .feature-desc { font-size: 0.85rem; color: var(--color-text-muted); }
 
-    /* FORM */
     .form-wrapper { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); padding: 2.5rem; }
     .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
@@ -180,7 +168,6 @@
     .file-dropzone input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
     .preview-image { max-height: 160px; margin: 1rem auto 0 auto; display: none; border: 2px solid var(--color-border-dark); }
 
-    /* TRACKER */
     .tracker-card { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); padding: 2rem; box-shadow: 6px 6px 0px var(--color-border-dark); max-width: 600px; margin: 0 auto; }
     .tracker-input-group { display: flex; gap: 0.75rem; margin-top: 1rem; }
     .status-badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
@@ -188,7 +175,6 @@
     .status-process { background: var(--status-process-bg); color: var(--status-process); border: 1px solid var(--status-process); }
     .status-done { background: var(--status-done-bg); color: var(--status-done); border: 1px solid var(--status-done); }
 
-    /* MODALS */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 100; padding: 1rem; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: white; border: 2px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); width: 100%; max-width: 450px; padding: 2rem; position: relative; }
@@ -198,7 +184,6 @@
     .ticket-popup-box { background: white; border: 3px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); width: 100%; max-width: 480px; padding: 2rem; text-align: center; }
     .ticket-code-display { background: var(--color-brand-light); border: 2px dashed var(--color-brand); color: var(--color-brand); font-family: var(--font-heading); font-size: 2rem; font-weight: 800; padding: 1rem; margin: 1.25rem 0; }
 
-    /* ADMIN DASHBOARD */
     .admin-stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
     .admin-stat-card { background: var(--color-bg); border: 2px solid var(--color-border-dark); padding: 1rem; }
     .admin-stat-card .val { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; }
@@ -237,7 +222,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="container">
       <div class="header-inner">
@@ -262,15 +246,14 @@
           </div>
         </a>
         <div class="nav-actions">
-          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()">🔔 Aktif Notifikasi</button>
-          <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Log Masuk Admin</button>
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()">🔔 Notifikasi</button>
+          <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Admin</button>
           <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
@@ -284,9 +267,9 @@
           </div>
 
           <div class="hero-stats">
-            <div><div class="stat-number">24 Jam</div><div class="stat-label">Masa Respons</div></div>
-            <div><div class="stat-number">Rasmi</div><div class="stat-label">Sistem Teratur</div></div>
-            <div><div class="stat-number">Direct</div><div class="stat-label">Ke Warden</div></div>
+            <div><div class="stat-number">24 Jam</div><div class="stat-label">Respons</div></div>
+            <div><div class="stat-number">Rasmi</div><div class="stat-label">Sistem</div></div>
+            <div><div class="stat-number">Direct</div><div class="stat-label">Warden</div></div>
           </div>
         </div>
 
@@ -297,7 +280,6 @@
     </div>
   </section>
 
-  <!-- EMERGENCY -->
   <section class="container">
     <div class="emergency-banner">
       <div class="emergency-info">
@@ -307,12 +289,11 @@
       <div class="emergency-contacts">
         <div class="contact-card"><strong>AJK KEBAJIKAN</strong><a href="tel:+601129661251">+6011-2966-1251</a></div>
         <div class="contact-card"><strong>AJK DISIPLIN</strong><a href="tel:+601111259682">+6011-1125-9682</a></div>
-        <div class="contact-card"><strong>WARDEN BERTUGAS</strong><a href="tel:+60172479411">+6017-247-9411</a></div>
+        <div class="contact-card"><strong>WARDEN</strong><a href="tel:+60172479411">+6017-247-9411</a></div>
       </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
   <section class="section-padding" style="padding-top: 1rem;">
     <div class="container">
       <div class="section-header">
@@ -328,7 +309,6 @@
     </div>
   </section>
 
-  <!-- FORM -->
   <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 2px solid var(--color-border-dark); border-bottom: 2px solid var(--color-border-dark);">
     <div class="container">
       <div class="section-header" style="text-align: center;">
@@ -359,8 +339,9 @@
             <div class="form-group">
               <label>Muat Naik Gambar Bukti Kerosakan</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
-                <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik untuk tangkap/pilih gambar (Pilihan)</span>
-                <input type="file" id="gambarInput" accept="image/*" onchange="previewAndCompressFile(this)">
+                <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
+                <!-- ADD-ON KHAS IOS: Terima format imej standard & HEIC/HEIF -->
+                <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
                 <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
               </div>
             </div>
@@ -372,7 +353,6 @@
     </div>
   </section>
 
-  <!-- TRACKER -->
   <section class="section-padding" id="semak-status">
     <div class="container">
       <div class="section-header" style="text-align: center;">
@@ -391,7 +371,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container" style="text-align: center;">
       <strong>TVETMARA Lenggong</strong> — Unit Pengurusan Asrama & Kebajikan Pelajar.<br>
@@ -399,7 +378,6 @@
     </div>
   </footer>
 
-  <!-- POPUP TIKET -->
   <div class="modal-overlay" id="ticketSuccessModal">
     <div class="ticket-popup-box">
       <div style="font-size: 3rem; margin-bottom: 0.25rem;">🎉</div>
@@ -421,7 +399,6 @@
     </div>
   </div>
 
-  <!-- ADMIN LOGIN -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
       <button class="modal-close" onclick="closeAdminModal()">✕</button>
@@ -437,7 +414,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD ADMIN -->
   <div class="modal-overlay" id="dashboardModal">
     <div class="modal-content modal-dashboard">
       <button class="modal-close" onclick="closeDashboard()">✕</button>
@@ -486,14 +462,12 @@
     </div>
   </div>
 
-  <!-- ZOOM GAMBAR -->
   <div class="modal-overlay" id="imageZoomModal" onclick="this.classList.remove('active')">
     <div style="background: white; padding: 0.75rem; border: 2px solid var(--color-border-dark); max-width: 95vw; max-height: 90vh;">
       <img id="zoomedImg" src="" style="max-width: 100%; max-height: 80vh; display: block;" alt="Gambar Bukti">
     </div>
   </div>
 
-  <!-- JAVASCRIPT -->
   <script>
     const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwcxLn02JyPJzkILHzcD5y7PMIybfWq9WrkGe_aMCMCLG_10P16l1rcKdOwM_yN0cSN/exec"; 
 
@@ -533,11 +507,11 @@
       const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
       const btn = document.getElementById('adminNavBtn');
       if (isLoggedIn === 'true') {
-        btn.innerText = "⚙️ Dashboard Admin";
+        btn.innerText = "⚙️ Dashboard";
         btn.classList.add('btn-primary');
         btn.classList.remove('btn-outline');
       } else {
-        btn.innerText = "Log Masuk Admin";
+        btn.innerText = "Admin";
         btn.classList.add('btn-outline');
         btn.classList.remove('btn-primary');
       }
@@ -578,7 +552,7 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // FUNGSI UNIK PEMAMPATAN IMEJ KHAS IOS/SAFARI & ANDROID
+    // ADD-ON KHAS IOS SAFARI: Kaedah Pembacaan Fail Selamat
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -587,59 +561,24 @@
       if (!file) {
         currentUploadedImageBase64 = "";
         preview.style.display = 'none';
-        uploadText.innerText = "📷 Klik untuk tangkap/pilih gambar (Pilihan)";
+        uploadText.innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
         return;
       }
 
       uploadText.innerText = "⏳ Memproses gambar...";
 
-      // Guna URL.createObjectURL secara langsung (Lancar pada iOS Safari tanpa memori crash)
-      const objectUrl = URL.createObjectURL(file);
-      const img = new Image();
-
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 350; // Dikecilkan sedikit untuk keselamatan RAM iPhone
-
-        if (width > height && width > maxDim) {
-          height *= maxDim / width; width = maxDim;
-        } else if (height > maxDim) {
-          width *= maxDim / height; height = maxDim;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        try {
-          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.4);
-          preview.src = currentUploadedImageBase64;
-          preview.style.display = 'block';
-          uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
-        } catch(err) {
-          console.error("Canvas error:", err);
-          uploadText.innerText = "⚠️ Gagal proses gambar, aduan diteruskan tanpa imej.";
-          currentUploadedImageBase64 = "";
-        }
-        URL.revokeObjectURL(objectUrl);
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentUploadedImageBase64 = e.target.result;
+        preview.src = currentUploadedImageBase64;
+        preview.style.display = 'block';
+        uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
       };
-
-      img.onerror = function() {
-        // Fallback untuk iOS jika imej kamera gagal dibaca Canvas
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          currentUploadedImageBase64 = e.target.result;
-          preview.src = currentUploadedImageBase64;
-          preview.style.display = 'block';
-          uploadText.innerText = "✅ Gambar dimasukkan (Mod Terus)";
-        };
-        reader.readAsDataURL(file);
+      reader.onerror = function() {
+        alert("Gagal membaca imej pada iOS Safari.");
+        uploadText.innerText = "⚠️ Gagal muat naik gambar.";
       };
-
-      img.src = objectUrl;
+      reader.readAsDataURL(file);
     }
 
     async function handleFormSubmit(e) {
@@ -699,7 +638,7 @@
 
       document.getElementById('aduanForm').reset();
       document.getElementById('imgPreview').style.display = 'none';
-      document.getElementById('uploadText').innerText = "📷 Klik untuk tangkap/pilih gambar (Pilihan)";
+      document.getElementById('uploadText').innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
       currentUploadedImageBase64 = "";
     }
 
@@ -805,7 +744,7 @@
       localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
       renderAdminTable();
 
-      showDeviceNotification("⚙️ Status Aduan Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
+      showDeviceNotification("⚙️ Status Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
 
       try {
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
