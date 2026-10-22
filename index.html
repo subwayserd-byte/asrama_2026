@@ -450,7 +450,7 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Blok</th>
+              <th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Bilik</th>
               <th>No. Tel</th><th>Kategori</th><th>Bukti Gambar</th><th>Keterangan</th>
               <th>Status</th><th>Tindakan Status</th><th>Padam</th>
             </tr>
@@ -533,8 +533,15 @@
         const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
         const data = await response.json();
         if (Array.isArray(data)) {
-          globalComplaintsList = data;
-          localStorage.setItem('tvet_aduan_list', JSON.stringify(data));
+          // Bersihkan data duplikat secara logik paparan supaya admin nampak kemas
+          const uniqueMap = new Map();
+          data.forEach(item => {
+            if (item && item.id) {
+              uniqueMap.set(item.id.toLowerCase(), item);
+            }
+          });
+          globalComplaintsList = Array.from(uniqueMap.values());
+          localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
           renderAdminTable();
         }
       } catch (err) {
@@ -758,16 +765,15 @@
       }
     }
 
-    // FUNGSI DELETE DIGABUNGKAN DENGAN GOOGLE SHEETS
+    // FUNGSI DELETE KEMAS KINI (PADAM SEMUA DUPLIKAT DAN SEGERA REFRESH DATA)
     async function deleteAduan(ticketId) {
       if (confirm(`Adakah anda pasti nak PADAM aduan ${ticketId} terus dari Google Sheets?`)) {
-        
-        // Padam dari paparan tempatan
-        globalComplaintsList = globalComplaintsList.filter(item => item.id !== ticketId);
+        // Padam serta-merta dari senarai tempatan
+        globalComplaintsList = globalComplaintsList.filter(item => item.id.toLowerCase() !== ticketId.toLowerCase());
         localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
         renderAdminTable();
 
-        // Hantar arahan padam terus ke Google Sheet
+        // Hantar arahan padam ke Google Sheets
         try {
           await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
             method: "POST",
@@ -778,7 +784,14 @@
               id: ticketId
             })
           });
-          alert(`Aduan ${ticketId} telah dipadam sepenuhnya dari Google Sheets!`);
+          
+          alert(`Aduan ${ticketId} telah dipadam sepenuhnya!`);
+          
+          // Tunggu 1.5 saat untuk pelayan Google memproses pemadaman sebelum tarik semula data bersih
+          setTimeout(() => {
+            fetchLiveComplaints();
+          }, 1500);
+
         } catch(err) {
           console.error("Gagal padam dari Google Sheets:", err);
           alert("Gagal memadam dari Google Sheets, sila semak sambungan internet.");
