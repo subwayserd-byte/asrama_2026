@@ -468,7 +468,7 @@
   </div>
 
   <script>
-    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwcxLn02JyPJzkILHzcD5y7PMIybfWq9WrkGe_aMCMCLG_10P16l1rcKdOwM_yN0cSN/exec"; 
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxpbI9-9eBv-qqZEtZv0DIoVftKQKn9t7A7jcg1-9ChhRPRY9CElAMGREqntLn0kZfo/exec"; 
 
     let globalComplaintsList = [];
     let currentFilter = 'ALL';
@@ -533,7 +533,6 @@
         const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
         const data = await response.json();
         if (Array.isArray(data)) {
-          // Bersihkan data duplikat secara logik paparan supaya admin nampak kemas
           const uniqueMap = new Map();
           data.forEach(item => {
             if (item && item.id) {
@@ -765,15 +764,12 @@
       }
     }
 
-    // FUNGSI DELETE KEMAS KINI (PADAM SEMUA DUPLIKAT DAN SEGERA REFRESH DATA)
     async function deleteAduan(ticketId) {
       if (confirm(`Adakah anda pasti nak PADAM aduan ${ticketId} terus dari Google Sheets?`)) {
-        // Padam serta-merta dari senarai tempatan
         globalComplaintsList = globalComplaintsList.filter(item => item.id.toLowerCase() !== ticketId.toLowerCase());
         localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
         renderAdminTable();
 
-        // Hantar arahan padam ke Google Sheets
         try {
           await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
             method: "POST",
@@ -787,7 +783,6 @@
           
           alert(`Aduan ${ticketId} telah dipadam sepenuhnya!`);
           
-          // Tunggu 1.5 saat untuk pelayan Google memproses pemadaman sebelum tarik semula data bersih
           setTimeout(() => {
             fetchLiveComplaints();
           }, 1500);
