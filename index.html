@@ -350,7 +350,7 @@
       color: var(--color-text-muted);
     }
 
-    /* FORM SECTION - ATAS BAWAH (1 COLUMN) FOR DESKTOP & MOBILE */
+    /* FORM SECTION */
     .form-wrapper {
       background-color: var(--color-surface);
       border: 2px solid var(--color-border-dark);
@@ -794,7 +794,7 @@
     </div>
   </section>
 
-  <!-- FORM BORANG ADUAN (ATAS BAWAH 1 COLUMN) -->
+  <!-- FORM BORANG ADUAN -->
   <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
     <div class="container">
       <div class="section-header">
@@ -852,7 +852,7 @@
 
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 0.85rem;">HANTAR ADUAN SEKARANG</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 0.85rem;">HANTAR ADUAN SEKARANG</button>
         </form>
       </div>
     </div>
@@ -940,7 +940,10 @@
           <h3 style="font-family: var(--font-heading); font-size: 1.1rem;">Dashboard Pengurusan Aduan</h3>
           <span style="font-size: 0.7rem; color: var(--color-text-muted);">Akses Admin TVETMARA Lenggong</span>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="handleLogout()">Log Keluar</button>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-outline btn-sm" onclick="fetchLiveComplaints()">🔄 Refresh</button>
+          <button class="btn btn-outline btn-sm" onclick="handleLogout()">Log Keluar</button>
+        </div>
       </div>
 
       <!-- STATS COUNTER -->
@@ -1007,43 +1010,15 @@
 
   <!-- JAVASCRIPT -->
   <script>
-    // WEBHOOK URL GOOGLE SHEETS RASMI LENGGONG
-    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz5huDtSf_K5mJum-xFniRdlzvoIoCRTERHn8qDzgDZAxFg26qqEq1gdlfI9aK_wuP5/exec"; 
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwcxLn02JyPJzkILHzcD5y7PMIybfWq9WrkGe_aMCMCLG_10P16l1rcKdOwM_yN0cSN/exec"; 
 
-    async function sendToGoogleSheets(aduanData) {
-      if (!GOOGLE_SHEETS_WEBHOOK_URL) return;
-      try {
-        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(aduanData)
-        });
-      } catch (err) {
-        console.error("Ralat Google Sheets:", err);
-      }
-    }
-
-    let initialComplaints = [
-      {
-        id: "#TVET-9921",
-        nama: "Ahmad Zaki",
-        matrik: "TVET-2024-0012",
-        blok: "Blok A (A-2-04)",
-        telefon: "0123456789",
-        kategori: "Fasiliti",
-        keterangan: "Pintu almari pakaian tercabut engsel.",
-        gambarBase64: "",
-        status: "Pending",
-        tarikh: "2026-03-28"
-      }
-    ];
-
+    let globalComplaintsList = [];
     let currentFilter = 'ALL';
     let currentUploadedImageBase64 = "";
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
+      fetchLiveComplaints();
     });
 
     function checkAdminSession() {
@@ -1069,18 +1044,25 @@
       }
     }
 
-    function getComplaints() {
-      const stored = localStorage.getItem('tvet_aduan_list');
-      if (stored) {
-        return JSON.parse(stored);
-      } else {
-        localStorage.setItem('tvet_aduan_list', JSON.stringify(initialComplaints));
-        return initialComplaints;
+    // TARIK DATA REAL-TIME DARI GOOGLE SHEETS
+    async function fetchLiveComplaints() {
+      const tbody = document.getElementById('adminTableBody');
+      if (tbody) tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 1rem;">⏳ Memuat naik data terkini...</td></tr>`;
+      
+      try {
+        const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          globalComplaintsList = data;
+          localStorage.setItem('tvet_aduan_list', JSON.stringify(data));
+          renderAdminTable();
+        }
+      } catch (err) {
+        console.error("Gagal menarik data dari Google Sheets:", err);
+        const stored = localStorage.getItem('tvet_aduan_list');
+        if (stored) globalComplaintsList = JSON.parse(stored);
+        renderAdminTable();
       }
-    }
-
-    function saveComplaints(data) {
-      localStorage.setItem('tvet_aduan_list', JSON.stringify(data));
     }
 
     function selectCategory(element, catName) {
@@ -1089,7 +1071,7 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // AUTO-COMPRESS GAMBAR KAMERA PHONE
+    // PEMAMPAT GAMBAR PHONE MAMPAT (SUPER COMPRESS <= 500px, 0.5 Quality)
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -1102,7 +1084,7 @@
         return;
       }
 
-      uploadText.innerText = "⏳ Sedang memproses gambar...";
+      uploadText.innerText = "⏳ Memampatkan gambar...";
 
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -1111,7 +1093,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 800; 
+          const maxDim = 500; 
 
           if (width > height && width > maxDim) {
             height *= maxDim / width;
@@ -1126,19 +1108,23 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.5);
           preview.src = currentUploadedImageBase64;
           preview.style.display = 'block';
-          uploadText.innerText = "✅ Gambar berjaya dipilih!";
+          uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
       e.preventDefault();
       
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "SEDANG MENGHANTAR...";
+
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const ticketId = `#TVET-${randomNum}`;
 
@@ -1162,10 +1148,22 @@
         tarikh: new Date().toISOString().split('T')[0]
       };
 
-      const list = getComplaints();
-      list.unshift(newAduan);
-      saveComplaints(list);
-      sendToGoogleSheets(newAduan);
+      globalComplaintsList.unshift(newAduan);
+      localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
+
+      try {
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newAduan)
+        });
+      } catch(err) {
+        console.error("Gagal hantar ke Sheets:", err);
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = "HANTAR ADUAN SEKARANG";
 
       document.getElementById('popupTicketCode').innerText = ticketId;
       document.getElementById('popupNama').innerText = namaVal;
@@ -1192,14 +1190,13 @@
     function checkStatus() {
       const query = document.getElementById('trackerInput').value.trim();
       const resContainer = document.getElementById('trackerResult');
-      const list = getComplaints();
 
       if(!query) {
         alert("Sila masukkan ID Tiket.");
         return;
       }
 
-      const found = list.find(item => item.id.toLowerCase() === query.toLowerCase());
+      const found = globalComplaintsList.find(item => item.id.toLowerCase() === query.toLowerCase());
 
       resContainer.style.display = 'block';
       if (found) {
@@ -1216,7 +1213,7 @@
           </div>
         `;
       } else {
-        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.8rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui.</p>`;
+        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.8rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui dalam pangkalan data.</p>`;
       }
     }
 
@@ -1257,7 +1254,7 @@
     }
 
     function openDashboard() {
-      renderAdminTable();
+      fetchLiveComplaints();
       document.getElementById('dashboardModal').classList.add('active');
     }
 
@@ -1278,24 +1275,21 @@
     }
 
     function updateStatus(index, newStatus) {
-      const list = getComplaints();
-      list[index].status = newStatus;
-      saveComplaints(list);
+      globalComplaintsList[index].status = newStatus;
+      localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
       renderAdminTable();
     }
 
     function deleteAduan(ticketId) {
       if (confirm(`Padam aduan ${ticketId}?`)) {
-        let list = getComplaints();
-        list = list.filter(item => item.id !== ticketId);
-        saveComplaints(list);
+        globalComplaintsList = globalComplaintsList.filter(item => item.id !== ticketId);
+        localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
         renderAdminTable();
       }
     }
 
     function exportToCSV() {
-      const list = getComplaints();
-      if (!list || list.length === 0) {
+      if (!globalComplaintsList || globalComplaintsList.length === 0) {
         alert("Tiada data aduan.");
         return;
       }
@@ -1303,7 +1297,7 @@
       let csvLines = [];
       csvLines.push(["ID Tiket", "Nama Pelajar", "No Matrik", "Lokasi Blok", "No Telefon", "Kategori", "Keterangan", "Status", "Tarikh"]);
 
-      list.forEach(item => {
+      globalComplaintsList.forEach(item => {
         const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
         const cleanNama = (item.nama || '').replace(/"/g, '""');
         const cleanBlok = (item.blok || '').replace(/"/g, '""');
@@ -1336,22 +1330,22 @@
     }
 
     function renderAdminTable() {
-      const list = getComplaints();
       const tbody = document.getElementById('adminTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      const pendingCount = list.filter(i => i.status === 'Pending').length;
-      const processCount = list.filter(i => i.status === 'Dalam Tindakan').length;
-      const doneCount = list.filter(i => i.status === 'Selesai').length;
+      const pendingCount = globalComplaintsList.filter(i => i.status === 'Pending').length;
+      const processCount = globalComplaintsList.filter(i => i.status === 'Dalam Tindakan').length;
+      const doneCount = globalComplaintsList.filter(i => i.status === 'Selesai').length;
 
-      document.getElementById('statTotal').innerText = list.length;
+      document.getElementById('statTotal').innerText = globalComplaintsList.length;
       document.getElementById('statPending').innerText = pendingCount;
       document.getElementById('statProcess').innerText = processCount;
       document.getElementById('statDone').innerText = doneCount;
 
-      let filteredList = list;
+      let filteredList = globalComplaintsList;
       if (currentFilter === 'Pending' || currentFilter === 'Dalam Tindakan' || currentFilter === 'Selesai') {
-        filteredList = list.filter(item => item.status === currentFilter);
+        filteredList = globalComplaintsList.filter(item => item.status === currentFilter);
       }
 
       if (filteredList.length === 0) {
@@ -1360,7 +1354,7 @@
       }
 
       filteredList.forEach((item) => {
-        const mainIndex = list.findIndex(i => i.id === item.id);
+        const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
         const imgCell = item.gambarBase64 
           ? `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')">`
