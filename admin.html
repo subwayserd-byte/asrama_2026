@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Aduan Kerosakan Asrama | TVETMARA Lenggong</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Space Grotesk & Inter (Modern Swiss Typography) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        swiss: {
+                            red: '#E50914',
+                            redhover: '#C10710',
+                            black: '#111111',
+                            offwhite: '#F5F5F7',
+                            gray: '#E5E5E7',
+                            darkgray: '#6E6E73',
+                            border: '#111111'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .swiss-border { border: 2px solid #111111; }
+        .swiss-border-b { border-bottom: 2px solid #111111; }
+        .swiss-border-r { border-right: 2px solid #111111; }
+        .swiss-shadow { box-shadow: 5px 5px 0px #111111; }
+        .swiss-shadow-lg { box-shadow: 8px 8px 0px #111111; }
+        .swiss-shadow-sm { box-shadow: 3px 3px 0px #111111; }
+        .swiss-btn-active:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #111111; }
+        .grid-bg {
+            background-size: 24px 24px;
+            background-image: linear-gradient(to right, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-swiss
