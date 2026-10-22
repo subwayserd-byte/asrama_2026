@@ -650,7 +650,6 @@
       alert(`ID Tiket ${code} telah disalin!`);
     }
 
-    // FUNGSI CHECK STATUS DIKEMAS KINI (AMBIL DATA PALING LATEST JIKA ADA DUPLIKAT)
     function checkStatus() {
       const query = document.getElementById('trackerInput').value.trim();
       const resContainer = document.getElementById('trackerResult');
@@ -664,7 +663,7 @@
 
       resContainer.style.display = 'block';
       if (matches.length > 0) {
-        const found = matches[matches.length - 1]; // Ambil rekod status paling baru
+        const found = matches[matches.length - 1];
 
         let statusClass = 'status-pending';
         if (found.status === 'Dalam Tindakan') statusClass = 'status-process';
@@ -759,11 +758,31 @@
       }
     }
 
-    function deleteAduan(ticketId) {
-      if (confirm(`Padam aduan ${ticketId}?`)) {
+    // FUNGSI DELETE DIGABUNGKAN DENGAN GOOGLE SHEETS
+    async function deleteAduan(ticketId) {
+      if (confirm(`Adakah anda pasti nak PADAM aduan ${ticketId} terus dari Google Sheets?`)) {
+        
+        // Padam dari paparan tempatan
         globalComplaintsList = globalComplaintsList.filter(item => item.id !== ticketId);
         localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
         renderAdminTable();
+
+        // Hantar arahan padam terus ke Google Sheet
+        try {
+          await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "delete",
+              id: ticketId
+            })
+          });
+          alert(`Aduan ${ticketId} telah dipadam sepenuhnya dari Google Sheets!`);
+        } catch(err) {
+          console.error("Gagal padam dari Google Sheets:", err);
+          alert("Gagal memadam dari Google Sheets, sila semak sambungan internet.");
+        }
       }
     }
 
