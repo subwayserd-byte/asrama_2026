@@ -340,7 +340,6 @@
               <label>Muat Naik Gambar Bukti Kerosakan</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
-                <!-- ADD-ON KHAS IOS: Terima format imej standard & HEIC/HEIF -->
                 <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
                 <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
               </div>
@@ -451,7 +450,7 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Bilik</th>
+              <th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Blok</th>
               <th>No. Tel</th><th>Kategori</th><th>Bukti Gambar</th><th>Keterangan</th>
               <th>Status</th><th>Tindakan Status</th><th>Padam</th>
             </tr>
@@ -552,7 +551,6 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // ADD-ON KHAS IOS SAFARI: Kaedah Pembacaan Fail Selamat
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -575,7 +573,7 @@
         uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
       };
       reader.onerror = function() {
-        alert("Gagal membaca imej pada iOS Safari.");
+        alert("Gagal membaca imej pada peranti.");
         uploadText.innerText = "⚠️ Gagal muat naik gambar.";
       };
       reader.readAsDataURL(file);
@@ -652,19 +650,22 @@
       alert(`ID Tiket ${code} telah disalin!`);
     }
 
+    // FUNGSI CHECK STATUS DIKEMAS KINI (AMBIL DATA PALING LATEST JIKA ADA DUPLIKAT)
     function checkStatus() {
       const query = document.getElementById('trackerInput').value.trim();
       const resContainer = document.getElementById('trackerResult');
 
-      if(!query) {
+      if (!query) {
         alert("Sila masukkan ID Tiket.");
         return;
       }
 
-      const found = globalComplaintsList.find(item => item.id.toLowerCase() === query.toLowerCase());
+      const matches = globalComplaintsList.filter(item => item.id.toLowerCase() === query.toLowerCase());
 
       resContainer.style.display = 'block';
-      if (found) {
+      if (matches.length > 0) {
+        const found = matches[matches.length - 1]; // Ambil rekod status paling baru
+
         let statusClass = 'status-pending';
         if (found.status === 'Dalam Tindakan') statusClass = 'status-process';
         if (found.status === 'Selesai') statusClass = 'status-done';
