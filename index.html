@@ -19,7 +19,6 @@
       --color-text-muted: #4b5563;
       --color-border: #e5e7eb;
       --color-border-dark: #111827;
-      --color-badge-bg: #e5e7eb;
       --status-pending: #d97706;
       --status-pending-bg: #fef3c7;
       --status-process: #2563eb;
@@ -67,19 +66,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 70px;
+      height: 75px;
     }
 
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       text-decoration: none;
       color: var(--color-text-main);
     }
 
     .logo-svg {
-      height: 32px;
+      height: 36px;
       width: auto;
     }
 
@@ -118,7 +117,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 0.65rem 1rem;
+      padding: 0.65rem 1.25rem;
       font-family: var(--font-body);
       font-size: 0.85rem;
       font-weight: 600;
@@ -129,6 +128,12 @@
       transition: all 0.15s ease;
       background-color: var(--color-surface);
       color: var(--color-text-main);
+      box-shadow: 2px 2px 0px var(--color-border-dark);
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
     }
 
     .btn-primary {
@@ -139,13 +144,11 @@
 
     .btn-primary:hover {
       background-color: var(--color-brand-hover);
-      border-color: var(--color-brand-hover);
     }
 
     .btn-outline {
       background-color: transparent;
       color: var(--color-text-main);
-      border-color: var(--color-border-dark);
     }
 
     .btn-danger {
@@ -154,30 +157,31 @@
       border-color: #991b1b;
       padding: 0.3rem 0.6rem;
       font-size: 0.75rem;
+      box-shadow: none;
     }
 
     .btn-sm {
-      padding: 0.4rem 0.65rem;
+      padding: 0.45rem 0.85rem;
       font-size: 0.75rem;
     }
 
     /* HERO SECTION */
     .hero {
-      padding: 2.5rem 0 3rem;
+      padding: 3.5rem 0 4rem;
       background-color: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 2px solid var(--color-border-dark);
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 2rem;
+      gap: 3rem;
       align-items: center;
     }
 
     .hero-tag {
       display: inline-block;
-      padding: 0.2rem 0.6rem;
+      padding: 0.25rem 0.75rem;
       background-color: var(--color-brand-light);
       color: var(--color-brand);
       border: 1px solid #fca5a5;
@@ -185,12 +189,12 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
 
     .hero-title {
       font-family: var(--font-heading);
-      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-size: clamp(2rem, 4vw, 3.25rem);
       font-weight: 800;
       line-height: 1.15;
       letter-spacing: -0.03em;
@@ -198,23 +202,23 @@
     }
 
     .hero-desc {
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: var(--color-text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .hero-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
+      gap: 1rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--color-border);
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
 
     .stat-number {
       font-family: var(--font-heading);
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--color-text-main);
     }
@@ -233,7 +237,7 @@
       border: 2px solid var(--color-border-dark);
       position: relative;
       overflow: hidden;
-      box-shadow: 4px 4px 0px var(--color-border-dark);
+      box-shadow: 6px 6px 0px var(--color-border-dark);
     }
 
     .hero-image-box img {
@@ -244,11 +248,11 @@
 
     /* SECTION STYLES */
     .section-padding {
-      padding: 3rem 0;
+      padding: 4rem 0;
     }
 
     .section-header {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .section-subtitle {
@@ -261,7 +265,7 @@
 
     .section-title {
       font-family: var(--font-heading);
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-top: 0.25rem;
@@ -271,19 +275,20 @@
     .emergency-banner {
       background-color: #fef2f2;
       border: 2px solid #ef4444;
-      padding: 1.25rem 1.5rem;
+      padding: 1.5rem 2rem;
+      margin-top: -1.5rem;
       margin-bottom: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+      gap: 1.5rem;
+      box-shadow: 4px 4px 0px #ef4444;
     }
 
     .emergency-info h3 {
       font-family: var(--font-heading);
       color: #991b1b;
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-bottom: 0.25rem;
     }
 
@@ -291,16 +296,14 @@
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
-      width: 100%;
     }
 
     .contact-card {
       background: white;
-      padding: 0.6rem 0.8rem;
+      padding: 0.75rem 1rem;
       border: 1px solid #fca5a5;
-      font-size: 0.8rem;
-      flex: 1;
-      min-width: 140px;
+      font-size: 0.85rem;
+      min-width: 150px;
     }
 
     .contact-card strong {
@@ -320,33 +323,34 @@
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
 
     .feature-card {
       background-color: var(--color-surface);
       border: 2px solid var(--color-border-dark);
-      padding: 1.25rem;
+      padding: 1.75rem;
+      box-shadow: 4px 4px 0px var(--color-border-dark);
     }
 
     .feature-num {
       font-family: var(--font-heading);
-      font-size: 2rem;
+      font-size: 2.25rem;
       font-weight: 800;
-      color: var(--color-border);
+      color: #d1d5db;
       line-height: 1;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .feature-title {
       font-family: var(--font-heading);
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .feature-desc {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--color-text-muted);
     }
 
@@ -354,25 +358,25 @@
     .form-wrapper {
       background-color: var(--color-surface);
       border: 2px solid var(--color-border-dark);
-      box-shadow: 6px 6px 0px var(--color-border-dark);
-      padding: 1.5rem;
+      box-shadow: 8px 8px 0px var(--color-border-dark);
+      padding: 2.5rem;
     }
 
     .form-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.5rem;
       width: 100%;
     }
 
     label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--color-text-main);
     }
@@ -383,9 +387,9 @@
     select,
     textarea {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.85rem;
       font-family: var(--font-body);
-      font-size: 0.875rem;
+      font-size: 0.95rem;
       border: 2px solid var(--color-border-dark);
       background-color: #fff;
       border-radius: 0;
@@ -394,13 +398,13 @@
 
     /* CATEGORY SELECTOR */
     .category-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
     }
 
     .cat-btn {
-      padding: 0.75rem;
+      padding: 0.85rem;
       border: 2px solid var(--color-border-dark);
       text-align: center;
       cursor: pointer;
@@ -413,12 +417,13 @@
       border-color: var(--color-brand);
       background-color: var(--color-brand-light);
       color: var(--color-brand);
+      box-shadow: 2px 2px 0px var(--color-brand);
     }
 
     /* FILE UPLOAD DROPZONE */
     .file-dropzone {
       border: 2px dashed var(--color-border-dark);
-      padding: 1.25rem;
+      padding: 1.5rem;
       text-align: center;
       background: var(--color-bg);
       cursor: pointer;
@@ -433,38 +438,39 @@
     }
 
     .preview-image {
-      max-height: 140px;
-      margin: 0.75rem auto 0 auto;
+      max-height: 160px;
+      margin: 1rem auto 0 auto;
       display: none;
-      border: 1px solid var(--color-border-dark);
+      border: 2px solid var(--color-border-dark);
     }
 
     /* TRACKER SECTION */
     .tracker-card {
       background-color: var(--color-surface);
       border: 2px solid var(--color-border-dark);
-      padding: 1.5rem;
-      margin-top: 1.5rem;
+      padding: 2rem;
+      box-shadow: 6px 6px 0px var(--color-border-dark);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .tracker-input-group {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
       margin-top: 1rem;
     }
 
     .status-badge {
       display: inline-block;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
     }
 
-    .status-pending { background: var(--status-pending-bg); color: var(--status-pending); }
-    .status-process { background: var(--status-process-bg); color: var(--status-process); }
-    .status-done { background: var(--status-done-bg); color: var(--status-done); }
+    .status-pending { background: var(--status-pending-bg); color: var(--status-pending); border: 1px solid var(--status-pending); }
+    .status-process { background: var(--status-process-bg); color: var(--status-process); border: 1px solid var(--status-process); }
+    .status-done { background: var(--status-done-bg); color: var(--status-done); border: 1px solid var(--status-done); }
 
     /* MODALS */
     .modal-overlay {
@@ -475,7 +481,7 @@
       justify-content: center;
       align-items: center;
       z-index: 100;
-      padding: 0.75rem;
+      padding: 1rem;
     }
 
     .modal-overlay.active {
@@ -485,28 +491,28 @@
     .modal-content {
       background: white;
       border: 2px solid var(--color-border-dark);
-      box-shadow: 6px 6px 0px var(--color-border-dark);
+      box-shadow: 8px 8px 0px var(--color-border-dark);
       width: 100%;
       max-width: 450px;
-      padding: 1.5rem;
+      padding: 2rem;
       position: relative;
     }
 
     .modal-dashboard {
-      max-width: 98vw;
-      width: 98vw;
-      height: 92vh;
-      max-height: 92vh;
+      max-width: 95vw;
+      width: 95vw;
+      height: 90vh;
+      max-height: 90vh;
       overflow-y: auto;
-      padding: 1rem;
+      padding: 1.5rem;
     }
 
     .modal-close {
       position: absolute;
-      top: 0.75rem; right: 0.75rem;
+      top: 1rem; right: 1rem;
       background: none;
       border: none;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: bold;
       cursor: pointer;
     }
@@ -517,8 +523,8 @@
       border: 3px solid var(--color-border-dark);
       box-shadow: 8px 8px 0px var(--color-border-dark);
       width: 100%;
-      max-width: 450px;
-      padding: 1.5rem;
+      max-width: 480px;
+      padding: 2rem;
       text-align: center;
     }
 
@@ -527,59 +533,60 @@
       border: 2px dashed var(--color-brand);
       color: var(--color-brand);
       font-family: var(--font-heading);
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 800;
-      padding: 0.75rem;
-      margin: 1rem 0;
+      padding: 1rem;
+      margin: 1.25rem 0;
     }
 
     /* ADMIN DASHBOARD */
     .admin-stats-bar {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .admin-stat-card {
       background: var(--color-bg);
-      border: 1px solid var(--color-border-dark);
-      padding: 0.5rem 0.75rem;
+      border: 2px solid var(--color-border-dark);
+      padding: 1rem;
     }
 
     .admin-stat-card .val {
       font-family: var(--font-heading);
       font-weight: 800;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
     }
 
     .admin-stat-card .lbl {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
       text-transform: uppercase;
+      font-weight: 700;
     }
 
     .admin-action-bar {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .admin-filter-tabs {
       display: flex;
-      gap: 0.4rem;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
+      gap: 0.5rem;
     }
 
     .tab-btn {
-      padding: 0.35rem 0.65rem;
-      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      border: 1px solid var(--color-border-dark);
+      border: 2px solid var(--color-border-dark);
       background: white;
-      white-space: nowrap;
+      cursor: pointer;
     }
 
     .tab-btn.active {
@@ -589,37 +596,43 @@
 
     .admin-table-container {
       overflow-x: auto;
-      border: 1px solid var(--color-border-dark);
+      border: 2px solid var(--color-border-dark);
     }
 
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
-      min-width: 700px;
+      font-size: 0.85rem;
+      min-width: 800px;
     }
 
     .admin-table th, .admin-table td {
       border: 1px solid var(--color-border-dark);
-      padding: 0.5rem;
+      padding: 0.75rem;
       text-align: left;
     }
 
+    .admin-table th {
+      background-color: var(--color-bg);
+      font-family: var(--font-heading);
+    }
+
     .img-thumbnail {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       object-fit: cover;
       border: 1px solid var(--color-border-dark);
+      cursor: pointer;
     }
 
     .no-img {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
     }
 
     .error-msg {
       color: #b91c1c;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 600;
       margin-top: 0.5rem;
       display: none;
@@ -629,18 +642,18 @@
     .site-footer {
       background: var(--color-surface);
       border-top: 2px solid var(--color-border-dark);
-      padding: 2rem 0;
-      font-size: 0.8rem;
+      padding: 2.5rem 0;
+      font-size: 0.85rem;
       color: var(--color-text-muted);
     }
 
-    /* LAYOUT MOBIL KHAS */
+    /* RESPONSIF KHAS MOBILE (< 768px) */
     @media (max-width: 768px) {
       .header-inner {
-        flex-direction: column;
         height: auto;
-        padding: 0.75rem 0;
-        gap: 0.5rem;
+        padding: 0.85rem 0;
+        flex-direction: column;
+        gap: 0.75rem;
       }
 
       .logo-container {
@@ -649,23 +662,58 @@
 
       .nav-actions {
         width: 100%;
-      }
-
-      .nav-actions .btn {
-        flex: 1;
-        text-align: center;
+        justify-content: center;
+        flex-wrap: wrap;
       }
 
       .hero-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
       }
 
       .grid-3 {
         grid-template-columns: 1fr;
       }
 
-      .emergency-contacts {
+      .emergency-banner {
         flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .emergency-contacts {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .contact-card {
+        width: 100%;
+      }
+
+      .category-options {
+        grid-template-columns: 1fr;
+      }
+
+      .form-wrapper {
+        padding: 1.25rem;
+        box-shadow: 4px 4px 0px var(--color-border-dark);
+      }
+
+      .tracker-input-group {
+        flex-direction: column;
+      }
+
+      .admin-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .admin-action-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .admin-filter-tabs {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
       }
     }
   </style>
@@ -697,6 +745,7 @@
           </div>
         </a>
         <div class="nav-actions">
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()">🔔 Aktif Notifikasi</button>
           <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Log Masuk Admin</button>
           <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
         </div>
@@ -712,7 +761,7 @@
           <span class="hero-tag">Portal Aduan Asrama</span>
           <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
           <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda. Pengurusan TVETMARA Lenggong sedia bertindak cepat.</p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#hantar-aduan" class="btn btn-primary" style="flex:1;">Hantar Aduan</a>
             <a href="#semak-status" class="btn btn-outline" style="flex:1;">Semak Status</a>
           </div>
@@ -741,33 +790,31 @@
   </section>
 
   <!-- EMERGENCY CONTACTS -->
-  <section style="background-color: var(--color-surface); padding-top: 1.5rem;">
-    <div class="container">
-      <div class="emergency-banner">
-        <div class="emergency-info">
-          <h3>⚠️ KECEMASAN / ADUAN DESAKAN?</h3>
-          <p style="font-size: 0.8rem; color: #7f1d1d;">Hubungi talian kecemasan di bawah untuk bantuan serta-merta.</p>
+  <section class="container">
+    <div class="emergency-banner">
+      <div class="emergency-info">
+        <h3>⚠️ KECEMASAN / ADUAN DESAKAN?</h3>
+        <p style="font-size: 0.85rem; color: #7f1d1d;">Hubungi talian kecemasan di bawah untuk bantuan serta-merta.</p>
+      </div>
+      <div class="emergency-contacts">
+        <div class="contact-card">
+          <strong>AJK KEBAJIKAN</strong>
+          <a href="tel:+601129661251">+6011-2966-1251</a>
         </div>
-        <div class="emergency-contacts">
-          <div class="contact-card">
-            <strong>AJK KEBAJIKAN</strong>
-            <a href="tel:+601129661251">+6011-2966-1251</a>
-          </div>
-          <div class="contact-card">
-            <strong>AJK DISIPLIN</strong>
-            <a href="tel:+601111259682">+6011-1125-9682</a>
-          </div>
-          <div class="contact-card">
-            <strong>WARDEN BERTUGAS</strong>
-            <a href="tel:+60172479411">+6017-247-9411</a>
-          </div>
+        <div class="contact-card">
+          <strong>AJK DISIPLIN</strong>
+          <a href="tel:+601111259682">+6011-1125-9682</a>
+        </div>
+        <div class="contact-card">
+          <strong>WARDEN BERTUGAS</strong>
+          <a href="tel:+60172479411">+6017-247-9411</a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- FEATURES -->
-  <section class="section-padding">
+  <section class="section-padding" style="padding-top: 1rem;">
     <div class="container">
       <div class="section-header">
         <span class="section-subtitle">Portal Rasmi</span>
@@ -795,14 +842,14 @@
   </section>
 
   <!-- FORM BORANG ADUAN -->
-  <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+  <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 2px solid var(--color-border-dark); border-bottom: 2px solid var(--color-border-dark);">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header" style="text-align: center;">
         <span class="section-subtitle">Borang Aduan</span>
         <h2 class="section-title">Borang Laporan Kerosakan</h2>
       </div>
 
-      <div class="form-wrapper" style="max-width: 600px; margin: 0 auto;">
+      <div class="form-wrapper" style="max-width: 700px; margin: 0 auto;">
         <form id="aduanForm" onsubmit="handleFormSubmit(event)">
           <div class="form-grid">
             
@@ -830,9 +877,9 @@
               <label>Kategori Kerosakan *</label>
               <input type="hidden" id="kategori" value="Fasiliti" required>
               <div class="category-options">
-                <div class="cat-btn active" onclick="selectCategory(this, 'Fasiliti')">🛠️ Fasiliti / Perabot</div>
+                <div class="cat-btn active" onclick="selectCategory(this, 'Fasiliti')">🛠️ Fasiliti</div>
                 <div class="cat-btn" onclick="selectCategory(this, 'Kebersihan')">🧹 Kebersihan</div>
-                <div class="cat-btn" onclick="selectCategory(this, 'Utiliti')">💡 Utiliti / Elektrik / Air</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Utiliti')">💡 Utiliti</div>
               </div>
             </div>
 
@@ -844,7 +891,7 @@
             <div class="form-group">
               <label>Muat Naik Gambar Bukti Kerosakan</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
-                <span style="font-size: 0.8rem; color: var(--color-text-muted);" id="uploadText">📷 Klik untuk tangkap/pilih gambar (Pilihan)</span>
+                <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik untuk tangkap/pilih gambar (Pilihan)</span>
                 <input type="file" id="gambarInput" accept="image/*" onchange="previewAndCompressFile(this)">
                 <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
               </div>
@@ -852,7 +899,7 @@
 
           </div>
 
-          <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 0.85rem;">HANTAR ADUAN SEKARANG</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 2rem; padding: 1rem; font-size: 1rem;">HANTAR ADUAN SEKARANG</button>
         </form>
       </div>
     </div>
@@ -861,19 +908,19 @@
   <!-- TRACKER SECTION -->
   <section class="section-padding" id="semak-status">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header" style="text-align: center;">
         <span class="section-subtitle">Semakan Status</span>
         <h2 class="section-title">Semak Status Tiket</h2>
       </div>
 
       <div class="tracker-card">
-        <p style="font-size: 0.8rem; color: var(--color-text-muted);">Masukkan ID Tiket Aduan anda (Contoh: #TVET-9921)</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center;">Masukkan ID Tiket Aduan anda (Contoh: #TVET-9921)</p>
         <div class="tracker-input-group">
           <input type="text" id="trackerInput" placeholder="Contoh: #TVET-9921">
-          <button class="btn btn-primary" onclick="checkStatus()">Semak Status</button>
+          <button class="btn btn-primary" onclick="checkStatus()">Semak</button>
         </div>
 
-        <div id="trackerResult" style="margin-top: 1rem; display: none; padding-top: 1rem; border-top: 1px dashed var(--color-border-dark);"></div>
+        <div id="trackerResult" style="margin-top: 1.25rem; display: none; padding-top: 1.25rem; border-top: 1px dashed var(--color-border-dark);"></div>
       </div>
     </div>
   </section>
@@ -889,19 +936,19 @@
   <!-- POPUP TIKET -->
   <div class="modal-overlay" id="ticketSuccessModal">
     <div class="ticket-popup-box">
-      <div style="font-size: 2.5rem; margin-bottom: 0.25rem;">🎉</div>
-      <h3 style="font-family: var(--font-heading); font-size: 1.25rem;">Aduan Berjaya Dihantar!</h3>
-      <p style="font-size: 0.8rem; color: var(--color-text-muted);">Sila simpan ID Tiket di bawah untuk semakan status.</p>
+      <div style="font-size: 3rem; margin-bottom: 0.25rem;">🎉</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.35rem;">Aduan Berjaya Dihantar!</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted);">Sila simpan ID Tiket di bawah untuk semakan status.</p>
 
       <div class="ticket-code-display" id="popupTicketCode">#TVET-0000</div>
 
-      <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.6rem; border: 1px solid var(--color-border); margin-bottom: 1rem;">
+      <div style="font-size: 0.8rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.75rem; border: 1px solid var(--color-border-dark); margin-bottom: 1.25rem;">
         <strong>Pengadu:</strong> <span id="popupNama"></span><br>
         <strong>Kategori:</strong> <span id="popupKategori"></span><br>
         <strong>Lokasi:</strong> <span id="popupBlok"></span>
       </div>
 
-      <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+      <div style="display: flex; gap: 0.75rem; flex-direction: column;">
         <button class="btn btn-outline" onclick="copyTicketCode()">📋 Salin ID Tiket</button>
         <button class="btn btn-primary" onclick="closeTicketPopup()">Tutup Window</button>
       </div>
@@ -912,20 +959,20 @@
   <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
       <button class="modal-close" onclick="closeAdminModal()">✕</button>
-      <h3 style="font-family: var(--font-heading); margin-bottom: 0.25rem;">Log Masuk Admin</h3>
-      <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 1rem;">Akses khas Staf / Warden TVETMARA Lenggong.</p>
+      <h3 style="font-family: var(--font-heading); margin-bottom: 0.25rem; font-size: 1.25rem;">Log Masuk Admin</h3>
+      <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Akses khas Staf / Warden TVETMARA Lenggong.</p>
       
       <form onsubmit="handleLogin(event)">
-        <div class="form-group" style="margin-bottom: 0.75rem;">
+        <div class="form-group" style="margin-bottom: 1rem;">
           <label for="adminUsername">Username Admin</label>
           <input type="text" id="adminUsername" placeholder="Username Admin" required>
         </div>
-        <div class="form-group" style="margin-bottom: 0.75rem;">
+        <div class="form-group" style="margin-bottom: 1rem;">
           <label for="adminPassword">Kata Laluan</label>
           <input type="password" id="adminPassword" placeholder="Kata Laluan" required>
         </div>
         <div id="loginError" class="error-msg">❌ Username/Password Salah!</div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.75rem;">MASUK DASHBOARD</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">MASUK DASHBOARD</button>
       </form>
     </div>
   </div>
@@ -935,10 +982,10 @@
     <div class="modal-content modal-dashboard">
       <button class="modal-close" onclick="closeDashboard()">✕</button>
       
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--color-border-dark); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--color-border-dark); padding-bottom: 0.75rem; margin-bottom: 1rem;">
         <div>
-          <h3 style="font-family: var(--font-heading); font-size: 1.1rem;">Dashboard Pengurusan Aduan</h3>
-          <span style="font-size: 0.7rem; color: var(--color-text-muted);">Akses Admin TVETMARA Lenggong</span>
+          <h3 style="font-family: var(--font-heading); font-size: 1.25rem;">Dashboard Pengurusan Aduan</h3>
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Akses Admin TVETMARA Lenggong</span>
         </div>
         <div style="display:flex; gap:0.5rem;">
           <button class="btn btn-outline btn-sm" onclick="fetchLiveComplaints()">🔄 Refresh</button>
@@ -950,7 +997,7 @@
       <div class="admin-stats-bar">
         <div class="admin-stat-card">
           <div class="val" id="statTotal">0</div>
-          <div class="lbl">Jumlah Aduan</div>
+          <div class="lbl">Jumlah</div>
         </div>
         <div class="admin-stat-card">
           <div class="val" id="statPending" style="color: var(--status-pending);">0</div>
@@ -958,7 +1005,7 @@
         </div>
         <div class="admin-stat-card">
           <div class="val" id="statProcess" style="color: var(--status-process);">0</div>
-          <div class="lbl">Dalam Tindakan</div>
+          <div class="lbl">Proses</div>
         </div>
         <div class="admin-stat-card">
           <div class="val" id="statDone" style="color: var(--status-done);">0</div>
@@ -975,7 +1022,7 @@
           <button class="tab-btn" onclick="filterAdminTable('Selesai', this)">Selesai</button>
         </div>
         
-        <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport ke CSV / Excel</button>
+        <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport Excel / CSV</button>
       </div>
 
       <div class="admin-table-container">
@@ -999,11 +1046,11 @@
         </table>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- MODAL ZOOM GAMBAR BUKTI -->
   <div class="modal-overlay" id="imageZoomModal" onclick="this.classList.remove('active')">
-    <div style="background: white; padding: 0.5rem; border: 2px solid var(--color-border-dark); max-width: 95vw; max-height: 90vh;">
+    <div style="background: white; padding: 0.75rem; border: 2px solid var(--color-border-dark); max-width: 95vw; max-height: 90vh;">
       <img id="zoomedImg" src="" style="max-width: 100%; max-height: 80vh; display: block;" alt="Gambar Bukti">
     </div>
   </div>
@@ -1020,6 +1067,31 @@
       checkAdminSession();
       fetchLiveComplaints();
     });
+
+    // SISTEM NOTIFIKASI POP-UP PERANTI (WEB PUSH NOTIFICATION)
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Pelayar web anda tidak menyokong notifikasi peranti.");
+        return;
+      }
+
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          showDeviceNotification("🔔 Notifikasi Diaktifkan!", "Anda akan menerima makluman pop-up terus di peranti anda.");
+        } else {
+          alert("Sila benarkan keizinan notifikasi dalam tetapan pelayar anda.");
+        }
+      });
+    }
+
+    function showDeviceNotification(title, bodyText) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+          body: bodyText,
+          icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
+        });
+      }
+    }
 
     function checkAdminSession() {
       const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
@@ -1044,10 +1116,9 @@
       }
     }
 
-    // TARIK DATA REAL-TIME DARI GOOGLE SHEETS
     async function fetchLiveComplaints() {
       const tbody = document.getElementById('adminTableBody');
-      if (tbody) tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 1rem;">⏳ Memuat naik data terkini...</td></tr>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 1.5rem;">⏳ Memuat naik data terkini...</td></tr>`;
       
       try {
         const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
@@ -1071,7 +1142,6 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // PEMAMPAT GAMBAR SEIRING IOS & ANDROID (SAFE COMPRESSION)
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -1093,7 +1163,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 400; // Saiz optimum untuk iOS/Safari
+          const maxDim = 400; 
 
           if (width > height && width > maxDim) {
             height *= maxDim / width;
@@ -1115,7 +1185,7 @@
             uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
           } catch(err) {
             console.error("Canvas error:", err);
-            uploadText.innerText = "⚠️ Gagalproses imej, teruskan hantar tanpa gambar.";
+            uploadText.innerText = "⚠️ Gagal proses imej, hantar tanpa gambar.";
             currentUploadedImageBase64 = "";
           }
         };
@@ -1171,6 +1241,9 @@
       submitBtn.disabled = false;
       submitBtn.innerText = "HANTAR ADUAN SEKARANG";
 
+      // POP-UP NOTIFIKASI PERANTI SEBENAR
+      showDeviceNotification("🎉 Aduan Berjaya Dihantar!", `ID Tiket anda: ${ticketId}. Pihak pengurusan akan menyemak laporan anda.`);
+
       document.getElementById('popupTicketCode').innerText = ticketId;
       document.getElementById('popupNama').innerText = namaVal;
       document.getElementById('popupKategori').innerText = kategoriVal;
@@ -1213,13 +1286,13 @@
         resContainer.innerHTML = `
           <div>
             <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
-            <p style="font-size: 0.8rem; margin-top:0.2rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
-            <p style="font-size: 0.8rem;"><strong>Lokasi:</strong> ${found.blok}</p>
-            <p style="font-size: 0.8rem; background: var(--color-bg); padding:0.4rem; margin-top:0.4rem;">"${found.keterangan}"</p>
+            <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
+            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.blok}</p>
+            <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
           </div>
         `;
       } else {
-        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.8rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui dalam pangkalan data.</p>`;
+        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.85rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui dalam pangkalan data.</p>`;
       }
     }
 
@@ -1280,13 +1353,14 @@
       document.getElementById('imageZoomModal').classList.add('active');
     }
 
-    // KEMAS KINI STATUS DAN SELARAS DENGAN GLOBAL LIST & STORAGE
     async function updateStatus(index, newStatus) {
       globalComplaintsList[index].status = newStatus;
       localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
       renderAdminTable();
 
-      // Hantar kemas kini status ke Google Sheets juga
+      // HANTAR POP-UP NOTIFIKASI BILA STATUS DIUBAH
+      showDeviceNotification("⚙️ Status Aduan Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
+
       try {
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
@@ -1368,7 +1442,7 @@
       }
 
       if (filteredList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--color-text-muted); padding: 1rem;">Tiada rekod aduan.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--color-text-muted); padding: 1.5rem;">Tiada rekod aduan.</td></tr>`;
         return;
       }
 
@@ -1385,8 +1459,8 @@
           <td><strong>${item.nama}</strong></td>
           <td>${item.matrik}</td>
           <td>${item.blok}</td>
-          <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process);">${item.telefon}</a></td>
-          <td><span style="font-size: 0.7rem; font-weight: 700;">${item.kategori}</span></td>
+          <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
+          <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
           <td style="text-align: center;">${imgCell}</td>
           <td>${item.keterangan}</td>
           <td>
@@ -1395,7 +1469,7 @@
             </span>
           </td>
           <td>
-            <select onchange="updateStatus(${mainIndex}, this.value)" style="padding: 0.2rem; font-size: 0.75rem;">
+            <select onchange="updateStatus(${mainIndex}, this.value)" style="padding: 0.3rem; font-size: 0.8rem; border: 1px solid var(--color-border-dark);">
               <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
               <option value="Dalam Tindakan" ${item.status === 'Dalam Tindakan' ? 'selected' : ''}>Dalam Tindakan</option>
               <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
