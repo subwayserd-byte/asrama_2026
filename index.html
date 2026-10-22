@@ -465,4 +465,1006 @@
       display: inline-block;
       padding: 0.25rem 0.5rem;
       font-size: 0.75rem;
-      font-weight: 7
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pending { background: var(--status-pending-bg); color: var(--status-pending); }
+    .status-process { background: var(--status-process-bg); color: var(--status-process); }
+    .status-done { background: var(--status-done-bg); color: var(--status-done); }
+
+    /* MODAL ADMIN & NOTIFICATION */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border: 2px solid var(--color-border-dark);
+      box-shadow: 8px 8px 0px var(--color-border-dark);
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .modal-dashboard {
+      max-width: 1100px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* CENTER SCREEN NOTIFICATION POPUP */
+    .ticket-popup-box {
+      background: white;
+      border: 3px solid var(--color-border-dark);
+      box-shadow: 10px 10px 0px var(--color-border-dark);
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .ticket-code-display {
+      background: var(--color-brand-light);
+      border: 2px dashed var(--color-brand);
+      color: var(--color-brand);
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      padding: 1rem;
+      margin: 1rem 0;
+      letter-spacing: 0.05em;
+    }
+
+    /* ADMIN DASHBOARD COMPONENTS */
+    .admin-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-stat-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-dark);
+      padding: 0.75rem 1rem;
+    }
+
+    .admin-stat-card .val {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .admin-stat-card .lbl {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+
+    .admin-action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .admin-filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--color-border-dark);
+      background: white;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--color-border-dark);
+      color: white;
+    }
+
+    .admin-alert-banner {
+      background: #fef2f2;
+      border: 1px solid #ef4444;
+      color: #991b1b;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .admin-table th, .admin-table td {
+      border: 1px solid var(--color-border-dark);
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .admin-table th {
+      background: var(--color-bg);
+      font-family: var(--font-heading);
+    }
+
+    .img-thumbnail {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border: 1px solid var(--color-border-dark);
+      cursor: pointer;
+    }
+
+    .no-img {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .error-msg {
+      color: #b91c1c;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* FAQ SECTION */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: white;
+      border: 2px solid var(--color-border-dark);
+      padding: 1.25rem;
+    }
+
+    .faq-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--color-surface);
+      border-top: 2px solid var(--color-border-dark);
+      padding: 2.5rem 0;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* RESPONSIVE KHAS UNTUK TELEFON (MOBILE FRIENDLY) */
+    @media (max-width: 600px) {
+      .header-inner {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem 0;
+        gap: 0.75rem;
+      }
+
+      .logo-container {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .logo-svg {
+        height: 32px;
+        width: auto;
+      }
+
+      .logo-text {
+        font-size: 0.95rem;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .nav-actions .btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      .hero-title {
+        font-size: 1.75rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-stats-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER DENGAN LOGO VEKTOR TVETMARA KEMAS -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="logo-container">
+          <!-- SVG LOGO RASMI TVETMARA -->
+          <svg class="logo-svg" viewBox="0 0 550 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
+            <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
+            <path d="M92 28L134 12H105L92 28Z" fill="#E63946"/>
+            <path d="M138 12H195V28H157V38H190V53H157V68H195V84H138V12Z" fill="#1D3557"/>
+            <path d="M200 12H265V28H241V84H224V28H200V12Z" fill="#1D3557"/>
+            <path d="M270 12H294L313 52L332 12H356V84H339V36L320 84H306L287 36V84H270V12Z" fill="#1D3557"/>
+            <path d="M365 12H395L418 84H399L394 68H369L364 84H345L368 12ZM374 51H389L381 22L374 51Z" fill="#1D3557"/>
+            <circle cx="381" cy="58" r="4.5" fill="#E63946"/>
+            <path d="M422 12H450C468 12 480 21 480 34C480 44 472 51 462 54L482 84H461L444 58H440V84H422V12ZM440 26V44H451C459 44 463 40 463 35C463 30 459 26 451 26H440Z" fill="#1D3557"/>
+            <path d="M485 12H515L538 84H519L514 68H489L484 84H465L488 12ZM494 51H509L501 22L494 51Z" fill="#1D3557"/>
+            <circle cx="501" cy="58" r="4.5" fill="#E63946"/>
+          </svg>
+
+          <div class="logo-divider"></div>
+          <div class="logo-text">
+            TVETMARA
+            <span>LENGGONG</span>
+          </div>
+        </a>
+        <div class="nav-actions">
+          <button class="btn btn-outline btn-sm" onclick="openAdminModal()">Log Masuk Admin</button>
+          <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <span class="hero-tag">Sistem Portal Aduan Asrama</span>
+          <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
+          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda. Pengurusan TVETMARA Lenggong sedia bertindak cepat demi keselesaan anda.</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="#hantar-aduan" class="btn btn-primary">Hantar Aduan Sekarang</a>
+            <a href="#semak-status" class="btn btn-outline">Semak Status Tiket</a>
+          </div>
+
+          <div class="hero-stats">
+            <div>
+              <div class="stat-number">24 Jam</div>
+              <div class="stat-label">Masa Respons</div>
+            </div>
+            <div>
+              <div class="stat-number">Rasmi</div>
+              <div class="stat-label">Sistem Teratur</div>
+            </div>
+            <div>
+              <div class="stat-number">Direct</div>
+              <div class="stat-label">Ke Unit Warden</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image-box">
+          <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80" alt="Asrama TVETMARA Lenggong">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMERGENCY CONTACTS -->
+  <section style="background-color: var(--color-surface); padding-top: 2rem;">
+    <div class="container">
+      <div class="emergency-banner">
+        <div class="emergency-info">
+          <h3>⚠️ KECEMASAN / ADUAN DESAKAN HARI INI?</h3>
+          <p style="font-size: 0.875rem; color: #7f1d1d;">Hubungi terus talian kecemasan di bawah untuk bantuan serta-merta.</p>
+        </div>
+        <div class="emergency-contacts">
+          <div class="contact-card">
+            <strong>AJK KEBAJIKAN</strong>
+            <a href="tel:+601129661251">+60 11-2966-1251</a>
+          </div>
+          <div class="contact-card">
+            <strong>AJK DISIPLIN</strong>
+            <a href="tel:+601111259682">+6011-1125-9682</a>
+          </div>
+          <div class="contact-card">
+            <strong>WARDEN BERTUGAS</strong>
+            <a href="tel:+60172479411">+6017-247-9411</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE PROPOSITION / FEATURES -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Mengapa Gunakan Portal Ini</span>
+        <h2 class="section-title">Proses Aduan Teratur & Mudah</h2>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-num">01</div>
+          <h3 class="feature-title">Rekod Pelajar Sah</h3>
+          <p class="feature-desc">Aduan diproses secara sistematik mengikut identiti pelajar bagi tindakan penyelenggaraan yang sahih.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">02</div>
+          <h3 class="feature-title">Kategori Spesifik</h3>
+          <p class="feature-desc">Pengkelasan isu kerosakan fasiliti, kebersihan, dan utiliti bagi mempercepatkan proses agihan tugas teknikal.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">03</div>
+          <h3 class="feature-title">Jejak Status Real-Time</h3>
+          <p class="feature-desc">Semak perkembangan terkini aduan anda secara dalam talian menggunakan kod nombor tiket yang dijana.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEAD CAPTURE FORM -->
+  <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+    <div class="container">
+      <div class="section-header" style="text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <span class="section-subtitle">Borang Aduan</span>
+        <h2 class="section-title">Borang Laporan Kerosakan Asrama</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-top: 0.5rem;">Sila isi maklumat kerosakan di bawah dengan lengkap bagi memudahkan tindakan baik pulih.</p>
+      </div>
+
+      <div class="form-wrapper" style="max-width: 800px; margin: 0 auto;">
+        <form id="aduanForm" onsubmit="handleFormSubmit(event)">
+
+          <div class="form-grid">
+            <div class="form-group" id="group-nama">
+              <label for="nama">Nama Penuh *</label>
+              <input type="text" id="nama" placeholder="Contoh: Muhammad Ali" required>
+            </div>
+
+            <div class="form-group" id="group-matrik">
+              <label for="matrik">No. Matrik / Pendaftaran *</label>
+              <input type="text" id="matrik" placeholder="Contoh: TVET-2024-0891" required>
+            </div>
+
+            <div class="form-group">
+              <label for="blok">Blok & No. Bilik *</label>
+              <input type="text" id="blok" placeholder="Contoh: Blok A, Bilik A-2-04" required>
+            </div>
+
+            <div class="form-group">
+              <label for="telefon">No. Telefon (WhatsApp) *</label>
+              <input type="tel" id="telefon" placeholder="Contoh: 0123456789" required>
+            </div>
+
+            <div class="form-group full">
+              <label>Kategori Kerosakan *</label>
+              <input type="hidden" id="kategori" value="Fasiliti" required>
+              <div class="category-options">
+                <div class="cat-btn active" onclick="selectCategory(this, 'Fasiliti')">🛠️ Fasiliti / Perabot</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Kebersihan')">🧹 Kebersihan</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Utiliti')">💡 Utiliti / Elektrik / Air</div>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label for="keterangan">Keterangan Terperinci Kerosakan *</label>
+              <textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan (Cth: Kipas syiling tidak berputar dan berbunyi bising)..." required></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Muat Naik Gambar Bukti Kerosakan</label>
+              <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
+                <span style="font-size: 0.875rem; color: var(--color-text-muted);">Klik di sini untuk pilih gambar (Pilihan)</span>
+                <input type="file" id="gambarInput" accept="image/*" onchange="previewFile(this)">
+                <br>
+                <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 1rem;">HANTAR ADUAN SEKARANG</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS TRACKER -->
+  <section class="section-padding" id="semak-status">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Semakan Kerosakan</span>
+        <h2 class="section-title">Semak Status Tiket Aduan</h2>
+      </div>
+
+      <div class="tracker-card">
+        <p style="font-size: 0.875rem; color: var(--color-text-muted);">Masukkan ID Tiket Aduan anda (Contoh ID sedia ada untuk ujian: <strong>#TVET-9921</strong> atau <strong>#TVET-8821</strong>)</p>
+        <div class="tracker-input-group">
+          <input type="text" id="trackerInput" placeholder="Contoh: #TVET-9921">
+          <button class="btn btn-primary" onclick="checkStatus()">Semak Status</button>
+        </div>
+
+        <div id="trackerResult" style="margin-top: 1.5rem; display: none; padding-top: 1.5rem; border-top: 1px dashed var(--color-border-dark);">
+          <!-- Dynamic Content -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="section-padding" style="background-color: var(--color-surface); border-top: 1px solid var(--color-border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Soalan Lazim</span>
+        <h2 class="section-title">Soalan Kerap Ditanya (FAQ)</h2>
+      </div>
+
+      <div class="faq-list" style="max-width: 800px;">
+        <div class="faq-item">
+          <div class="faq-title">Berapa lamakah masa yang diambil untuk tindakan aduan?</div>
+          <div class="faq-desc">Semua aduan disemak dalam tempoh 24 jam bertugas. Tindakan pembaikan bergantung kepada tahap kerosakan fasiliti tersebut.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-title">Adakah aduan saya direkodkan secara langsung kepada admin?</div>
+          <div class="faq-desc">Ya, setiap aduan yang dihantar akan dijana ID Tiket unik dan terus dimasukkan ke dalam pangkalan data dashboard pengurusan admin/warden serta disinkronkan ke Google Sheets.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-title">Apa perlu dibuat jika berlaku kerosakan bahaya (Kecemasan)?</div>
+          <div class="faq-desc">Bagi kes kecemasan seperti kebocoran gas, litar pintas berapi atau paip pecah utama, sila hubungi talian kecemasan Warden atau AJK bertugas secara terus.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <strong>TVETMARA Lenggong</strong> — Unit Pengurusan Asrama & Kebajikan Pelajar.
+        </div>
+        <div>
+          &copy; 2026 TVETMARA Lenggong. Hak Cipta Terpelihara.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- NOTIFICATION POPUP TENGAH SKRIN (TIKET ADUAN) -->
+  <div class="modal-overlay" id="ticketSuccessModal">
+    <div class="ticket-popup-box">
+      <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.25rem;">Aduan Berjaya Dihantar!</h3>
+      <p style="font-size: 0.875rem; color: var(--color-text-muted);">Sila simpan ID Tiket di bawah untuk tujuan semakan status pada bila-bila masa.</p>
+
+      <div class="ticket-code-display" id="popupTicketCode">#TVET-0000</div>
+
+      <div style="font-size: 0.8rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.75rem; border: 1px solid var(--color-border); margin-bottom: 1.25rem;">
+        <strong>Pengadu:</strong> <span id="popupNama"></span><br>
+        <strong>Kategori:</strong> <span id="popupKategori"></span><br>
+        <strong>Lokasi:</strong> <span id="popupBlok"></span>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-outline" style="flex: 1;" onclick="copyTicketCode()">📋 Salin ID Tiket</button>
+        <button class="btn btn-primary" style="flex: 1;" onclick="closeTicketPopup()">Tutup Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN LOGIN -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAdminModal()">✕</button>
+      <h3 style="font-family: var(--font-heading); margin-bottom: 0.5rem;">Log Masuk Admin</h3>
+      <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Akses khas Staf / Warden TVETMARA Lenggong sahaja.</p>
+      
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="adminUsername">Username Admin</label>
+          <input type="text" id="adminUsername" placeholder="Masukkan Username Admin" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="adminPassword">Kata Laluan</label>
+          <input type="password" id="adminPassword" placeholder="Masukkan Kata Laluan" required>
+        </div>
+        <div id="loginError" class="error-msg">❌ Username atau Kata Laluan tidak sah. Akses ditolak!</div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">MASUK DASHBOARD</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN DASHBOARD -->
+  <div class="modal-overlay" id="dashboardModal">
+    <div class="modal-content modal-dashboard">
+      <button class="modal-close" onclick="closeDashboard()">✕</button>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--color-border-dark); padding-bottom: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h3 style="font-family: var(--font-heading); display: flex; align-items: center; gap: 0.5rem;">
+            Dashboard Pengurusan Aduan
+            <span id="notificationBadge" class="status-badge status-pending" style="display: none; font-size: 0.7rem;">🔔 ALERT ADUAN BAHARU</span>
+          </h3>
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Akses Rasmi: Admin / Warden TVETMARA Lenggong</span>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="closeDashboard()">Log Keluar</button>
+      </div>
+
+      <!-- NOTIFICATION ALERT -->
+      <div id="adminNotificationAlert" class="admin-alert-banner" style="display: none;">
+        <span>🔔 <strong>PERHATIAN ADMIN:</strong> Terdapat aduan berstatus 'Pending' yang memerlukan tindakan susulan anda!</span>
+      </div>
+
+      <!-- STATS COUNTER -->
+      <div class="admin-stats-bar">
+        <div class="admin-stat-card">
+          <div class="val" id="statTotal">0</div>
+          <div class="lbl">Jumlah Aduan</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="val" id="statPending" style="color: var(--status-pending);">0</div>
+          <div class="lbl">Pending</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="val" id="statProcess" style="color: var(--status-process);">0</div>
+          <div class="lbl">Dalam Tindakan</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="val" id="statDone" style="color: var(--status-done);">0</div>
+          <div class="lbl">Selesai</div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS & EXPORT BUTTON -->
+      <div class="admin-action-bar">
+        <div class="admin-filter-tabs">
+          <button class="tab-btn active" onclick="filterAdminTable('ALL', this)">Semua Aduan</button>
+          <button class="tab-btn" onclick="filterAdminTable('Pending', this)">Pending</button>
+          <button class="tab-btn" onclick="filterAdminTable('Dalam Tindakan', this)">Dalam Tindakan</button>
+          <button class="tab-btn" onclick="filterAdminTable('Selesai', this)">Selesai</button>
+          <button class="tab-btn" onclick="filterAdminTable('Fasiliti', this)">Fasiliti</button>
+          <button class="tab-btn" onclick="filterAdminTable('Kebersihan', this)">Kebersihan</button>
+          <button class="tab-btn" onclick="filterAdminTable('Utiliti', this)">Utiliti</button>
+        </div>
+        
+        <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport ke CSV / Excel</button>
+      </div>
+
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID Tiket</th>
+              <th>Nama Pelajar</th>
+              <th>No. Matrik</th>
+              <th>Lokasi Bilik</th>
+              <th>No. Tel</th>
+              <th>Kategori</th>
+              <th>Bukti Gambar</th>
+              <th>Keterangan Aduan</th>
+              <th>Status</th>
+              <th>Tindakan Status</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <!-- Dynamic Data -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ZOOM GAMBAR BUKTI -->
+  <div class="modal-overlay" id="imageZoomModal" onclick="this.classList.remove('active')">
+    <div style="background: white; padding: 1rem; border: 2px solid var(--color-border-dark); max-width: 90vw; max-height: 90vh;">
+      <img id="zoomedImg" src="" style="max-width: 100%; max-height: 80vh; display: block;" alt="Gambar Bukti">
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const GOOGLE_SHEETS_WEBHOOK_URL = ""; 
+
+    async function sendToGoogleSheets(aduanData) {
+      if (!GOOGLE_SHEETS_WEBHOOK_URL) return;
+      try {
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(aduanData)
+        });
+      } catch (err) {
+        console.error("Ralat Google Sheets:", err);
+      }
+    }
+
+    let initialComplaints = [
+      {
+        id: "#TVET-9921",
+        nama: "Ahmad Zaki",
+        matrik: "TVET-2024-0012",
+        blok: "Blok A (A-2-04)",
+        telefon: "0123456789",
+        kategori: "Fasiliti",
+        keterangan: "Pintu almari pakaian tercabut engsel.",
+        gambarBase64: "",
+        status: "Pending",
+        tarikh: "2026-03-28"
+      },
+      {
+        id: "#TVET-8821",
+        nama: "Muhammad Danial",
+        matrik: "TVET-2024-0411",
+        blok: "Blok B (B-1-10)",
+        telefon: "0198765432",
+        kategori: "Utiliti",
+        keterangan: "Lampu kalimantang bilik berkelip-kelip dan padam.",
+        gambarBase64: "",
+        status: "Dalam Tindakan",
+        tarikh: "2026-03-27"
+      }
+    ];
+
+    let currentFilter = 'ALL';
+    let currentUploadedImageBase64 = "";
+
+    function getComplaints() {
+      const stored = localStorage.getItem('tvet_aduan_list');
+      if (stored) {
+        return JSON.parse(stored);
+      } else {
+        localStorage.setItem('tvet_aduan_list', JSON.stringify(initialComplaints));
+        return initialComplaints;
+      }
+    }
+
+    function saveComplaints(data) {
+      localStorage.setItem('tvet_aduan_list', JSON.stringify(data));
+    }
+
+    function selectCategory(element, catName) {
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('kategori').value = catName;
+    }
+
+    function previewFile(input) {
+      const preview = document.getElementById('imgPreview');
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          currentUploadedImageBase64 = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      } else {
+        currentUploadedImageBase64 = "";
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const ticketId = `#TVET-${randomNum}`;
+
+      const namaVal = document.getElementById('nama').value;
+      const matrikVal = document.getElementById('matrik').value;
+      const blokVal = document.getElementById('blok').value;
+      const telefonVal = document.getElementById('telefon').value;
+      const kategoriVal = document.getElementById('kategori').value;
+      const keteranganVal = document.getElementById('keterangan').value;
+
+      const newAduan = {
+        id: ticketId,
+        nama: namaVal,
+        matrik: matrikVal,
+        blok: blokVal,
+        telefon: telefonVal,
+        kategori: kategoriVal,
+        keterangan: keteranganVal,
+        gambarBase64: currentUploadedImageBase64,
+        status: 'Pending',
+        tarikh: new Date().toISOString().split('T')[0]
+      };
+
+      const list = getComplaints();
+      list.unshift(newAduan);
+      saveComplaints(list);
+      sendToGoogleSheets(newAduan);
+
+      document.getElementById('popupTicketCode').innerText = ticketId;
+      document.getElementById('popupNama').innerText = namaVal;
+      document.getElementById('popupKategori').innerText = kategoriVal;
+      document.getElementById('popupBlok').innerText = blokVal;
+      document.getElementById('ticketSuccessModal').classList.add('active');
+
+      document.getElementById('aduanForm').reset();
+      document.getElementById('imgPreview').style.display = 'none';
+      currentUploadedImageBase64 = "";
+    }
+
+    function closeTicketPopup() {
+      document.getElementById('ticketSuccessModal').classList.remove('active');
+    }
+
+    function copyTicketCode() {
+      const code = document.getElementById('popupTicketCode').innerText;
+      navigator.clipboard.writeText(code);
+      alert(`ID Tiket ${code} telah disalin ke clipboard!`);
+    }
+
+    function checkStatus() {
+      const query = document.getElementById('trackerInput').value.trim();
+      const resContainer = document.getElementById('trackerResult');
+      const list = getComplaints();
+
+      if(!query) {
+        alert("Sila masukkan ID Tiket terlebih dahulu.");
+        return;
+      }
+
+      const found = list.find(item => item.id.toLowerCase() === query.toLowerCase());
+
+      resContainer.style.display = 'block';
+      if (found) {
+        let statusClass = 'status-pending';
+        if (found.status === 'Dalam Tindakan') statusClass = 'status-process';
+        if (found.status === 'Selesai') statusClass = 'status-done';
+
+        resContainer.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong style="font-size: 1.125rem;">${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;"><strong>Nama Pengadu:</strong> ${found.nama} (${found.matrik})</p>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted);"><strong>Lokasi:</strong> ${found.blok} | <strong>Kategori:</strong> ${found.kategori}</p>
+              <p style="font-size: 0.875rem; margin-top: 0.5rem; background: var(--color-bg); padding: 0.5rem; border-left: 3px solid var(--color-border-dark);">"${found.keterangan}"</p>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--color-text-muted);">Tarikh Aduan: ${found.tarikh}</span>
+          </div>
+        `;
+      } else {
+        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.875rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui. Sila pastikan format ID betul.</p>`;
+      }
+    }
+
+    function openAdminModal() {
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginModal').classList.add('active');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('loginModal').classList.remove('active');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const userVal = document.getElementById('adminUsername').value.trim();
+      const passVal = document.getElementById('adminPassword').value.trim();
+      const errBox = document.getElementById('loginError');
+
+      if (userVal === "TVETMARA@ASRAMA" && passVal === "ASRAMA2026") {
+        errBox.style.display = 'none';
+        closeAdminModal();
+        openDashboard();
+      } else {
+        errBox.style.display = 'block';
+      }
+    }
+
+    function openDashboard() {
+      renderAdminTable();
+      document.getElementById('dashboardModal').classList.add('active');
+    }
+
+    function closeDashboard() {
+      document.getElementById('dashboardModal').classList.remove('active');
+    }
+
+    function filterAdminTable(filterKey, btnElement) {
+      currentFilter = filterKey;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      renderAdminTable();
+    }
+
+    function zoomImage(src) {
+      document.getElementById('zoomedImg').src = src;
+      document.getElementById('imageZoomModal').classList.add('active');
+    }
+
+    function updateStatus(index, newStatus) {
+      const list = getComplaints();
+      list[index].status = newStatus;
+      saveComplaints(list);
+      renderAdminTable();
+    }
+
+    function exportToCSV() {
+      const list = getComplaints();
+      if (!list || list.length === 0) {
+        alert("Tiada data aduan untuk dieksport.");
+        return;
+      }
+
+      let csvLines = [];
+      csvLines.push(["ID Tiket", "Nama Pelajar", "No Matrik", "Lokasi Blok", "No Telefon", "Kategori", "Keterangan", "Status", "Tarikh"]);
+
+      list.forEach(item => {
+        const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
+        const cleanNama = (item.nama || '').replace(/"/g, '""');
+        const cleanBlok = (item.blok || '').replace(/"/g, '""');
+
+        const row = [
+          `"${item.id || ''}"`,
+          `"${cleanNama}"`,
+          `"${item.matrik || ''}"`,
+          `"${cleanBlok}"`,
+          `"${item.telefon || ''}"`,
+          `"${item.kategori || ''}"`,
+          `"${cleanKeterangan}"`,
+          `"${item.status || ''}"`,
+          `"${item.tarikh || ''}"`
+        ];
+        csvLines.push(row.join(","));
+      });
+
+      const csvString = csvLines.join("\n");
+      const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Laporan_Aduan_Asrama_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function renderAdminTable() {
+      const list = getComplaints();
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '';
+
+      const pendingCount = list.filter(i => i.status === 'Pending').length;
+      const processCount = list.filter(i => i.status === 'Dalam Tindakan').length;
+      const doneCount = list.filter(i => i.status === 'Selesai').length;
+
+      document.getElementById('statTotal').innerText = list.length;
+      document.getElementById('statPending').innerText = pendingCount;
+      document.getElementById('statProcess').innerText = processCount;
+      document.getElementById('statDone').innerText = doneCount;
+
+      const notifAlert = document.getElementById('adminNotificationAlert');
+      const notifBadge = document.getElementById('notificationBadge');
+
+      if (pendingCount > 0) {
+        notifAlert.style.display = 'flex';
+        notifBadge.style.display = 'inline-block';
+      } else {
+        notifAlert.style.display = 'none';
+        notifBadge.style.display = 'none';
+      }
+
+      let filteredList = list;
+      if (currentFilter === 'Pending' || currentFilter === 'Dalam Tindakan' || currentFilter === 'Selesai') {
+        filteredList = list.filter(item => item.status === currentFilter);
+      } else if (currentFilter === 'Fasiliti' || currentFilter === 'Kebersihan' || currentFilter === 'Utiliti') {
+        filteredList = list.filter(item => item.kategori === currentFilter);
+      }
+
+      if (filteredList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--color-text-muted); padding: 1.5rem;">Tiada senarai aduan untuk kategori / status ini.</td></tr>`;
+        return;
+      }
+
+      filteredList.forEach((item) => {
+        const mainIndex = list.findIndex(i => i.id === item.id);
+
+        const imgCell = item.gambarBase64 
+          ? `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')" title="Klik untuk besarkan">`
+          : `<span class="no-img">Tiada Gambar</span>`;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${item.id}</strong></td>
+          <td><strong>${item.nama}</strong></td>
+          <td>${item.matrik}</td>
+          <td>${item.blok}</td>
+          <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); text-decoration: underline;">${item.telefon}</a></td>
+          <td><span style="font-size: 0.75rem; font-weight: 700; background: var(--color-bg); padding: 0.2rem 0.4rem; border: 1px solid var(--color-border);">${item.kategori}</span></td>
+          <td style="text-align: center;">${imgCell}</td>
+          <td>${item.keterangan}</td>
+          <td>
+            <span class="status-badge ${item.status === 'Pending' ? 'status-pending' : item.status === 'Dalam Tindakan' ? 'status-process' : 'status-done'}">
+              ${item.status}
+            </span>
+          </td>
+          <td>
+            <select onchange="updateStatus(${mainIndex}, this.value)" style="padding: 0.25rem; font-size: 0.8rem;">
+              <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Dalam Tindakan" ${item.status === 'Dalam Tindakan' ? 'selected' : ''}>Dalam Tindakan</option>
+              <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+            </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
