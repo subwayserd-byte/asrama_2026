@@ -696,52 +696,32 @@
       gap: 1rem;
     }
 
-    /* RESPONSIVE KHAS UNTUK TELEFON (MOBILE FRIENDLY) */
-    @media (max-width: 600px) {
-      .header-inner {
-        flex-direction: column;
-        height: auto;
-        padding: 1rem 0;
-        gap: 0.75rem;
-      }
-
-      .logo-container {
-        flex-direction: row;
-        justify-content: center;
-      }
-
-      .logo-svg {
-        height: 32px;
-        width: auto;
-      }
-
-      .logo-text {
-        font-size: 0.95rem;
-      }
-
-      .nav-actions {
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .nav-actions .btn {
-        flex: 1;
-        text-align: center;
-        padding: 0.5rem 0.5rem;
-        font-size: 0.75rem;
-      }
-
-      .hero-title {
-        font-size: 1.75rem;
-      }
-
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
       .hero-grid {
         grid-template-columns: 1fr;
       }
-
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full {
+        grid-column: span 1;
+      }
+      .category-options {
+        grid-template-columns: 1fr;
+      }
+      .emergency-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
       .admin-stats-bar {
         grid-template-columns: 1fr 1fr;
+      }
+      .admin-table-container {
+        overflow-x: auto;
       }
     }
   </style>
@@ -1129,7 +1109,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT -->
+  <!-- JAVASCRIPT VANILLA -->
   <script>
     const GOOGLE_SHEETS_WEBHOOK_URL = ""; 
 
@@ -1353,46 +1333,38 @@
       renderAdminTable();
     }
 
+    // FUNGSI EKSPORT LAPORAN KE CSV / EXCEL
     function exportToCSV() {
       const list = getComplaints();
-      if (!list || list.length === 0) {
-        alert("Tiada data aduan untuk dieksport.");
+      if (list.length === 0) {
+        alert("Tiada data untuk dieksport.");
         return;
       }
 
-      let csvLines = [];
-      csvLines.push(["ID Tiket", "Nama Pelajar", "No Matrik", "Lokasi Blok", "No Telefon", "Kategori", "Keterangan", "Status", "Tarikh"]);
-
+      let csvContent = "data:text/csv;charset=utf-8,ID Tiket,Nama Pelajar,No Matrik,Lokasi Blok,No Telefon,Kategori,Keterangan,Status,Tarikh\n";
+      
       list.forEach(item => {
-        const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
-        const cleanNama = (item.nama || '').replace(/"/g, '""');
-        const cleanBlok = (item.blok || '').replace(/"/g, '""');
-
         const row = [
-          `"${item.id || ''}"`,
-          `"${cleanNama}"`,
-          `"${item.matrik || ''}"`,
-          `"${cleanBlok}"`,
-          `"${item.telefon || ''}"`,
-          `"${item.kategori || ''}"`,
-          `"${cleanKeterangan}"`,
-          `"${item.status || ''}"`,
-          `"${item.tarikh || ''}"`
+          item.id,
+          `"${item.nama}"`,
+          item.matrik,
+          `"${item.blok}"`,
+          item.telefon,
+          item.kategori,
+          `"${item.keterangan.replace(/"/g, '""')}"`,
+          item.status,
+          item.tarikh
         ];
-        csvLines.push(row.join(","));
+        csvContent += row.join(",") + "\n";
       });
 
-      const csvString = csvLines.join("\n");
-      const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      
+      const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
-      link.setAttribute("href", url);
+      link.setAttribute("href", encodedUri);
       link.setAttribute("download", `Laporan_Aduan_Asrama_${new Date().toISOString().split('T')[0]}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
     }
 
     function renderAdminTable() {
