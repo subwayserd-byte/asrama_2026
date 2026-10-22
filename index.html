@@ -152,6 +152,18 @@
       color: white;
     }
 
+    .btn-danger {
+      background-color: #dc2626;
+      color: white;
+      border-color: #991b1b;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .btn-danger:hover {
+      background-color: #991b1b;
+    }
+
     .btn-sm {
       padding: 0.4rem 0.75rem;
       font-size: 0.8rem;
@@ -499,9 +511,11 @@
       position: relative;
     }
 
+    /* MODAL DASHBOARD SKRIN PENUH (FULL VIEW) */
     .modal-dashboard {
-      max-width: 1100px;
-      width: 100%;
+      max-width: 95vw;
+      width: 95vw;
+      height: 90vh;
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -775,7 +789,7 @@
           </div>
         </a>
         <div class="nav-actions">
-          <button class="btn btn-outline btn-sm" onclick="openAdminModal()">Log Masuk Admin</button>
+          <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Log Masuk Admin</button>
           <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
         </div>
       </div>
@@ -1042,7 +1056,7 @@
     </div>
   </div>
 
-  <!-- MODAL ADMIN DASHBOARD -->
+  <!-- MODAL ADMIN DASHBOARD (FULL SKRIN) -->
   <div class="modal-overlay" id="dashboardModal">
     <div class="modal-content modal-dashboard">
       <button class="modal-close" onclick="closeDashboard()">✕</button>
@@ -1055,7 +1069,7 @@
           </h3>
           <span style="font-size: 0.75rem; color: var(--color-text-muted);">Akses Rasmi: Admin / Warden TVETMARA Lenggong</span>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="closeDashboard()">Log Keluar</button>
+        <button class="btn btn-outline btn-sm" onclick="handleLogout()">🚪 Log Keluar</button>
       </div>
 
       <!-- NOTIFICATION ALERT -->
@@ -1098,7 +1112,7 @@
         <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport ke CSV / Excel</button>
       </div>
 
-      <div class="admin-table-container">
+      <div class="admin-table-container" style="overflow-x: auto;">
         <table class="admin-table">
           <thead>
             <tr>
@@ -1112,6 +1126,7 @@
               <th>Keterangan Aduan</th>
               <th>Status</th>
               <th>Tindakan Status</th>
+              <th>Padam</th>
             </tr>
           </thead>
           <tbody id="adminTableBody">
@@ -1129,7 +1144,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT -->
+  <!-- JAVASCRIPT VANILLA -->
   <script>
     const GOOGLE_SHEETS_WEBHOOK_URL = ""; 
 
@@ -1176,6 +1191,34 @@
 
     let currentFilter = 'ALL';
     let currentUploadedImageBase64 = "";
+
+    // PERIKSA SESI ADMIN SEBAIK SAHAJA WEB DIBUKA
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+    });
+
+    function checkAdminSession() {
+      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
+      const btn = document.getElementById('adminNavBtn');
+      if (isLoggedIn === 'true') {
+        btn.innerText = "⚙️ Dashboard Admin";
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+      } else {
+        btn.innerText = "Log Masuk Admin";
+        btn.classList.add('btn-outline');
+        btn.classList.remove('btn-primary');
+      }
+    }
+
+    function clickAdminNav() {
+      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
+      if (isLoggedIn === 'true') {
+        openDashboard();
+      } else {
+        openAdminModal();
+      }
+    }
 
     function getComplaints() {
       const stored = localStorage.getItem('tvet_aduan_list');
@@ -1318,10 +1361,20 @@
 
       if (userVal === "TVETMARA@ASRAMA" && passVal === "ASRAMA2026") {
         errBox.style.display = 'none';
+        localStorage.setItem('tvet_admin_logged_in', 'true');
+        checkAdminSession();
         closeAdminModal();
         openDashboard();
       } else {
         errBox.style.display = 'block';
+      }
+    }
+
+    function handleLogout() {
+      if (confirm("Adakah anda pasti nak log keluar dari akaun Admin?")) {
+        localStorage.removeItem('tvet_admin_logged_in');
+        checkAdminSession();
+        closeDashboard();
       }
     }
 
@@ -1353,6 +1406,17 @@
       renderAdminTable();
     }
 
+    // FUNGSI PADAM ADUAN (DELETE)
+    function deleteAduan(ticketId) {
+      if (confirm(`Adakah anda pasti nak padam aduan ${ticketId}?`)) {
+        let list = getComplaints();
+        list = list.filter(item => item.id !== ticketId);
+        saveComplaints(list);
+        renderAdminTable();
+      }
+    }
+
+    // FUNGSI EXCEL (CSV) UTF-8 BOM
     function exportToCSV() {
       const list = getComplaints();
       if (!list || list.length === 0) {
@@ -1428,7 +1492,7 @@
       }
 
       if (filteredList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--color-text-muted); padding: 1.5rem;">Tiada senarai aduan untuk kategori / status ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--color-text-muted); padding: 1.5rem;">Tiada senarai aduan untuk kategori / status ini.</td></tr>`;
         return;
       }
 
@@ -1460,6 +1524,9 @@
               <option value="Dalam Tindakan" ${item.status === 'Dalam Tindakan' ? 'selected' : ''}>Dalam Tindakan</option>
               <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
             </select>
+          </td>
+          <td style="text-align: center;">
+            <button class="btn btn-danger" onclick="deleteAduan('${item.id}')" title="Padam Aduan Ini">🗑️</button>
           </td>
         `;
         tbody.appendChild(tr);
