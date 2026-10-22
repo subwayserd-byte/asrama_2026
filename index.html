@@ -1071,7 +1071,7 @@
       document.getElementById('kategori').value = catName;
     }
 
-    // PEMAMPAT GAMBAR PHONE MAMPAT (SUPER COMPRESS <= 500px, 0.5 Quality)
+    // PEMAMPAT GAMBAR SEIRING IOS & ANDROID (SAFE COMPRESSION)
     function previewAndCompressFile(input) {
       const preview = document.getElementById('imgPreview');
       const uploadText = document.getElementById('uploadText');
@@ -1084,7 +1084,7 @@
         return;
       }
 
-      uploadText.innerText = "⏳ Memampatkan gambar...";
+      uploadText.innerText = "⏳ Memproses gambar...";
 
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -1093,7 +1093,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 500; 
+          const maxDim = 400; // Saiz optimum untuk iOS/Safari
 
           if (width > height && width > maxDim) {
             height *= maxDim / width;
@@ -1108,10 +1108,16 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.5);
-          preview.src = currentUploadedImageBase64;
-          preview.style.display = 'block';
-          uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
+          try {
+            currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.4);
+            preview.src = currentUploadedImageBase64;
+            preview.style.display = 'block';
+            uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
+          } catch(err) {
+            console.error("Canvas error:", err);
+            uploadText.innerText = "⚠️ Gagalproses imej, teruskan hantar tanpa gambar.";
+            currentUploadedImageBase64 = "";
+          }
         };
         img.src = e.target.result;
       };
@@ -1274,10 +1280,23 @@
       document.getElementById('imageZoomModal').classList.add('active');
     }
 
-    function updateStatus(index, newStatus) {
+    // KEMAS KINI STATUS DAN SELARAS DENGAN GLOBAL LIST & STORAGE
+    async function updateStatus(index, newStatus) {
       globalComplaintsList[index].status = newStatus;
       localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
       renderAdminTable();
+
+      // Hantar kemas kini status ke Google Sheets juga
+      try {
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(globalComplaintsList[index])
+        });
+      } catch(err) {
+        console.error("Gagal kemas kini status ke Sheets:", err);
+      }
     }
 
     function deleteAduan(ticketId) {
