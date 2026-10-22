@@ -291,7 +291,7 @@
         <div class="hero-content">
           <span class="hero-tag">Portal Aduan Asrama</span>
           <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
-          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda. Pengurusan AJK TVETMARA Lenggong sedia bertindak cepat.</p>
+          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti Wing asrama anda. Pengurusan AJK TVETMARA Lenggong sedia bertindak cepat.</p>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#hantar-aduan" class="btn btn-primary" style="flex:1;">Hantar Aduan</a>
             <a href="#semak-status" class="btn btn-outline" style="flex:1;">Semak Status</a>
@@ -353,8 +353,8 @@
         <form id="aduanForm" onsubmit="handleFormSubmit(event)">
           <div class="form-grid">
             <div class="form-group"><label for="nama">Nama Penuh *</label><input type="text" id="nama" placeholder="Contoh: Muhammad Ali" required></div>
-            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: TVET-2024-0891" required></div>
-            <div class="form-group"><label for="blok">Blok & No. Bilik *</label><input type="text" id="blok" placeholder="Contoh: Blok A, Bilik A-2-04" required></div>
+            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: LG2501111" required></div>
+            <div class="form-group"><label for="Wing">Wing & No. Bilik *</label><input type="text" id="Wing" placeholder="Contoh: Wing A, Bilik L2-1-01" required></div>
             <div class="form-group"><label for="telefon">No. Telefon (WhatsApp) *</label><input type="tel" id="telefon" placeholder="Contoh: 0123456789" required></div>
 
             <div class="form-group">
@@ -422,7 +422,7 @@
       <div style="font-size: 0.8rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.75rem; border: 1px solid var(--color-border-dark); margin-bottom: 1.25rem;">
         <strong>Pengadu:</strong> <span id="popupNama"></span><br>
         <strong>Kategori:</strong> <span id="popupKategori"></span><br>
-        <strong>Lokasi:</strong> <span id="popupBlok"></span>
+        <strong>Lokasi:</strong> <span id="popupWing"></span>
       </div>
 
       <div style="display: flex; gap: 0.75rem; flex-direction: column;">
@@ -653,7 +653,7 @@
 
       const namaVal = document.getElementById('nama').value;
       const matrikVal = document.getElementById('matrik').value;
-      const blokVal = document.getElementById('blok').value;
+      const WingVal = document.getElementById('Wing').value;
       const telefonVal = document.getElementById('telefon').value;
       const kategoriVal = document.getElementById('kategori').value;
       const keteranganVal = document.getElementById('keterangan').value;
@@ -662,7 +662,7 @@
         id: ticketId,
         nama: namaVal,
         matrik: matrikVal,
-        blok: blokVal,
+        Wing: WingVal,
         telefon: telefonVal,
         kategori: kategoriVal,
         keterangan: keteranganVal,
@@ -693,7 +693,7 @@
       document.getElementById('popupTicketCode').innerText = ticketId;
       document.getElementById('popupNama').innerText = namaVal;
       document.getElementById('popupKategori').innerText = kategoriVal;
-      document.getElementById('popupBlok').innerText = blokVal;
+      document.getElementById('popupWing').innerText = WingVal;
       document.getElementById('ticketSuccessModal').classList.add('active');
 
       document.getElementById('aduanForm').reset();
@@ -735,7 +735,7 @@
           <div>
             <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
             <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
-            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.blok || found.lokasi || '-'}</p>
+            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.lokasi || '-'}</p>
             <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
           </div>
         `;
@@ -862,13 +862,13 @@
       globalComplaintsList.forEach(item => {
         const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
         const cleanNama = (item.nama || '').replace(/"/g, '""');
-        const cleanBlok = ((item.blok || item.lokasi) || '').replace(/"/g, '""');
+        const cleanWing = ((item.Wing || item.lokasi) || '').replace(/"/g, '""');
 
         const row = [
           `"${item.id || ''}"`,
           `"${cleanNama}"`,
           `"${item.matrik || ''}"`,
-          `"${cleanBlok}"`,
+          `"${cleanWing}"`,
           `"${item.telefon || ''}"`,
           `"${item.kategori || ''}"`,
           `"${cleanKeterangan}"`,
@@ -929,7 +929,7 @@
           <td><strong>${item.id}</strong></td>
           <td><strong>${item.nama}</strong></td>
           <td>${item.matrik}</td>
-          <td>${item.blok || item.lokasi || '-'}</td>
+          <td>${item.Wing || item.lokasi || '-'}</td>
           <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
           <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
           <td style="text-align: center;">${imgCell}</td>
