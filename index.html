@@ -60,18 +60,43 @@
     }
 
     .logo-container {
-      display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--color-text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--color-text-main);
     }
 
-    .logo-svg { height: 36px; width: auto; }
-    .logo-divider { height: 24px; width: 2px; background-color: var(--color-border-dark); }
+    .logo-svg {
+      height: 26px;
+      width: auto;
+      max-width: 140px;
+      display: block;
+    }
+
+    .logo-divider {
+      height: 22px;
+      width: 2px;
+      background-color: var(--color-border-dark);
+    }
 
     .logo-text {
-      font-family: var(--font-heading); font-weight: 800; font-size: 1rem;
-      letter-spacing: -0.02em; line-height: 1.1; display: flex; flex-direction: column;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      display: flex;
+      flex-direction: column;
     }
 
-    .logo-text span { font-size: 0.7rem; color: var(--color-brand); font-weight: 700; letter-spacing: 0.05em; }
+    .logo-text span {
+      font-size: 0.65rem;
+      color: var(--color-brand);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
     .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
 
     .btn {
@@ -230,7 +255,7 @@
     <div class="container">
       <div class="header-inner">
         <a href="#" class="logo-container">
-          <svg class="logo-svg" viewBox="0 0 550 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="logo-svg" viewBox="0 0 540 90" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
             <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
             <path d="M92 28L134 12H105L92 28Z" fill="#E63946"/>
@@ -264,21 +289,21 @@
         <div class="hero-content">
           <span class="hero-tag">Portal Aduan Asrama</span>
           <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
-          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda. Pengurusan TVETMARA Lenggong sedia bertindak cepat.</p>
+          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti di asrama anda. Pengurusan Asrama TVETMARA Lenggong sedia bertindak dengan pantas.</p>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#hantar-aduan" class="btn btn-primary" style="flex:1;">Hantar Aduan</a>
             <a href="#semak-status" class="btn btn-outline" style="flex:1;">Semak Status</a>
           </div>
 
           <div class="hero-stats">
-            <div><div class="stat-number">24 Jam</div><div class="stat-label">Respons</div></div>
-            <div><div class="stat-number">Rasmi</div><div class="stat-label">Sistem</div></div>
-            <div><div class="stat-number">Direct</div><div class="stat-label">Warden</div></div>
+            <div><div class="stat-number">Respons</div><div class="stat-label">Waktu Kecemasan</div></div>
+            <div><div class="stat-number">Sistem</div><div class="stat-label">Rasmi</div></div>
+            <div><div class="stat-number">Direct</div><div class="stat-label">Warden & AJK</div></div>
           </div>
         </div>
 
         <div class="hero-image-box">
-          <img src="asrama.jpg" alt="Warga Asrama TVETMARA Lenggong">
+          <img src="asrama.jpg" alt="Asrama TVETMARA Lenggong">
         </div>
       </div>
     </div>
@@ -292,8 +317,10 @@
       </div>
       <div class="emergency-contacts">
         <div class="contact-card"><strong>AJK KEBAJIKAN</strong><a href="tel:+601129661251">+6011-2966-1251</a></div>
-        <div class="contact-card"><strong>AJK DISIPLIN</strong><a href="tel:+601111259682">+6011-1125-9682</a></div>
+        <div class="contact-card"><strong>AJK KESELAMATAN</strong><a href="tel:+601127975227">+6011-2797-5227</a></div>
+        <div class="contact-card"><strong>AJK KEBERSIHAN</strong><a href="tel:+601111259682">+6011-1125-9682</a></div>
         <div class="contact-card"><strong>WARDEN</strong><a href="tel:+60172479411">+6017-247-9411</a></div>
+        <div class="contact-card"><strong>PUAN ZARINA</strong><a href="tel:+60124243905">+6012-424-3905</a></div>
       </div>
     </div>
   </section>
@@ -324,8 +351,8 @@
         <form id="aduanForm" onsubmit="handleFormSubmit(event)">
           <div class="form-grid">
             <div class="form-group"><label for="nama">Nama Penuh *</label><input type="text" id="nama" placeholder="Contoh: Muhammad Ali" required></div>
-            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: TVET-2024-0891" required></div>
-            <div class="form-group"><label for="blok">Blok & No. Bilik *</label><input type="text" id="blok" placeholder="Contoh: Blok A, Bilik A-2-04" required></div>
+            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: LG2501111" required></div>
+            <div class="form-group"><label for="Wing">Wing & No. Bilik *</label><input type="text" id="Wing" placeholder="Contoh: Wing A, Bilik L2-1-01" required></div>
             <div class="form-group"><label for="telefon">No. Telefon (WhatsApp) *</label><input type="tel" id="telefon" placeholder="Contoh: 0123456789" required></div>
 
             <div class="form-group">
@@ -342,7 +369,7 @@
             <div class="form-group"><label for="keterangan">Keterangan Kerosakan *</label><textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan..." required></textarea></div>
 
             <div class="form-group">
-              <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
+              <label>Muat Naik Gambar Bukti Kerosakan (Jika boleh)</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
                 <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
@@ -393,7 +420,7 @@
       <div style="font-size: 0.8rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.75rem; border: 1px solid var(--color-border-dark); margin-bottom: 1.25rem;">
         <strong>Pengadu:</strong> <span id="popupNama"></span><br>
         <strong>Kategori:</strong> <span id="popupKategori"></span><br>
-        <strong>Lokasi:</strong> <span id="popupBlok"></span>
+        <strong>Lokasi:</strong> <span id="popupWing"></span>
       </div>
 
       <div style="display: flex; gap: 0.75rem; flex-direction: column;">
@@ -473,7 +500,6 @@
   </div>
 
   <script>
-    // URL WEB APP TERBAHARU ANDA
     const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzNSSTDFGW0igU1z-NEannSorfn3TvUZOFLBSRxqnIWQ9dNfuuENfWkQdIe59dpa6qt/exec"; 
 
     let globalComplaintsList = [];
@@ -625,20 +651,24 @@
 
       const namaVal = document.getElementById('nama').value;
       const matrikVal = document.getElementById('matrik').value;
-      const blokVal = document.getElementById('blok').value;
+      const WingVal = document.getElementById('Wing').value;
       const telefonVal = document.getElementById('telefon').value;
       const kategoriVal = document.getElementById('kategori').value;
       const keteranganVal = document.getElementById('keterangan').value;
+
+      const finalImage = currentUploadedImageBase64 ? currentUploadedImageBase64 : "";
 
       const newAduan = {
         id: ticketId,
         nama: namaVal,
         matrik: matrikVal,
-        blok: blokVal,
+        Wing: WingVal,
+        blok: WingVal,
         telefon: telefonVal,
         kategori: kategoriVal,
         keterangan: keteranganVal,
-        gambarBase64: currentUploadedImageBase64,
+        gambarBase64: finalImage,
+        gambar: finalImage,
         status: 'Pending',
         tarikh: new Date().toISOString().split('T')[0]
       };
@@ -665,7 +695,7 @@
       document.getElementById('popupTicketCode').innerText = ticketId;
       document.getElementById('popupNama').innerText = namaVal;
       document.getElementById('popupKategori').innerText = kategoriVal;
-      document.getElementById('popupBlok').innerText = blokVal;
+      document.getElementById('popupWing').innerText = WingVal;
       document.getElementById('ticketSuccessModal').classList.add('active');
 
       document.getElementById('aduanForm').reset();
@@ -707,7 +737,7 @@
           <div>
             <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
             <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
-            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.blok || found.lokasi || '-'}</p>
+            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.blok || found.lokasi || '-'}</p>
             <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
           </div>
         `;
@@ -834,13 +864,13 @@
       globalComplaintsList.forEach(item => {
         const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
         const cleanNama = (item.nama || '').replace(/"/g, '""');
-        const cleanBlok = ((item.blok || item.lokasi) || '').replace(/"/g, '""');
+        const cleanWing = ((item.Wing || item.blok || item.lokasi) || '').replace(/"/g, '""');
 
         const row = [
           `"${item.id || ''}"`,
           `"${cleanNama}"`,
           `"${item.matrik || ''}"`,
-          `"${cleanBlok}"`,
+          `"${cleanWing}"`,
           `"${item.telefon || ''}"`,
           `"${item.kategori || ''}"`,
           `"${cleanKeterangan}"`,
@@ -890,18 +920,23 @@
       filteredList.forEach((item) => {
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
-        const imgCell = item.gambarBase64 
-          ? (item.gambarBase64.startsWith('http') 
-              ? `<a href="${item.gambarBase64}" target="_blank" style="color:var(--status-process); font-weight:bold;">🖼️ Lihat Gambar</a>`
-              : `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')">`)
-          : `<span class="no-img">Tiada Gambar</span>`;
+        let imgCell = `<span class="no-img">Tiada Gambar</span>`;
+        const imgData = item.gambarBase64 || item.gambar || "";
+        
+        if (imgData && imgData.length > 30) {
+          if (imgData.startsWith('http')) {
+            imgCell = `<a href="${imgData}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
+          } else {
+            imgCell = `<img src="${imgData}" class="img-thumbnail" onclick="zoomImage('${imgData}')" alt="Bukti Pelajar">`;
+          }
+        }
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${item.id}</strong></td>
           <td><strong>${item.nama}</strong></td>
           <td>${item.matrik}</td>
-          <td>${item.blok || item.lokasi || '-'}</td>
+          <td>${item.Wing || item.blok || item.lokasi || '-'}</td>
           <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
           <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
           <td style="text-align: center;">${imgCell}</td>
