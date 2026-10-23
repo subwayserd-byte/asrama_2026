@@ -303,7 +303,7 @@
         </div>
 
         <div class="hero-image-box">
-          <img src="asrama.jpg" alt="Asrama TVETMARA Lenggong">
+          <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80" alt="Asrama TVETMARA Lenggong">
         </div>
       </div>
     </div>
@@ -369,7 +369,7 @@
             <div class="form-group"><label for="keterangan">Keterangan Kerosakan *</label><textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan..." required></textarea></div>
 
             <div class="form-group">
-              <label>Muat Naik Gambar Bukti Kerosakan (Jika boleh)</label>
+              <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
                 <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
@@ -611,7 +611,7 @@
           let width = img.width;
           let height = img.height;
           
-          const max_size = 600;
+          const max_size = 400; 
           if (width > height) {
             if (width > max_size) {
               height *= max_size / width;
@@ -629,7 +629,7 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.5);
+          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.4);
           preview.src = currentUploadedImageBase64;
           preview.style.display = 'block';
           uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
@@ -923,7 +923,7 @@
         let imgCell = `<span class="no-img">Tiada Gambar</span>`;
         const imgData = item.gambarBase64 || item.gambar || "";
         
-        if (imgData && imgData.length > 30) {
+        if (imgData && imgData.length > 20) {
           if (imgData.startsWith('http')) {
             imgCell = `<a href="${imgData}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
           } else {
