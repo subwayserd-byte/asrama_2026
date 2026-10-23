@@ -646,6 +646,8 @@
       const kategoriVal = document.getElementById('kategori').value;
       const keteranganVal = document.getElementById('keterangan').value;
 
+      const finalImage = currentUploadedImageBase64 ? currentUploadedImageBase64 : "";
+
       const newAduan = {
         id: ticketId,
         nama: namaVal,
@@ -655,7 +657,8 @@
         telefon: telefonVal,
         kategori: kategoriVal,
         keterangan: keteranganVal,
-        gambarBase64: currentUploadedImageBase64 || "",
+        gambarBase64: finalImage,
+        gambar: finalImage,
         status: 'Pending',
         tarikh: new Date().toISOString().split('T')[0]
       };
@@ -674,7 +677,6 @@
         console.error("Gagal hantar ke Sheets:", err);
       }
 
-      // Hantar Push Notification khusus kepada Admin (Warden) menggunakan OneSignal Tag
       try {
         fetch("https://onesignal.com/api/v1/notifications", {
           method: "POST",
@@ -774,7 +776,6 @@
         checkAdminSession();
         closeAdminModal();
         
-        // PAKSA WARDEN AKTIFKAN NOTIFIKASI & SET TAG ADMIN SEBAIK SAHAJA LOG MASUK
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         window.OneSignalDeferred.push(async function(OneSignal) {
           try {
@@ -935,12 +936,15 @@
       filteredList.forEach((item) => {
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
-        // PAPARAN GAMBAR DIPERBAIKI: Menyokong Base64 atau URL luar tanpa masalah
         let imgCell = `<span class="no-img">Tiada Gambar</span>`;
-        if (item.gambarBase64 && item.gambarBase64.length > 30) {
-          imgCell = `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')" alt="Bukti">`;
-        } else if (item.gambarBase64 && item.gambarBase64.startsWith('http')) {
-          imgCell = `<a href="${item.gambarBase64}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
+        const imgData = item.gambarBase64 || item.gambar || "";
+        
+        if (imgData && imgData.length > 30) {
+          if (imgData.startsWith('http')) {
+            imgCell = `<a href="${imgData}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
+          } else {
+            imgCell = `<img src="${imgData}" class="img-thumbnail" onclick="zoomImage('${imgData}')" alt="Bukti">`;
+          }
         }
 
         const tr = document.createElement('tr');
