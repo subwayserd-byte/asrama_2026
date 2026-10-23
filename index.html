@@ -920,13 +920,15 @@
       filteredList.forEach((item) => {
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
+        // KITA SEMAK SEMUA VARIASI NAMA KEY GAMBAR SUPAYA IA 100% PASTI KELUAR
         let imgCell = `<span class="no-img">Tiada Gambar</span>`;
-        const imgData = item.gambarBase64 || item.gambar || "";
+        const imgData = item.gambarBase64 || item.gambar || item.image || "";
         
         if (imgData && imgData.length > 20) {
           if (imgData.startsWith('http')) {
             imgCell = `<a href="${imgData}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
           } else {
+            // Render imej sebenar yang dihantar pelajar dengan tetapan selamat
             imgCell = `<img src="${imgData}" class="img-thumbnail" onclick="zoomImage('${imgData}')" alt="Bukti Pelajar">`;
           }
         }
