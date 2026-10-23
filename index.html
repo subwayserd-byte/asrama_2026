@@ -656,7 +656,25 @@
       } catch(err) {
         console.error("Gagal hantar ke Sheets:", err);
       }
-
+// Hantar Push Notification khusus kepada Warden yang ber-tag 'admin'
+      try {
+        fetch("https://onesignal.com/api/v1/notifications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          body: JSON.stringify({
+            app_id: "23e3b894-010b-4d9b-8447-22c62bf31a6b",
+            headings: { "en": "🚨 ADUAN ASRAMA BAHARU!" },
+            contents: { "en": `Aduan baru diterima daripada ${namaVal} (${blokVal})!` },
+            filters: [
+              { field: "tag", key: "peranan", relation: "=", value: "admin" }
+            ]
+          })
+        });
+      } catch(err) {
+        console.error("Gagal hantar push notification:", err);
+      }
       try {
         fetch("https://onesignal.com/api/v1/notifications", {
           method: "POST",
@@ -752,11 +770,12 @@
         checkAdminSession();
         closeAdminModal();
         
-        // PAKSA WARDEN AKTIFKAN NOTIFIKASI SEBAIK SAHAJA LOG MASUK ADMIN
+        // AKTIFKAN NOTIFIKASI & SET TAG ADMIN UNTUK WARDEN
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         window.OneSignalDeferred.push(async function(OneSignal) {
           try {
             await OneSignal.Slidedown.promptPush();
+            await OneSignal.User.addTag("peranan", "admin"); // <-- TAG WARDEN DI SINI
           } catch (err) {
             console.log("Prompt notifikasi:", err);
           }
