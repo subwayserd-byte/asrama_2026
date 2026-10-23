@@ -8,17 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   
-  <!-- ONESIGNAL SDK -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function (OneSignal) {
-      await OneSignal.init({
-        appId: "23e3b894-010b-4d9b-8447-22c62bf31a6b",
-      });
-    });
-  </script>
-
   <style>
     :root {
       --color-brand: #b91c1c;
@@ -70,6 +59,7 @@
       display: flex; justify-content: space-between; align-items: center; height: 75px;
     }
 
+    /* DIKEMAS KINI: TETAPAN LOGO SUPAYA TIDAK BERTINDIH */
     .logo-container {
       display: flex;
       align-items: center;
@@ -266,6 +256,7 @@
     <div class="container">
       <div class="header-inner">
         <a href="#" class="logo-container">
+          <!-- SVG LOGO TERJAJAR PROPOSIONAL -->
           <svg class="logo-svg" viewBox="0 0 540 90" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
             <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
@@ -286,6 +277,7 @@
           </div>
         </a>
         <div class="nav-actions">
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()">🔔 Notifikasi</button>
           <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Admin</button>
           <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
         </div>
@@ -299,21 +291,21 @@
         <div class="hero-content">
           <span class="hero-tag">Portal Aduan Asrama</span>
           <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
-          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti blok asrama anda. Pengurusan TVETMARA Lenggong sedia bertindak cepat.</p>
+          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti di asrama anda. Pengurusan Asrama TVETMARA Lenggong sedia bertindak dengan pantas.</p>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#hantar-aduan" class="btn btn-primary" style="flex:1;">Hantar Aduan</a>
             <a href="#semak-status" class="btn btn-outline" style="flex:1;">Semak Status</a>
           </div>
 
           <div class="hero-stats">
-            <div><div class="stat-number">24 Jam</div><div class="stat-label">Respons</div></div>
-            <div><div class="stat-number">Rasmi</div><div class="stat-label">Sistem</div></div>
-            <div><div class="stat-number">Direct</div><div class="stat-label">Warden</div></div>
+            <div><div class="stat-number">Respons</div><div class="stat-label">Waktu Kecemasan</div></div>
+            <div><div class="stat-number">Sistem</div><div class="stat-label">Rasmi</div></div>
+            <div><div class="stat-number">Direct</div><div class="stat-label">Warden & AJK</div></div>
           </div>
         </div>
 
         <div class="hero-image-box">
-          <img src="asrama.jpg" alt="Asrama TVETMARA Lenggong">
+          <img src="https://raw.githubusercontent.com/subwayserd-byte/asrama_2026/main/asrama.jpg" alt="Asrama TVETMARA Lenggong">
         </div>
       </div>
     </div>
@@ -327,8 +319,10 @@
       </div>
       <div class="emergency-contacts">
         <div class="contact-card"><strong>AJK KEBAJIKAN</strong><a href="tel:+601129661251">+6011-2966-1251</a></div>
-        <div class="contact-card"><strong>AJK DISIPLIN</strong><a href="tel:+601111259682">+6011-1125-9682</a></div>
+        <div class="contact-card"><strong>AJK KESELAMATAN</strong><a href="tel:+601127975227">+6011-2797-5227</a></div>
+        <div class="contact-card"><strong>AJK KEBERSIHAN</strong><a href="tel:+601111259682">+6011-1125-9682</a></div>
         <div class="contact-card"><strong>WARDEN</strong><a href="tel:+60172479411">+6017-247-9411</a></div>
+        <div class="contact-card"><strong>PUAN ZARINA</strong><a href="tel:+60124243905">+6012-424-3905</a></div>
       </div>
     </div>
   </section>
@@ -359,7 +353,7 @@
         <form id="aduanForm" onsubmit="handleFormSubmit(event)">
           <div class="form-grid">
             <div class="form-group"><label for="nama">Nama Penuh *</label><input type="text" id="nama" placeholder="Contoh: Muhammad Ali" required></div>
-            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: TVET-2024-0891" required></div>
+            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: LG2501111" required></div>
             <div class="form-group"><label for="Wing">Wing & No. Bilik *</label><input type="text" id="Wing" placeholder="Contoh: Wing A, Bilik L2-1-01" required></div>
             <div class="form-group"><label for="telefon">No. Telefon (WhatsApp) *</label><input type="tel" id="telefon" placeholder="Contoh: 0123456789" required></div>
 
@@ -377,7 +371,7 @@
             <div class="form-group"><label for="keterangan">Keterangan Kerosakan *</label><textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan..." required></textarea></div>
 
             <div class="form-group">
-              <label>Muat Naik Gambar Bukti Kerosakan (Pilihan)</label>
+              <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
                 <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
@@ -519,6 +513,29 @@
       fetchLiveComplaints();
     });
 
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Pelayar web anda tidak menyokong notifikasi peranti.");
+        return;
+      }
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          showDeviceNotification("🔔 Notifikasi Diaktifkan!", "Anda akan menerima makluman terus di peranti anda.");
+        } else {
+          alert("Sila benarkan keizinan notifikasi dalam tetapan pelayar anda.");
+        }
+      });
+    }
+
+    function showDeviceNotification(title, bodyText) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+          body: bodyText,
+          icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
+        });
+      }
+    }
+
     function checkAdminSession() {
       const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
       const btn = document.getElementById('adminNavBtn');
@@ -586,7 +603,7 @@
         return;
       }
 
-      uploadText.innerText = "⏳ Memproses gambar...";
+      uploadText.innerText = "⏳ Memproses gambar untuk iOS...";
 
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -646,11 +663,10 @@
         nama: namaVal,
         matrik: matrikVal,
         Wing: WingVal,
-        blok: WingVal,
         telefon: telefonVal,
         kategori: kategoriVal,
         keterangan: keteranganVal,
-        gambarBase64: currentUploadedImageBase64 || "",
+        gambarBase64: currentUploadedImageBase64,
         status: 'Pending',
         tarikh: new Date().toISOString().split('T')[0]
       };
@@ -669,28 +685,10 @@
         console.error("Gagal hantar ke Sheets:", err);
       }
 
-      // Hantar Push Notification khusus kepada Admin (Warden) menggunakan tag peranan: admin
-      try {
-        fetch("https://onesignal.com/api/v1/notifications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json; charset=utf-8"
-          },
-          body: JSON.stringify({
-            app_id: "23e3b894-010b-4d9b-8447-22c62bf31a6b",
-            headings: { "en": "🚨 ADUAN ASRAMA BAHARU!" },
-            contents: { "en": `Aduan baru diterima daripada ${namaVal} (${WingVal})!` },
-            filters: [
-              { field: "tag", key: "peranan", relation: "=", value: "admin" }
-            ]
-          })
-        });
-      } catch(err) {
-        console.error("Gagal hantar push notification:", err);
-      }
-
       submitBtn.disabled = false;
       submitBtn.innerText = "HANTAR ADUAN SEKARANG";
+
+      showDeviceNotification("🎉 Aduan Berjaya Dihantar!", `ID Tiket anda: ${ticketId}. Pihak pengurusan akan menyemak laporan anda.`);
 
       document.getElementById('popupTicketCode').innerText = ticketId;
       document.getElementById('popupNama').innerText = namaVal;
@@ -737,7 +735,7 @@
           <div>
             <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
             <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
-            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.blok || found.lokasi || '-'}</p>
+            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.lokasi || '-'}</p>
             <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
           </div>
         `;
@@ -768,18 +766,6 @@
         localStorage.setItem('tvet_admin_logged_in', 'true');
         checkAdminSession();
         closeAdminModal();
-        
-        // AKTIFKAN PROMPT NOTIFIKASI & SET TAG ADMIN UNTUK WARDEN
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(async function(OneSignal) {
-          try {
-            await OneSignal.Slidedown.promptPush();
-            await OneSignal.User.addTag("peranan", "admin");
-          } catch (err) {
-            console.log("Prompt notifikasi:", err);
-          }
-        });
-
         openDashboard();
       } else {
         errBox.style.display = 'block';
@@ -819,6 +805,8 @@
       globalComplaintsList[index].status = newStatus;
       localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
       renderAdminTable();
+
+      showDeviceNotification("⚙️ Status Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
 
       try {
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
@@ -874,7 +862,7 @@
       globalComplaintsList.forEach(item => {
         const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
         const cleanNama = (item.nama || '').replace(/"/g, '""');
-        const cleanWing = ((item.Wing || item.blok || item.lokasi) || '').replace(/"/g, '""');
+        const cleanWing = ((item.Wing || item.lokasi) || '').replace(/"/g, '""');
 
         const row = [
           `"${item.id || ''}"`,
@@ -930,20 +918,18 @@
       filteredList.forEach((item) => {
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
-        // PAPARAN GAMBAR STABIL DI ADMIN DALAM BENTUK THUMBNAIL & ZOOM
-        let imgCell = `<span class="no-img">Tiada Gambar</span>`;
-        if (item.gambarBase64 && item.gambarBase64.length > 50) {
-          imgCell = `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')" alt="Bukti">`;
-        } else if (item.gambarBase64 && item.gambarBase64.startsWith('http')) {
-          imgCell = `<a href="${item.gambarBase64}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
-        }
+        const imgCell = item.gambarBase64 
+          ? (item.gambarBase64.startsWith('http') 
+              ? `<a href="${item.gambarBase64}" target="_blank" style="color:var(--status-process); font-weight:bold;">🖼️ Lihat Gambar</a>`
+              : `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')">`)
+          : `<span class="no-img">Tiada Gambar</span>`;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${item.id}</strong></td>
           <td><strong>${item.nama}</strong></td>
           <td>${item.matrik}</td>
-          <td>${item.Wing || item.blok || item.lokasi || '-'}</td>
+          <td>${item.Wing || item.lokasi || '-'}</td>
           <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
           <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
           <td style="text-align: center;">${imgCell}</td>
