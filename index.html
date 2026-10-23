@@ -8,16 +8,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   
-  <!-- ONESIGNAL WEB PUSH NOTIFICATION SDK -->
- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function (OneSignal) {
-    await OneSignal.init({
-      appId: "23e3b894-010b-4d9b-8447-22c62bf31a6b",
+  <!-- SKRIP RASMI ONESIGNAL -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function (OneSignal) {
+      await OneSignal.init({
+        appId: "23e3b894-010b-4d9b-8447-22c62bf31a6b",
+      });
     });
-  });
-</script>
+  </script>
 
   <style>
     :root {
@@ -232,7 +232,6 @@
     .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 800px; }
     .admin-table th, .admin-table td { border: 1px solid var(--color-border-dark); padding: 0.75rem; text-align: left; }
     .admin-table th { background-color: var(--color-bg); font-family: var(--font-heading); }
-    .img-thumbnail { width: 50px; height: 50px; object-fit: cover; border: 1px solid var(--color-border-dark); cursor: pointer; }
     .no-img { font-size: 0.75rem; color: var(--color-text-muted); }
     .error-msg { color: #b91c1c; font-size: 0.8rem; font-weight: 600; margin-top: 0.5rem; display: none; }
 
@@ -373,7 +372,7 @@
             <div class="form-group"><label for="keterangan">Keterangan Kerosakan *</label><textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan..." required></textarea></div>
 
             <div class="form-group">
-              <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
+              <label>Muat Naik Gambar Bukti Kerosakan (Pilihan)</label>
               <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
                 <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
@@ -494,12 +493,6 @@
           <tbody id="adminTableBody"></tbody>
         </table>
       </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="imageZoomModal" onclick="this.classList.remove('active')">
-    <div style="background: white; padding: 0.75rem; border: 2px solid var(--color-border-dark); max-width: 95vw; max-height: 90vh;">
-      <img id="zoomedImg" src="" style="max-width: 100%; max-height: 80vh; display: block;" alt="Gambar Bukti">
     </div>
   </div>
 
@@ -653,7 +646,6 @@
       globalComplaintsList.unshift(newAduan);
       localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
 
-      // Hantar data ke Google Sheets
       try {
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
@@ -665,7 +657,6 @@
         console.error("Gagal hantar ke Sheets:", err);
       }
 
-      // Hantar Web Push Notification automatik melalui OneSignal
       try {
         fetch("https://onesignal.com/api/v1/notifications", {
           method: "POST",
@@ -760,6 +751,17 @@
         localStorage.setItem('tvet_admin_logged_in', 'true');
         checkAdminSession();
         closeAdminModal();
+        
+        // PAKSA WARDEN AKTIFKAN NOTIFIKASI SEBAIK SAHAJA LOG MASUK ADMIN
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        window.OneSignalDeferred.push(async function(OneSignal) {
+          try {
+            await OneSignal.Slidedown.promptPush();
+          } catch (err) {
+            console.log("Prompt notifikasi:", err);
+          }
+        });
+
         openDashboard();
       } else {
         errBox.style.display = 'block';
@@ -788,11 +790,6 @@
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       btnElement.classList.add('active');
       renderAdminTable();
-    }
-
-    function zoomImage(src) {
-      document.getElementById('zoomedImg').src = src;
-      document.getElementById('imageZoomModal').classList.add('active');
     }
 
     async function updateStatus(index, newStatus) {
@@ -911,9 +908,7 @@
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
         const imgCell = item.gambarBase64 
-          ? (item.gambarBase64.startsWith('http') 
-              ? `<a href="${item.gambarBase64}" target="_blank" style="color:var(--status-process); font-weight:bold;">🖼️ Lihat Gambar</a>`
-              : `<img src="${item.gambarBase64}" class="img-thumbnail" onclick="zoomImage('${item.gambarBase64}')">`)
+          ? `<a href="${item.gambarBase64}" target="_blank" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">🖼️ Buka Gambar</a>`
           : `<span class="no-img">Tiada Gambar</span>`;
 
         const tr = document.createElement('tr');
