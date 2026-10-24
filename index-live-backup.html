@@ -7,6 +7,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (() => {
+      const maintenanceStatusUrl = "/maintenance-status.json";
+      const maintenancePageUrl = "/maintenance.html";
+      const checkMaintenanceStatus = async () => {
+        try {
+          const response = await fetch(`${maintenanceStatusUrl}?t=${Date.now()}`, { cache: "no-store" });
+          if (!response.ok) return;
+          const status = await response.json();
+          if (status.maintenance === true) window.location.replace(maintenancePageUrl);
+        } catch (error) {
+          console.warn("Status penyelenggaraan tidak dapat diperiksa buat masa ini.");
+        }
+      };
+      checkMaintenanceStatus();
+      window.setInterval(checkMaintenanceStatus, 15000);
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   
   <style>
