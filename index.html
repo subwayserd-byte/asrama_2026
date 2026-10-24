@@ -507,6 +507,22 @@
     let currentUploadedImageBase64 = "";
     let currentImageProcessing = Promise.resolve(true);
 
+    function getSessionImageKey(ticketId) {
+      return `tvet_aduan_image_${ticketId}`;
+    }
+
+    function attachSessionImages(complaints) {
+      return complaints.map(item => {
+        const sessionImage = sessionStorage.getItem(getSessionImageKey(item.id));
+        return sessionImage ? { ...item, gambarBase64: sessionImage, gambar: sessionImage } : item;
+      });
+    }
+
+    function saveLocalComplaintList(complaints) {
+      const complaintsWithoutImages = complaints.map(({ gambarBase64, gambar, image, ...item }) => item);
+      localStorage.setItem('tvet_aduan_list', JSON.stringify(complaintsWithoutImages));
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
       fetchLiveComplaints();
@@ -572,14 +588,14 @@
               uniqueMap.set(item.id.toLowerCase(), item);
             }
           });
-          globalComplaintsList = Array.from(uniqueMap.values());
-          localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
+          globalComplaintsList = attachSessionImages(Array.from(uniqueMap.values()));
+          saveLocalComplaintList(globalComplaintsList);
           renderAdminTable();
         }
       } catch (err) {
         console.error("Gagal menarik data dari Google Sheets:", err);
         const stored = localStorage.getItem('tvet_aduan_list');
-        if (stored) globalComplaintsList = JSON.parse(stored);
+        if (stored) globalComplaintsList = attachSessionImages(JSON.parse(stored));
         renderAdminTable();
       }
     }
@@ -686,6 +702,17 @@
 
       const finalImage = currentUploadedImageBase64 ? currentUploadedImageBase64 : "";
 
+      if (finalImage) {
+        try {
+          sessionStorage.setItem(getSessionImageKey(ticketId), finalImage);
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "HANTAR ADUAN SEKARANG";
+          alert("Ruang sementara pelayar tidak mencukupi untuk menyimpan gambar. Cuba gambar yang lebih kecil atau hantar tanpa gambar.");
+          return;
+        }
+      }
+
       const newAduan = {
         id: ticketId,
         nama: namaVal,
@@ -702,14 +729,15 @@
       };
 
       globalComplaintsList.unshift(newAduan);
-      localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
+      saveLocalComplaintList(globalComplaintsList);
 
       try {
+        const complaintForServer = { ...newAduan, gambarBase64: "", gambar: "" };
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newAduan)
+          body: JSON.stringify(complaintForServer)
         });
       } catch(err) {
         console.error("Gagal hantar ke Sheets:", err);
@@ -834,17 +862,18 @@
 
     async function updateStatus(index, newStatus) {
       globalComplaintsList[index].status = newStatus;
-      localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
+      saveLocalComplaintList(globalComplaintsList);
       renderAdminTable();
 
       showDeviceNotification("⚙️ Status Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
 
       try {
+        const complaintForServer = { ...globalComplaintsList[index], gambarBase64: "", gambar: "" };
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(globalComplaintsList[index])
+          body: JSON.stringify(complaintForServer)
         });
       } catch(err) {
         console.error("Gagal kemas kini status ke Sheets:", err);
@@ -854,7 +883,7 @@
     async function deleteAduan(ticketId) {
       if (confirm(`Adakah anda pasti nak PADAM aduan ${ticketId} terus dari Google Sheets?`)) {
         globalComplaintsList = globalComplaintsList.filter(item => item.id.toLowerCase() !== ticketId.toLowerCase());
-        localStorage.setItem('tvet_aduan_list', JSON.stringify(globalComplaintsList));
+        saveLocalComplaintList(globalComplaintsList);
         renderAdminTable();
 
         try {
