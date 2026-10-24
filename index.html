@@ -500,11 +500,12 @@
   </div>
 
   <script>
-    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzNSSTDFGW0igU1z-NEannSorfn3TvUZOFLBSRxqnIWQ9dNfuuENfWkQdIe59dpa6qt/exec"; 
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw9LlxiN3838IQNdLT6vXr-Z5_4VqCVITK9Mn6E6nXQY2Ao5gEw869AsU27o78hB8E/exec"; 
 
     let globalComplaintsList = [];
     let currentFilter = 'ALL';
     let currentUploadedImageBase64 = "";
+    let currentImageProcessing = Promise.resolve(true);
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
@@ -596,47 +597,64 @@
 
       if (!file) {
         currentUploadedImageBase64 = "";
+        currentImageProcessing = Promise.resolve(true);
         preview.style.display = 'none';
         uploadText.innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
         return;
       }
 
+      currentUploadedImageBase64 = "";
       uploadText.innerText = "⏳ Memproses gambar untuk iOS...";
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          
-          const max_size = 400; 
-          if (width > height) {
-            if (width > max_size) {
+      currentImageProcessing = new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onerror = function() {
+          uploadText.innerText = "❌ Gagal membaca gambar. Cuba fail JPG atau PNG.";
+          preview.style.display = 'none';
+          resolve(false);
+        };
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onerror = function() {
+            uploadText.innerText = "❌ Format gambar tidak disokong. Cuba fail JPG atau PNG.";
+            preview.style.display = 'none';
+            resolve(false);
+          };
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            const max_size = 400;
+            if (width > height && width > max_size) {
               height *= max_size / width;
               width = max_size;
-            }
-          } else {
-            if (height > max_size) {
+            } else if (height >= width && height > max_size) {
               width *= max_size / height;
               height = max_size;
             }
-          }
-          
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.4);
-          preview.src = currentUploadedImageBase64;
-          preview.style.display = 'block';
-          uploadText.innerText = "✅ Gambar berjaya dimasukkan!";
+
+            canvas.width = Math.round(width);
+            canvas.height = Math.round(height);
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+              uploadText.innerText = "❌ Gagal memproses gambar. Cuba fail JPG atau PNG.";
+              preview.style.display = 'none';
+              resolve(false);
+              return;
+            }
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6);
+            preview.src = currentUploadedImageBase64;
+            preview.style.display = 'block';
+            uploadText.innerText = "✅ Gambar berjaya diproses dan sedia dihantar.";
+            resolve(true);
+          };
+          img.src = e.target.result;
         };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      });
     }
 
     async function handleFormSubmit(e) {
@@ -645,6 +663,16 @@
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
       submitBtn.innerText = "SEDANG MENGHANTAR...";
+
+      if (document.getElementById('gambarInput').files.length > 0) {
+        const imageReady = await currentImageProcessing;
+        if (!imageReady || !currentUploadedImageBase64) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "HANTAR ADUAN SEKARANG";
+          alert("Gambar belum berjaya diproses. Sila pilih gambar JPG/PNG yang boleh dibuka, atau hantar semula tanpa gambar.");
+          return;
+        }
+      }
 
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const ticketId = `#TVET-${randomNum}`;
@@ -702,6 +730,7 @@
       document.getElementById('imgPreview').style.display = 'none';
       document.getElementById('uploadText').innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
       currentUploadedImageBase64 = "";
+      currentImageProcessing = Promise.resolve(true);
     }
 
     function closeTicketPopup() {
@@ -918,7 +947,14 @@
     function createEvidenceImage(item) {
       const rawImage = String(item.gambarBase64 || item.gambar || item.image || "").trim();
       const imageSource = getEvidenceImageSource(rawImage);
-      if (!imageSource || rawImage === "Tiada Gambar" || rawImage === "Gagal Simpan Gambar") {
+      if (rawImage === "Gagal Simpan Gambar") {
+        const error = document.createElement("span");
+        error.className = "no-img";
+        error.textContent = "Gagal simpan ke Drive";
+        return error;
+      }
+
+      if (!imageSource || rawImage === "Tiada Gambar") {
         const noImage = document.createElement("span");
         noImage.className = "no-img";
         noImage.textContent = "Tiada Gambar";
