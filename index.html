@@ -625,7 +625,7 @@
             let width = img.width;
             let height = img.height;
 
-            const max_size = 400;
+            const max_size = 1600;
             if (width > height && width > max_size) {
               height *= max_size / width;
               width = max_size;
@@ -645,7 +645,7 @@
             }
 
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6);
+            currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.9);
             preview.src = currentUploadedImageBase64;
             preview.style.display = 'block';
             uploadText.innerText = "✅ Gambar berjaya diproses dan sedia dihantar.";
@@ -934,7 +934,7 @@
           const filePathMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
           const fileId = filePathMatch ? filePathMatch[1] : url.searchParams.get("id");
           if (fileId) {
-            return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
+            return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w2000`;
           }
         }
 
