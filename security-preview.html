@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f9fa">
+  <title>Pratonton Keselamatan Admin | TVETMARA Lenggong</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #b91c1c;
+      --brand-dark: #991b1b;
+      --brand-light: #fef2f2;
+      --ink: #111827;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --surface: #fff;
+      --background: #f8f9fa;
+      --green: #15803d;
+      --green-bg: #f0fdf4;
+      --blue: #1d4ed8;
+      --blue-bg: #eff6ff;
+      --heading: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.5;
+    }
+
+    button, input, textarea { font: inherit; }
+    .container { width: min(100% - 2rem, 1120px); margin-inline: auto; }
+    .site-header { background: var(--surface); border-bottom: 2px solid var(--ink); }
+    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--ink); }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; background: var(--brand); color: white; font-family: var(--heading); font-weight: 800; }
+    .brand-name { font-family: var(--heading); font-weight: 800; font-size: 0.82rem; line-height: 1.2; }
+    .brand-name span { display: block; margin-top: 0.2rem; color: var(--brand); font-family: var(--body); font-size: 0.63rem; letter-spacing: 0.08em; }
+    .nav { display: flex; align-items: center; gap: 0.5rem; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 42px; padding: 0.55rem 0.9rem; border: 2px solid var(--ink); border-radius: 0; background: white; color: var(--ink); font-weight: 700; text-decoration: none; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+    .button:active { transform: translate(2px, 2px); box-shadow: none; }
+    .button-primary { border-color: var(--brand); background: var(--brand); color: white; box-shadow: 2px 2px 0 var(--brand-dark); }
+    .button-primary:hover { background: var(--brand-dark); }
+    .button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+
+    main { padding-block: 2rem 4rem; }
+    .prototype-warning { margin-bottom: 1.25rem; padding: 0.85rem 1rem; border: 1px solid #f59e0b; background: #fffbeb; color: #78350f; font-size: 0.85rem; }
+    .prototype-warning strong { display: block; }
+    .intro { margin-bottom: 1.5rem; }
+    .eyebrow { margin: 0 0 0.35rem; color: var(--brand); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+    h1, h2, h3 { font-family: var(--heading); }
+    h1 { margin: 0; font-size: clamp(1.8rem, 5vw, 2.7rem); line-height: 1.12; letter-spacing: -0.04em; }
+    .intro p:last-child { max-width: 720px; margin: 0.7rem 0 0; color: var(--muted); }
+    .panel { border: 2px solid var(--ink); background: var(--surface); box-shadow: 6px 6px 0 var(--ink); }
+    .panel-head { padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { margin: 0; font-size: 1.2rem; }
+    .panel-head p { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.85rem; }
+    .panel-body { padding: clamp(1rem, 3vw, 1.5rem); }
+    .view { display: none; }
+    .view.active { display: block; }
+    .form-grid { display: grid; gap: 1rem; }
+    .field { display: grid; gap: 0.45rem; }
+    label { font-size: 0.86rem; font-weight: 700; }
+    input, textarea { width: 100%; padding: 0.75rem; border: 2px solid var(--ink); background: white; color: var(--ink); }
+    textarea { min-height: 110px; resize: vertical; }
+    .hint { margin: 0; color: var(--muted); font-size: 0.78rem; }
+    .privacy-note { margin: 1rem 0; padding: 0.8rem; border-left: 3px solid var(--blue); background: var(--blue-bg); color: #1e3a8a; font-size: 0.82rem; }
+    .demo-result { display: none; margin-top: 1rem; padding: 0.8rem; border: 1px solid #86efac; background: var(--green-bg); color: #166534; font-size: 0.85rem; }
+
+    .login-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 0.75fr); gap: 1.5rem; align-items: start; }
+    .login-card { padding: 1.25rem; border: 1px solid var(--line); background: #fff; }
+    .login-card h3 { margin: 0; font-size: 1rem; }
+    .login-card p { color: var(--muted); font-size: 0.84rem; }
+    .google-button { width: 100%; margin-top: 0.5rem; }
+    .access-list { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.82rem; }
+    .access-list li + li { margin-top: 0.4rem; }
+    .admin-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+    .signed-in { display: flex; align-items: center; gap: 0.65rem; }
+    .avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--green-bg); color: var(--green); font-weight: 800; }
+    .signed-in strong { display: block; font-size: 0.83rem; }
+    .signed-in span { color: var(--muted); font-size: 0.75rem; }
+    .status-chip { display: inline-flex; padding: 0.2rem 0.5rem; border: 1px solid #86efac; background: var(--green-bg); color: #166534; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+    .admin-table-wrap { overflow-x: auto; border: 1px solid var(--ink); }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; font-size: 0.82rem; }
+    th, td { padding: 0.75rem; border: 1px solid var(--line); text-align: left; }
+    th { background: #f3f4f6; font-family: var(--heading); }
+    .image-preview { width: 48px; height: 48px; display: grid; place-items: center; border: 1px dashed #9ca3af; color: #6b7280; font-size: 0.65rem; text-align: center; }
+    .admin-actions { display: flex; gap: 0.45rem; }
+    .small-button { min-height: 32px; padding: 0.25rem 0.5rem; font-size: 0.72rem; box-shadow: none; }
+    .footer-note { margin-top: 1.2rem; color: var(--muted); font-size: 0.76rem; }
+
+    @media (max-width: 650px) {
+      .header-inner { min-height: 70px; flex-wrap: wrap; padding-block: 0.65rem; }
+      .nav { width: 100%; }
+      .nav .button { flex: 1; }
+      .login-layout { grid-template-columns: 1fr; }
+      .admin-toolbar { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#" aria-label="TVETMARA Lenggong">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-name">PORTAL ADUAN ASRAMA<span>TVETMARA LENGGONG</span></span>
+      </a>
+      <nav class="nav" aria-label="Pratonton navigasi">
+        <button class="button" type="button" data-show="publicView">Borang pelajar</button>
+        <button class="button" type="button" data-show="adminView">Admin staf</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <aside class="prototype-warning" role="note">
+      <strong>Prototaip untuk semakan sahaja â€” bukan sistem sebenar.</strong>
+      Borang tidak menghantar data. Log masuk staf disimulasikan dalam pelayar dan tidak melindungi API, Google Sheets atau gambar.
+    </aside>
+
+    <section class="intro">
+      <p class="eyebrow">Pratonton aliran akses</p>
+      <h1>Borang awam, pengurusan terhad kepada staf</h1>
+      <p>Pelajar boleh membuat laporan tanpa membuka dashboard. Staf melalui log masuk dan semakan kebenaran sebelum melihat atau mengurus rekod.</p>
+    </section>
+
+    <section id="publicView" class="view active" aria-labelledby="public-title">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="public-title">Borang laporan pelajar</h2>
+          <p>Contoh paparan umum. Tiada nama akaun atau data laporan lain dipaparkan di sini.</p>
+        </div>
+        <div class="panel-body">
+          <form id="demoForm" class="form-grid">
+            <div class="field">
+              <label for="studentName">Nama pelajar</label>
+              <input id="studentName" autocomplete="name" placeholder="Nama penuh">
+            </div>
+            <div class="field">
+              <label for="room">Wing dan bilik</label>
+              <input id="room" placeholder="Contoh: Wing A, Bilik L2-1-01">
+            </div>
+            <div class="field">
+              <label for="issue">Keterangan laporan</label>
+              <textarea id="issue" placeholder="Terangkan kerosakan atau keadaan bilik"></textarea>
+            </div>
+            <div class="field">
+              <label for="evidence">Gambar bukti</label>
+              <input id="evidence" type="file" accept="image/*">
+              <p class="hint">Dalam sistem sebenar, fail dihantar ke storan laporan yang ditetapkan dan hanya staf dibenarkan boleh melihatnya.</p>
+            </div>
+            <div class="privacy-note">
+              Rekod pelajar, tindakan admin dan pautan gambar tidak dihantar ke halaman awam. Semua semakan akses dibuat di server dalam sistem sebenar.
+            </div>
+            <button class="button button-primary" type="submit">Hantar laporan (demo)</button>
+            <div id="demoResult" class="demo-result" role="status">Ini hanya pratontonâ€”tiada laporan dihantar atau disimpan.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="adminView" class="view" aria-labelledby="admin-title">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="admin-title">Akses staf</h2>
+          <p>Hanya alamat email yang disenaraikan oleh pentadbir boleh membuka dashboard.</p>
+        </div>
+        <div class="panel-body">
+          <div id="loginState" class="login-layout">
+            <div class="login-card">
+              <h3>Log masuk dengan Google</h3>
+              <p>Tiada kata laluan portal untuk dikongsi. Sistem sebenar akan meminta Google mengesahkan akaun staf, kemudian server memeriksa senarai akses yang dibenarkan.</p>
+              <button id="demoLogin" class="button button-primary google-button" type="button">G simulasikan log masuk staf</button>
+              <p class="hint">Butang ini hanya membuka paparan contoh; ia tidak menjalankan Google OAuth.</p>
+            </div>
+            <div class="login-card">
+              <h3>Semakan yang perlu dibuat di server</h3>
+              <ul class="access-list">
+                <li>Identiti Google telah disahkan, bukan sekadar email ditaip.</li>
+                <li>Email tepat berada dalam senarai staf yang dibenarkan.</li>
+                <li>Setiap permintaan lihat, ubah atau padam diperiksa semula.</li>
+                <li>Pelajar tidak diberi akses admin hanya kerana domain email sama.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="adminState" hidden>
+            <div class="admin-toolbar">
+              <div class="signed-in">
+                <span class="avatar" aria-hidden="true">S</span>
+                <div><strong>Staf dibenarkan <span class="status-chip">Akses disahkan Â· demo</span></strong><span>warden@lenggong.kktm.edu.my Â· contoh sahaja</span></div>
+              </div>
+              <button id="demoLogout" class="button small-button" type="button">Log keluar</button>
+            </div>
+            <div class="admin-table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Wing / bilik</th><th>Jenis laporan</th><th>Gambar</th><th>Status</th><th>Tindakan</th></tr></thead>
+                <tbody>
+                  <tr><td>#TVET-7514</td><td>Wing A / L2-1-16</td><td>Aduan kerosakan</td><td><span class="image-preview">Gambar<br>staf sahaja</span></td><td>Pending</td><td><div class="admin-actions"><button class="button small-button" type="button" disabled>Ubah</button><button class="button small-button" type="button" disabled>Padam</button></div></td></tr>
+                  <tr><td>#BILIK-DEMO</td><td>Wing B / L1-2-03</td><td>Laporan kendiri</td><td><span class="image-preview">Gambar<br>staf sahaja</span></td><td>Perlu perhatian</td><td><div class="admin-actions"><button class="button small-button" type="button" disabled>Ubah</button><button class="button small-button" type="button" disabled>Padam</button></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="footer-note">Data di atas contoh rekaan. Dalam sistem sebenar, server hanya menghantar rekod dan gambar kepada staf yang disahkan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const views = document.querySelectorAll('.view');
+    document.querySelectorAll('[data-show]').forEach(button => {
+      button.addEventListener('click', () => {
+        views.forEach(view => view.classList.toggle('active', view.id === button.dataset.show));
+        document.getElementById(button.dataset.show).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    document.getElementById('demoForm').addEventListener('submit', event => {
+      event.preventDefault();
+      document.getElementById('demoResult').style.display = 'block';
+    });
+
+    document.getElementById('demoLogin').addEventListener('click', () => {
+      document.getElementById('loginState').hidden = true;
+      document.getElementById('adminState').hidden = false;
+    });
+
+    document.getElementById('demoLogout').addEventListener('click', () => {
+      document.getElementById('adminState').hidden = true;
+      document.getElementById('loginState').hidden = false;
+    });
+  </script>
+</body>
+</html>
