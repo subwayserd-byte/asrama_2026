@@ -947,10 +947,10 @@
     function createEvidenceImage(item) {
       const rawImage = String(item.gambarBase64 || item.gambar || item.image || "").trim();
       const imageSource = getEvidenceImageSource(rawImage);
-      if (rawImage === "Gagal Simpan Gambar") {
+      if (rawImage.indexOf("Gagal Simpan Gambar") === 0) {
         const error = document.createElement("span");
         error.className = "no-img";
-        error.textContent = "Gagal simpan ke Drive";
+        error.textContent = rawImage;
         return error;
       }
 
