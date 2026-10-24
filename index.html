@@ -893,6 +893,64 @@
       URL.revokeObjectURL(url);
     }
 
+    function getEvidenceImageSource(value) {
+      const imageValue = String(value || "").trim();
+      if (imageValue.indexOf("data:image/") === 0) return imageValue;
+
+      try {
+        const url = new URL(imageValue);
+        if (url.protocol !== "https:") return "";
+
+        if (url.hostname === "drive.google.com") {
+          const filePathMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
+          const fileId = filePathMatch ? filePathMatch[1] : url.searchParams.get("id");
+          if (fileId) {
+            return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
+          }
+        }
+
+        return url.href;
+      } catch (err) {
+        return "";
+      }
+    }
+
+    function createEvidenceImage(item) {
+      const rawImage = String(item.gambarBase64 || item.gambar || item.image || "").trim();
+      const imageSource = getEvidenceImageSource(rawImage);
+      if (!imageSource || rawImage === "Tiada Gambar" || rawImage === "Gagal Simpan Gambar") {
+        const noImage = document.createElement("span");
+        noImage.className = "no-img";
+        noImage.textContent = "Tiada Gambar";
+        return noImage;
+      }
+
+      const image = document.createElement("img");
+      image.src = imageSource;
+      image.alt = "Bukti Pelajar";
+      image.className = "img-thumbnail";
+      image.addEventListener("click", () => zoomImage(imageSource));
+      image.onerror = function() {
+        if (rawImage.indexOf("https://") === 0) {
+          const link = document.createElement("a");
+          link.href = rawImage;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = "🖼️ Buka gambar";
+          link.style.color = "var(--status-process)";
+          link.style.fontWeight = "bold";
+          link.style.fontSize = "0.8rem";
+          this.parentNode.replaceChild(link, this);
+        } else {
+          const unavailable = document.createElement("span");
+          unavailable.className = "no-img";
+          unavailable.textContent = "Gambar tidak dapat dipaparkan";
+          this.parentNode.replaceChild(unavailable, this);
+        }
+      };
+      return image;
+    }
+
     function renderAdminTable() {
       const tbody = document.getElementById('adminTableBody');
       if (!tbody) return;
@@ -920,19 +978,6 @@
       filteredList.forEach((item) => {
         const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
 
-        // KITA SEMAK SEMUA VARIASI NAMA KEY GAMBAR SUPAYA IA 100% PASTI KELUAR
-        let imgCell = `<span class="no-img">Tiada Gambar</span>`;
-        const imgData = item.gambarBase64 || item.gambar || item.image || "";
-        
-        if (imgData && imgData.length > 20) {
-          if (imgData.startsWith('http')) {
-            imgCell = `<a href="${imgData}" target="_blank" style="color:var(--status-process); font-weight:bold; font-size:0.8rem;">🖼️ Buka URL</a>`;
-          } else {
-            // Render imej sebenar yang dihantar pelajar dengan tetapan selamat
-            imgCell = `<img src="${imgData}" class="img-thumbnail" onclick="zoomImage('${imgData}')" alt="Bukti Pelajar">`;
-          }
-        }
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${item.id}</strong></td>
@@ -941,7 +986,7 @@
           <td>${item.Wing || item.blok || item.lokasi || '-'}</td>
           <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
           <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
-          <td style="text-align: center;">${imgCell}</td>
+          <td style="text-align: center;"></td>
           <td>${item.keterangan}</td>
           <td>
             <span class="status-badge ${item.status === 'Pending' ? 'status-pending' : item.status === 'Dalam Tindakan' ? 'status-process' : 'status-done'}">
@@ -959,6 +1004,7 @@
             <button class="btn btn-danger" onclick="deleteAduan('${item.id}')">🗑️</button>
           </td>
         `;
+        tr.cells[6].appendChild(createEvidenceImage(item));
         tbody.appendChild(tr);
       });
     }
