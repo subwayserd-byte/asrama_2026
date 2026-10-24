@@ -237,5 +237,21 @@
   <footer class="site-footer">
     <div class="container"><strong>TVETMARA Lenggong</strong> — Unit Pengurusan Asrama &amp; Kebajikan Pelajar.</div>
   </footer>
+  <script>
+    (() => {
+      const checkMaintenanceStatus = async () => {
+        try {
+          const response = await fetch(`/maintenance-status.json?t=${Date.now()}`, { cache: "no-store" });
+          if (!response.ok) return;
+          const status = await response.json();
+          if (status.maintenance === false) window.location.replace("/");
+        } catch (error) {
+          console.warn("Status penyelenggaraan tidak dapat diperiksa buat masa ini.");
+        }
+      };
+      checkMaintenanceStatus();
+      window.setInterval(checkMaintenanceStatus, 15000);
+    })();
+  </script>
 </body>
 </html>
