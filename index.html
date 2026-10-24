@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   
   <style>
     :root {
@@ -413,9 +414,9 @@
 
             <div class="form-group">
               <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
-              <div class="file-dropzone" onclick="document.getElementById('gambarInput').click()">
+              <div class="file-dropzone">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
-                <input type="file" id="gambarInput" accept="image/jpeg,image/jpg,image/png,image/heic,image/heif" onchange="previewAndCompressFile(this)">
+                <input type="file" id="gambarInput" accept="image/*" onchange="previewAndCompressFile(this)">
                 <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
               </div>
             </div>
@@ -432,7 +433,7 @@
       <div class="section-header" style="text-align: center;">
         <span class="section-subtitle">Laporan Mingguan</span>
         <h2 class="section-title">Laporan Kendiri Bilik</h2>
-        <p class="hero-desc" style="margin: 0.75rem auto 0; max-width: 650px;">Hantar satu laporan bagi bilik anda setiap minggu pada hari jumaat sahaja.</p>
+        <p class="hero-desc" style="margin: 0.75rem auto 0; max-width: 650px;">Hantar satu laporan bagi bilik anda setiap minggu. Gambar hanya disimpan sementara dalam tab pelayar ini dan tidak dimuat naik ke Google Drive.</p>
       </div>
 
       <div class="form-wrapper" style="max-width: 700px; margin: 0 auto;">
@@ -455,9 +456,9 @@
             </div>
             <div class="form-group">
               <label for="roomImageInput">Gambar bilik (Pilihan)</label>
-              <div class="file-dropzone" onclick="document.getElementById('roomImageInput').click()">
+              <div class="file-dropzone">
                 <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="roomUploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
-                <input type="file" id="roomImageInput" accept="image/jpeg,image/jpg,image/png" onchange="previewAndCompressFile(this, 'roomImgPreview', 'roomUploadText')">
+                <input type="file" id="roomImageInput" accept="image/*" onchange="previewAndCompressFile(this, 'roomImgPreview', 'roomUploadText')">
                 <img id="roomImgPreview" class="preview-image" alt="Pratonton Gambar Bilik">
               </div>
             </div>
@@ -597,8 +598,8 @@
     let currentAdminReportMode = 'aduan';
     let complaintDataLoaded = false;
     const imageUploadStates = {
-      gambarInput: { data: "", processing: Promise.resolve(true) },
-      roomImageInput: { data: "", processing: Promise.resolve(true) }
+      gambarInput: { data: "", processing: Promise.resolve(true), sequence: 0 },
+      roomImageInput: { data: "", processing: Promise.resolve(true), sequence: 0 }
     };
 
     function getSessionImageKey(ticketId) {
@@ -740,7 +741,9 @@
       const uploadText = document.getElementById(uploadTextId);
       const imageState = imageUploadStates[input.id];
       const file = input.files[0];
+      if (!imageState) return;
 
+      const sequence = ++imageState.sequence;
       if (!file) {
         imageState.data = "";
         imageState.processing = Promise.resolve(true);
@@ -749,57 +752,114 @@
         return;
       }
 
+      input.value = "";
       imageState.data = "";
-      uploadText.innerText = "⏳ Memproses gambar untuk iOS...";
+      uploadText.innerText = `⏳ Gambar dipilih: ${file.name || "gambar"} — sedang memproses...`;
+      preview.removeAttribute('src');
+      preview.style.display = 'block';
 
       imageState.processing = new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onerror = function() {
-          uploadText.innerText = "❌ Gagal membaca gambar. Cuba fail JPG atau PNG.";
+        let previewUrl = "";
+        let settled = false;
+        let imageFile = file;
+
+        const finishWithError = (message) => {
+          if (settled || sequence !== imageState.sequence) return;
+          settled = true;
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
+          imageState.data = "";
           preview.style.display = 'none';
+          uploadText.innerText = message;
           resolve(false);
         };
-        reader.onload = function(e) {
-          const img = new Image();
-          img.onerror = function() {
-            uploadText.innerText = "❌ Format gambar tidak disokong. Cuba fail JPG atau PNG.";
-            preview.style.display = 'none';
-            resolve(false);
-          };
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
 
-            const max_size = 1600;
-            if (width > height && width > max_size) {
-              height *= max_size / width;
-              width = max_size;
-            } else if (height >= width && height > max_size) {
-              width *= max_size / height;
-              height = max_size;
-            }
+        const loadImageFile = (fileToLoad) => {
+          imageFile = fileToLoad;
+          try {
+            previewUrl = URL.createObjectURL(imageFile);
+          } catch (err) {
+            finishWithError("❌ Pelayar tidak dapat membuka gambar ini. Cuba simpan semula sebagai JPEG.");
+            return;
+          }
 
-            canvas.width = Math.round(width);
-            canvas.height = Math.round(height);
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-              uploadText.innerText = "❌ Gagal memproses gambar. Cuba fail JPG atau PNG.";
-              preview.style.display = 'none';
-              resolve(false);
-              return;
-            }
+          preview.src = previewUrl;
+          const objectImage = new Image();
+          objectImage.onerror = decodeWithDataUrl;
+          objectImage.onload = () => processDecodedImage(objectImage);
+          objectImage.src = previewUrl;
+        };
 
+        const convertHeicThenLoad = () => {
+          const looksLikeHeic = /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name || "");
+          if (!looksLikeHeic) {
+            loadImageFile(file);
+            return;
+          }
+          if (typeof window.heic2any !== 'function') {
+            finishWithError("❌ Pelayar iPhone tidak dapat menukar HEIC. Dalam Photos, pilih gambar → Share → Options → Most Compatible, kemudian simpan/hantar semula sebagai JPEG.");
+            return;
+          }
+
+          uploadText.innerText = "⏳ Menukar gambar HEIC iPhone kepada JPEG...";
+          window.heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 })
+            .then(converted => loadImageFile(Array.isArray(converted) ? converted[0] : converted))
+            .catch(() => finishWithError("❌ Gagal menukar gambar HEIC. Cuba kongsi gambar sebagai JPEG melalui Photos dan pilih semula."));
+        };
+
+        const processDecodedImage = (img) => {
+          if (settled || sequence !== imageState.sequence) return;
+          const canvas = document.createElement('canvas');
+          let width = img.naturalWidth;
+          let height = img.naturalHeight;
+          if (!width || !height) {
+            finishWithError("❌ Fail dipilih tetapi imej tidak dapat dinyahkod. Cuba kongsi/simpan semula sebagai JPEG.");
+            return;
+          }
+
+          const max_size = 1600;
+          if (width > height && width > max_size) {
+            height *= max_size / width;
+            width = max_size;
+          } else if (height >= width && height > max_size) {
+            width *= max_size / height;
+            height = max_size;
+          }
+
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            finishWithError("❌ Pelayar tidak dapat memproses gambar. Cuba simpan semula sebagai JPEG.");
+            return;
+          }
+
+          try {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             imageState.data = canvas.toDataURL('image/jpeg', 0.9);
+            settled = true;
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
             preview.src = imageState.data;
             preview.style.display = 'block';
             uploadText.innerText = "✅ Gambar berjaya diproses dan sedia dihantar.";
             resolve(true);
-          };
-          img.src = e.target.result;
+          } catch (err) {
+            finishWithError("❌ Gagal memproses gambar. Cuba simpan semula sebagai JPEG.");
+          }
         };
-        reader.readAsDataURL(file);
+
+        const decodeWithDataUrl = () => {
+          const reader = new FileReader();
+          reader.onerror = () => finishWithError("❌ Gagal membaca fail gambar. Cuba simpan semula sebagai JPEG.");
+          reader.onload = () => {
+            const dataImage = new Image();
+            dataImage.onerror = () => finishWithError("❌ Format gambar ini tidak disokong oleh Safari. Simpan/kongsi sebagai JPEG dan cuba lagi.");
+            dataImage.onload = () => processDecodedImage(dataImage);
+            dataImage.src = reader.result;
+          };
+          reader.readAsDataURL(imageFile);
+        };
+
+        convertHeicThenLoad();
       });
     }
 
