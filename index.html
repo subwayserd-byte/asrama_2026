@@ -2,26 +2,1441 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>Portal Aduan Asrama | TVETMARA Lenggong</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sistem Aduan Kerosakan Asrama | TVETMARA Lenggong</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <script>
-    (async () => {
-      const maintenanceUrl = "/maintenance.html";
-      const portalUrl = "/portal.html";
-      try {
-        const response = await fetch(`/maintenance-status.json?t=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) throw new Error("Status penyelenggaraan tidak tersedia.");
-        const status = await response.json();
-        window.location.replace(status.maintenance === true ? maintenanceUrl : portalUrl);
-      } catch (error) {
-        window.location.replace(maintenanceUrl);
-      }
+    (() => {
+      const maintenanceStatusUrl = "/maintenance-status.json";
+      const maintenancePageUrl = "/maintenance.html";
+      const checkMaintenanceStatus = async () => {
+        try {
+          const response = await fetch(`${maintenanceStatusUrl}?t=${Date.now()}`, { cache: "no-store" });
+          if (!response.ok) return;
+          const status = await response.json();
+          if (status.maintenance === true) window.location.replace(maintenancePageUrl);
+        } catch (error) {
+          console.warn("Status penyelenggaraan tidak dapat diperiksa buat masa ini.");
+        }
+      };
+      checkMaintenanceStatus();
+      window.setInterval(checkMaintenanceStatus, 15000);
     })();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  
+  <style>
+    :root {
+      --color-brand: #b91c1c;
+      --color-brand-hover: #991b1b;
+      --color-brand-light: #fef2f2;
+      --color-bg: #f8f9fa;
+      --color-surface: #ffffff;
+      --color-text-main: #111827;
+      --color-text-muted: #4b5563;
+      --color-border: #e5e7eb;
+      --color-border-dark: #111827;
+      --status-pending: #d97706;
+      --status-pending-bg: #fef3c7;
+      --status-process: #2563eb;
+      --status-process-bg: #dbeafe;
+      --status-done: #16a34a;
+      --status-done-bg: #dcfce7;
+      --font-heading: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --container-max: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-left: clamp(1rem, 3vw, 2.5rem);
+      padding-right: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    .site-header {
+      background-color: var(--color-surface);
+      border-bottom: 2px solid var(--color-border-dark);
+      position: sticky; top: 0; z-index: 50;
+    }
+
+    .header-inner {
+      display: flex; justify-content: space-between; align-items: center; min-height: 82px; gap: 1rem;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-brand);
+      text-decoration: none;
+      color: var(--color-text-main);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .logo-container:hover {
+      background-color: var(--color-brand-light);
+      border-color: #fca5a5;
+    }
+
+    .logo-svg {
+      height: 34px;
+      width: auto;
+      max-width: 204px;
+      display: block;
+    }
+
+    .logo-divider {
+      height: 32px;
+      width: 1px;
+      background-color: var(--color-border);
+    }
+
+    .logo-text {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.01em;
+      line-height: 1.25;
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+    }
+
+    .logo-text span {
+      margin-top: 0.15rem;
+      font-size: 0.61rem;
+      color: var(--color-brand);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.65rem 1.25rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: 2px solid var(--color-border-dark);
+      border-radius: 0px; transition: all 0.15s ease; background-color: var(--color-surface); color: var(--color-text-main);
+      box-shadow: 2px 2px 0px var(--color-border-dark);
+    }
+
+    .btn:active { transform: translate(2px, 2px); box-shadow: none; }
+    .btn-primary { background-color: var(--color-brand); color: white; border-color: var(--color-brand); }
+    .btn-primary:hover { background-color: var(--color-brand-hover); }
+    .btn-outline { background-color: transparent; color: var(--color-text-main); }
+    .btn-danger { background-color: #dc2626; color: white; border-color: #991b1b; padding: 0.3rem 0.6rem; font-size: 0.75rem; box-shadow: none; }
+    .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.75rem; }
+
+    .hero {
+      padding: 3.5rem 0 4rem; background-color: var(--color-surface);
+      border-bottom: 2px solid var(--color-border-dark);
+    }
+
+    .hero-grid {
+      display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center;
+    }
+
+    .hero-tag {
+      display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-brand-light);
+      color: var(--color-brand); border: 1px solid #fca5a5; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.25rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem;
+    }
+
+    .hero-desc { font-size: 1.05rem; color: var(--color-text-muted); margin-bottom: 2rem; }
+
+    .hero-cta-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--color-brand);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    #hantar-aduan, #semak-status { scroll-margin-top: 90px; }
+
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+      padding-top: 1.5rem; border-top: 1px solid var(--color-border); margin-top: 2rem;
+    }
+
+    .stat-number { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; }
+    .stat-label { font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 600; }
+
+    .hero-image-box {
+      width: 100%; aspect-ratio: 4/3; background-color: #e2e8f0;
+      border: 2px solid var(--color-border-dark); position: relative; overflow: hidden;
+      box-shadow: 6px 6px 0px var(--color-border-dark);
+    }
+
+    .hero-image-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .section-padding { padding: 4rem 0; }
+    .section-header { margin-bottom: 2.5rem; }
+    .section-subtitle { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--color-brand); letter-spacing: 0.05em; }
+    .section-title { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.25rem; }
+
+    .emergency-banner {
+      background-color: #fef2f2; border: 2px solid #ef4444; padding: 1.5rem 2rem;
+      margin-top: -1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between;
+      align-items: center; gap: 1.5rem; box-shadow: 4px 4px 0px #ef4444;
+    }
+
+    .emergency-info h3 { font-family: var(--font-heading); color: #991b1b; font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .emergency-contacts { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .contact-card { background: white; padding: 0.75rem 1rem; border: 1px solid #fca5a5; font-size: 0.85rem; min-width: 150px; }
+    .contact-card strong { display: block; font-size: 0.7rem; color: #991b1b; text-transform: uppercase; }
+    .contact-card a { color: var(--color-text-main); text-decoration: none; font-weight: 700; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .feature-card { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); padding: 1.75rem; box-shadow: 4px 4px 0px var(--color-border-dark); }
+    .feature-num { font-family: var(--font-heading); font-size: 2.25rem; font-weight: 800; color: #d1d5db; line-height: 1; margin-bottom: 1rem; }
+    .feature-title { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.85rem; color: var(--color-text-muted); }
+
+    .form-wrapper { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); padding: 2.5rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+    .form-group[hidden] { display: none; }
+    label { font-size: 0.9rem; font-weight: 700; color: var(--color-text-main); }
+
+    input[type="text"], input[type="password"], input[type="tel"], select, textarea {
+      width: 100%; padding: 0.85rem; font-family: var(--font-body); font-size: 0.95rem;
+      border: 2px solid var(--color-border-dark); background-color: #fff; border-radius: 0; outline: none;
+    }
+
+    .category-options { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 0.75rem; 
+    }
+    .cat-btn { padding: 0.85rem; border: 2px solid var(--color-border-dark); text-align: center; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: white; }
+    .cat-btn.active { border-color: var(--color-brand); background-color: var(--color-brand-light); color: var(--color-brand); box-shadow: 2px 2px 0px var(--color-brand); }
+    .room-condition-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .room-condition-option { display: flex; align-items: center; gap: 0.6rem; border: 2px solid var(--color-border-dark); padding: 0.85rem; cursor: pointer; font-weight: 600; }
+    .room-condition-option:has(input:checked) { border-color: var(--color-brand); background: var(--color-brand-light); color: var(--color-brand); }
+    .room-report-notice { padding: 0.75rem; background: var(--color-bg); border-left: 3px solid var(--color-brand); color: var(--color-text-muted); font-size: 0.8rem; }
+
+    .file-dropzone { border: 2px dashed var(--color-border-dark); padding: 1.5rem; text-align: center; background: var(--color-bg); cursor: pointer; position: relative; }
+    .file-dropzone input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .preview-image { max-height: 160px; margin: 1rem auto 0 auto; display: none; border: 2px solid var(--color-border-dark); }
+
+    .tracker-card { background-color: var(--color-surface); border: 2px solid var(--color-border-dark); padding: 2rem; box-shadow: 6px 6px 0px var(--color-border-dark); max-width: 600px; margin: 0 auto; }
+    .tracker-input-group { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .status-badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-pending { background: var(--status-pending-bg); color: var(--status-pending); border: 1px solid var(--status-pending); }
+    .status-process { background: var(--status-process-bg); color: var(--status-process); border: 1px solid var(--status-process); }
+    .status-done { background: var(--status-done-bg); color: var(--status-done); border: 1px solid var(--status-done); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 100; padding: 1rem; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: white; border: 2px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); width: 100%; max-width: 450px; padding: 2rem; position: relative; }
+    .modal-dashboard { max-width: 95vw; width: 95vw; height: 90vh; max-height: 90vh; overflow-y: auto; padding: 1.5rem; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+
+    .ticket-popup-box { background: white; border: 3px solid var(--color-border-dark); box-shadow: 8px 8px 0px var(--color-border-dark); width: 100%; max-width: 480px; padding: 2rem; text-align: center; }
+    .ticket-code-display { background: var(--color-brand-light); border: 2px dashed var(--color-brand); color: var(--color-brand); font-family: var(--font-heading); font-size: 2rem; font-weight: 800; padding: 1rem; margin: 1.25rem 0; }
+
+    .admin-stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .admin-stat-card { background: var(--color-bg); border: 2px solid var(--color-border-dark); padding: 1rem; }
+    .admin-stat-card .val { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; }
+    .admin-stat-card .lbl { font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700; }
+    .admin-action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem; }
+    .admin-filter-tabs { display: flex; gap: 0.5rem; }
+    .admin-report-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .admin-folder-links { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .tab-btn { padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600; border: 2px solid var(--color-border-dark); background: white; cursor: pointer; }
+    .tab-btn.active { background: var(--color-border-dark); color: white; }
+    .admin-table-container { overflow-x: auto; border: 2px solid var(--color-border-dark); }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 800px; }
+    .admin-table th, .admin-table td { border: 1px solid var(--color-border-dark); padding: 0.75rem; text-align: left; }
+    .admin-table th { background-color: var(--color-bg); font-family: var(--font-heading); }
+    .img-thumbnail { width: 50px; height: 50px; object-fit: cover; border: 1px solid var(--color-border-dark); cursor: pointer; }
+    .no-img { font-size: 0.75rem; color: var(--color-text-muted); }
+    .error-msg { color: #b91c1c; font-size: 0.8rem; font-weight: 600; margin-top: 0.5rem; display: none; }
+
+    .site-footer { background: var(--color-surface); border-top: 2px solid var(--color-border-dark); padding: 2.5rem 0; font-size: 0.85rem; color: var(--color-text-muted); }
+
+    @media (max-width: 768px) {
+      .header-inner { height: auto; padding: 0.85rem 0; flex-direction: column; gap: 0.75rem; }
+      .logo-container { justify-content: center; }
+      .logo-svg { height: 29px; max-width: 174px; }
+      .logo-container { gap: 0.65rem; padding: 0.45rem 0.65rem; }
+      .logo-text { font-size: 0.7rem; }
+      .logo-text span { font-size: 0.55rem; }
+      .nav-actions { width: 100%; justify-content: center; flex-wrap: wrap; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .emergency-banner { flex-direction: column; align-items: flex-start; }
+      .emergency-contacts { width: 100%; flex-direction: column; }
+      .contact-card { width: 100%; }
+      .category-options { grid-template-columns: 1fr; }
+      .form-wrapper { padding: 1.25rem; box-shadow: 4px 4px 0px var(--color-border-dark); }
+      .tracker-input-group { flex-direction: column; }
+      .admin-stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .admin-action-bar { flex-direction: column; align-items: stretch; }
+      .admin-filter-tabs { overflow-x: auto; padding-bottom: 0.5rem; }
+      .admin-report-tabs { overflow-x: auto; }
+      .admin-folder-links { width: 100%; }
+      .room-condition-options { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
 </head>
 <body>
-  <p>Memuatkan portal TVETMARA Lenggong…</p>
-  <noscript>Portal memerlukan JavaScript untuk memeriksa status penyelenggaraan.</noscript>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="logo-container" aria-label="Portal Aduan Asrama TVETMARA Lenggong">
+          <svg class="logo-svg" viewBox="0 0 540 90" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TVETMARA">
+            <path d="M0 12H65V28H41V84H24V28H0V12Z" fill="#1D3557"/>
+            <path d="M62 12L98 84L134 12H115L98 50L81 12H62Z" fill="#1D3557"/>
+            <path d="M92 28L134 12H105L92 28Z" fill="#E63946"/>
+            <path d="M138 12H195V28H157V38H190V53H157V68H195V84H138V12Z" fill="#1D3557"/>
+            <path d="M200 12H265V28H241V84H224V28H200V12Z" fill="#1D3557"/>
+            <path d="M270 12H294L313 52L332 12H356V84H339V36L320 84H306L287 36V84H270V12Z" fill="#1D3557"/>
+            <path d="M365 12H395L418 84H399L394 68H369L364 84H345L368 12ZM374 51H389L381 22L374 51Z" fill="#1D3557"/>
+            <circle cx="381" cy="58" r="4.5" fill="#E63946"/>
+            <path d="M422 12H450C468 12 480 21 480 34C480 44 472 51 462 54L482 84H461L444 58H440V84H422V12ZM440 26V44H451C459 44 463 40 463 35C463 30 459 26 451 26H440Z" fill="#1D3557"/>
+            <path d="M485 12H515L538 84H519L514 68H489L484 84H465L488 12ZM494 51H509L501 22L494 51Z" fill="#1D3557"/>
+            <circle cx="501" cy="58" r="4.5" fill="#E63946"/>
+          </svg>
+          <div class="logo-divider"></div>
+          <div class="logo-text">
+            PORTAL ADUAN ASRAMA
+            <span>TVETMARA LENGGONG</span>
+          </div>
+        </a>
+        <div class="nav-actions">
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()">🔔 Notifikasi</button>
+          <button class="btn btn-outline btn-sm" id="adminNavBtn" onclick="clickAdminNav()">Admin</button>
+          <a href="#hantar-aduan" class="btn btn-primary btn-sm">Buat Aduan</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <span class="hero-tag">Portal Aduan Asrama</span>
+          <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
+          <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti di asrama anda. Pengurusan Asrama TVETMARA Lenggong sedia bertindak dengan pantas.</p>
+          <span class="hero-cta-label">TEKAN DI SINI</span>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="#hantar-aduan" class="btn btn-primary" style="flex:1 1 30%;">Hantar Aduan</a>
+            <a href="#semak-status" class="btn btn-outline" style="flex:1 1 30%;">Semak Status</a>
+            <a href="#laporan-kendiri" class="btn btn-outline" style="flex:1 1 30%;">Laporan Kendiri</a>
+          </div>
+
+          <div class="hero-stats">
+            <div><div class="stat-number">Respons</div><div class="stat-label">Waktu Kecemasan</div></div>
+            <div><div class="stat-number">Sistem</div><div class="stat-label">Rasmi</div></div>
+            <div><div class="stat-number">Direct</div><div class="stat-label">Warden & AJK</div></div>
+          </div>
+        </div>
+
+        <div class="hero-image-box">
+          <img src="asrama.jpg" alt="Asrama TVETMARA Lenggong">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="emergency-banner">
+      <div class="emergency-info">
+        <h3>⚠️ KECEMASAN / ADUAN DESAKAN?</h3>
+        <p style="font-size: 0.85rem; color: #7f1d1d;">Hubungi talian kecemasan di bawah untuk bantuan serta-merta.</p>
+      </div>
+      <div class="emergency-contacts">
+        <div class="contact-card"><strong>AJK KEBAJIKAN/Naufal</strong><a href="tel:+601129661251">+6011-2966-1251</a></div>
+        <div class="contact-card"><strong>AJK KESELAMATAN/Nabil</strong><a href="tel:+601127975227">+6011-2797-5227</a></div>
+        <div class="contact-card"><strong>WARDEN/Ustaz Nabigh</strong><a href="tel:+60172479411">+6017-247-9411</a></div>
+        <div class="contact-card"><strong>PUAN ZARINA</strong><a href="tel:+60124243905">+6012-424-3905</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding" style="padding-top: 1rem;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Portal Rasmi</span>
+        <h2 class="section-title">Proses Aduan Teratur & Mudah</h2>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card"><div class="feature-num">01</div><h3 class="feature-title">Rekod Pelajar Sah</h3><p class="feature-desc">Aduan diproses secara sistematik mengikut identiti pengadu yang sah.</p></div>
+        <div class="feature-card"><div class="feature-num">02</div><h3 class="feature-title">Kategori Spesifik</h3><p class="feature-desc">Pengkelasan isu fasiliti, kebersihan, dan utiliti bagi mempercepat tindakan.</p></div>
+        <div class="feature-card"><div class="feature-num">03</div><h3 class="feature-title">Jejak Real-Time</h3><p class="feature-desc">Semak status terkini aduan menggunakan nombor tiket unik anda.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding" id="hantar-aduan" style="background-color: var(--color-surface); border-top: 2px solid var(--color-border-dark); border-bottom: 2px solid var(--color-border-dark);">
+    <div class="container">
+      <div class="section-header" style="text-align: center;">
+        <span class="section-subtitle">Borang Aduan</span>
+        <h2 class="section-title">Borang Laporan Kerosakan</h2>
+      </div>
+
+      <div class="form-wrapper" style="max-width: 700px; margin: 0 auto;">
+        <form id="aduanForm" onsubmit="handleFormSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group"><label for="nama">Nama Penuh *</label><input type="text" id="nama" placeholder="Contoh: Muhammad Ali" required></div>
+            <div class="form-group"><label for="matrik">No. Matrik / Pendaftaran *</label><input type="text" id="matrik" placeholder="Contoh: LG2501111" required></div>
+            <div class="form-group"><label for="Wing">Wing & No. Bilik *</label><input type="text" id="Wing" placeholder="Contoh: Wing A, Bilik L2-1-01" required></div>
+            <div class="form-group"><label for="telefon">No. Telefon (WhatsApp) *</label><input type="tel" id="telefon" placeholder="Contoh: 0123456789" required></div>
+
+            <div class="form-group">
+              <label>Kategori Kerosakan *</label>
+              <input type="hidden" id="kategori" value="Fasiliti" required>
+              <div class="category-options">
+                <div class="cat-btn active" onclick="selectCategory(this, 'Fasiliti')">🛠️ Fasiliti (cth: Elektrik)</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Kebersihan')">🧹 Kebersihan</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Utiliti')">💡 Utiliti (cth: Wifi)</div>
+                <div class="cat-btn" onclick="selectCategory(this, 'Lain-lain Masalah')">❓ Lain-lain Masalah</div>
+              </div>
+            </div>
+
+            <div class="form-group"><label for="keterangan">Keterangan Kerosakan *</label><textarea id="keterangan" rows="4" placeholder="Jelaskan jenis kerosakan..." required></textarea></div>
+
+            <div class="form-group">
+              <label>Muat Naik Gambar Bukti Kerosakan(Jika boleh)</label>
+              <div class="file-dropzone">
+                <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="uploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
+                <input type="file" id="gambarInput" accept="image/*" onchange="previewAndCompressFile(this)">
+                <img id="imgPreview" class="preview-image" alt="Pratonton Gambar">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 2rem; padding: 1rem; font-size: 1rem;">HANTAR ADUAN SEKARANG</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding" id="laporan-kendiri">
+    <div class="container">
+      <div class="section-header" style="text-align: center;">
+        <span class="section-subtitle">Laporan Mingguan</span>
+        <h2 class="section-title">Laporan Kendiri Bilik</h2>
+        <p class="hero-desc" style="margin: 0.75rem auto 0; max-width: 650px;">Hantar satu laporan bagi bilik anda setiap minggu. Wajib pada hari jumaat sahaja.</p>
+      </div>
+
+      <div class="form-wrapper" style="max-width: 700px; margin: 0 auto;">
+        <form id="roomReportForm" onsubmit="handleRoomReportSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="roomReportLocation">Wing & No. Bilik *</label>
+              <input type="text" id="roomReportLocation" placeholder="Contoh: Wing A, Bilik L2-1-01" required>
+            </div>
+            <div class="form-group">
+              <label>Keadaan bilik *</label>
+              <div class="room-condition-options">
+                <label class="room-condition-option"><input type="radio" name="roomCondition" value="Baik" required> ✅ Bilik dalam keadaan baik</label>
+                <label class="room-condition-option"><input type="radio" name="roomCondition" value="Perlu perhatian" required> ⚠️ Bilik tidak dalam keadaan baik</label>
+              </div>
+            </div>
+            <div class="form-group" id="roomReportNoteGroup" hidden>
+              <label for="roomReportNote">Nota ringkas masalah *</label>
+              <textarea id="roomReportNote" rows="3" placeholder="Terangkan perkara yang perlu diberi perhatian"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="roomImageInput">Gambar bilik (Pilihan)</label>
+              <div class="file-dropzone">
+                <span style="font-size: 0.85rem; color: var(--color-text-muted);" id="roomUploadText">📷 Klik tangkap/pilih gambar (Pilihan)</span>
+                <input type="file" id="roomImageInput" accept="image/*" onchange="previewAndCompressFile(this, 'roomImgPreview', 'roomUploadText')">
+                <img id="roomImgPreview" class="preview-image" alt="Pratonton Gambar Bilik">
+              </div>
+            </div>
+            <p class="room-report-notice">Hantar sekali sahaja bagi setiap bilik dalam minggu semasa. Gambar disimpan sementara dalam folder Drive kolej dan dipadam automatik selepas 7 hari.</p>
+          </div>
+          <button type="submit" id="roomReportSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 2rem; padding: 1rem; font-size: 1rem;">HANTAR LAPORAN KENDIRI</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding" id="semak-status">
+    <div class="container">
+      <div class="section-header" style="text-align: center;">
+        <span class="section-subtitle">Semakan Status</span>
+        <h2 class="section-title">Semak Status Tiket</h2>
+      </div>
+
+      <div class="tracker-card">
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center;">Masukkan ID Tiket Aduan anda (Contoh: #TVET-9921)</p>
+        <div class="tracker-input-group">
+          <input type="text" id="trackerInput" placeholder="Contoh: #TVET-9921">
+          <button class="btn btn-primary" onclick="checkStatus()">Semak</button>
+        </div>
+        <div id="trackerResult" style="margin-top: 1.25rem; display: none; padding-top: 1.25rem; border-top: 1px dashed var(--color-border-dark);"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align: center;">
+      <strong>TVETMARA Lenggong</strong> — Unit Pengurusan Asrama & Kebajikan Pelajar.<br>
+      &copy; 2026 TVETMARA Lenggong. Hak Cipta Terpelihara.
+    </div>
+  </footer>
+
+  <div class="modal-overlay" id="ticketSuccessModal">
+    <div class="ticket-popup-box">
+      <div style="font-size: 3rem; margin-bottom: 0.25rem;">🎉</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.35rem;">Aduan Berjaya Dihantar!</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted);">Sila simpan ID Tiket di bawah untuk semakan status.</p>
+
+      <div class="ticket-code-display" id="popupTicketCode">#TVET-0000</div>
+
+      <div style="font-size: 0.8rem; color: var(--color-text-muted); text-align: left; background: var(--color-bg); padding: 0.75rem; border: 1px solid var(--color-border-dark); margin-bottom: 1.25rem;">
+        <strong>Pengadu:</strong> <span id="popupNama"></span><br>
+        <strong>Kategori:</strong> <span id="popupKategori"></span><br>
+        <strong>Lokasi:</strong> <span id="popupWing"></span>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; flex-direction: column;">
+        <button class="btn btn-outline" onclick="copyTicketCode()">📋 Salin ID Tiket</button>
+        <button class="btn btn-primary" onclick="closeTicketPopup()">Tutup Window</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAdminModal()">✕</button>
+      <h3 style="font-family: var(--font-heading); margin-bottom: 0.25rem; font-size: 1.25rem;">Log Masuk Admin</h3>
+      <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Akses khas Staf / Warden TVETMARA Lenggong.</p>
+      
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group" style="margin-bottom: 1rem;"><label for="adminUsername">Username Admin</label><input type="text" id="adminUsername" placeholder="Username Admin" required></div>
+        <div class="form-group" style="margin-bottom: 1rem;"><label for="adminPassword">Kata Laluan</label><input type="password" id="adminPassword" placeholder="Kata Laluan" required></div>
+        <div id="loginError" class="error-msg">❌ Username/Password Salah!</div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">MASUK DASHBOARD</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="dashboardModal">
+    <div class="modal-content modal-dashboard">
+      <button class="modal-close" onclick="closeDashboard()">✕</button>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--color-border-dark); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+        <div>
+          <h3 style="font-family: var(--font-heading); font-size: 1.25rem;">Dashboard Pengurusan Laporan</h3>
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Akses Admin TVETMARA Lenggong</span>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <a class="btn btn-outline btn-sm" href="https://drive.google.com/drive/folders/1LPYl-WuS_7jB0lymTjkFal6L39hFVZgU?usp=sharing" target="_blank" rel="noopener noreferrer">📁 Folder Aduan</a>
+          <a class="btn btn-outline btn-sm" href="https://drive.google.com/drive/folders/1rbdUKTGCSYRBjfOPowr2czcnc-vNGc1D?usp=sharing" target="_blank" rel="noopener noreferrer">📁 Folder Kendiri</a>
+          <button class="btn btn-outline btn-sm" onclick="fetchLiveComplaints()">🔄 Refresh</button>
+          <button class="btn btn-outline btn-sm" onclick="handleLogout()">Log Keluar</button>
+        </div>
+      </div>
+
+      <div class="admin-stats-bar">
+        <div class="admin-stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Jumlah</div></div>
+        <div class="admin-stat-card"><div class="val" id="statPending" style="color: var(--status-pending);">0</div><div class="lbl">Pending</div></div>
+        <div class="admin-stat-card"><div class="val" id="statProcess" style="color: var(--status-process);">0</div><div class="lbl">Proses</div></div>
+        <div class="admin-stat-card"><div class="val" id="statDone" style="color: var(--status-done);">0</div><div class="lbl">Selesai</div></div>
+      </div>
+
+      <div class="admin-report-tabs">
+        <button class="tab-btn active" id="adminComplaintsTab" onclick="setAdminReportMode('aduan', this)">Laporan Hal Asrama</button>
+        <button class="tab-btn" id="adminRoomReportsTab" onclick="setAdminReportMode('kendiri', this)">Laporan Kendiri Bilik</button>
+      </div>
+
+      <div class="admin-action-bar">
+        <div class="admin-filter-tabs">
+          <button class="tab-btn active" onclick="filterAdminTable('ALL', this)">Semua</button>
+          <button class="tab-btn" onclick="filterAdminTable('Pending', this)">Pending</button>
+          <button class="tab-btn" onclick="filterAdminTable('Dalam Tindakan', this)">Dalam Tindakan</button>
+          <button class="tab-btn" onclick="filterAdminTable('Selesai', this)">Selesai</button>
+        </div>
+        
+        <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport Excel / CSV</button>
+      </div>
+
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead id="adminTableHead">
+            <tr id="adminTableHeadRow">
+              <th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Bilik</th>
+              <th>No. Tel</th><th>Kategori</th><th>Bukti Gambar</th><th>Keterangan</th>
+              <th>Status</th><th>Tindakan Status</th><th>Padam</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="imageZoomModal" onclick="this.classList.remove('active')">
+    <div style="background: white; padding: 0.75rem; border: 2px solid var(--color-border-dark); max-width: 95vw; max-height: 90vh;">
+      <img id="zoomedImg" src="" style="max-width: 100%; max-height: 80vh; display: block;" alt="Gambar Bukti">
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw9LlxiN3838IQNdLT6vXr-Z5_4VqCVITK9Mn6E6nXQY2Ao5gEw869AsU27o78hB8E/exec"; 
+
+    let globalComplaintsList = [];
+    let currentFilter = 'ALL';
+    let currentAdminReportMode = 'aduan';
+    let complaintDataLoaded = false;
+    const imageUploadStates = {
+      gambarInput: { data: "", processing: Promise.resolve(true), sequence: 0 },
+      roomImageInput: { data: "", processing: Promise.resolve(true), sequence: 0 }
+    };
+
+    function getSessionImageKey(ticketId) {
+      return `tvet_aduan_image_${ticketId}`;
+    }
+
+    function attachSessionImages(complaints) {
+      return complaints.map(item => {
+        const sessionImage = sessionStorage.getItem(getSessionImageKey(item.id));
+        return sessionImage ? { ...item, gambarBase64: sessionImage, gambar: sessionImage } : item;
+      });
+    }
+
+    function saveLocalComplaintList(complaints) {
+      const complaintsWithoutImages = complaints.map(({ gambarBase64, gambar, image, ...item }) => item);
+      localStorage.setItem('tvet_aduan_list', JSON.stringify(complaintsWithoutImages));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+      fetchLiveComplaints();
+      document.querySelectorAll('input[name="roomCondition"]').forEach(input => {
+        input.addEventListener('change', updateRoomReportNoteRequirement);
+      });
+    });
+
+    function updateRoomReportNoteRequirement() {
+      const condition = document.querySelector('input[name="roomCondition"]:checked');
+      const noteGroup = document.getElementById('roomReportNoteGroup');
+      const noteInput = document.getElementById('roomReportNote');
+      const needsNote = condition && condition.value === 'Perlu perhatian';
+      noteGroup.hidden = !needsNote;
+      noteInput.required = Boolean(needsNote);
+      if (!needsNote) noteInput.value = '';
+    }
+
+    function getIsoWeekKey(dateValue) {
+      const parts = String(dateValue).slice(0, 10).split('-').map(Number);
+      if (parts.length !== 3 || parts.some(Number.isNaN)) return '';
+      const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+      const day = date.getUTCDay() || 7;
+      date.setUTCDate(date.getUTCDate() + 4 - day);
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+      return `${date.getUTCFullYear()}-${String(week).padStart(2, '0')}`;
+    }
+
+    function hasRoomReportThisWeek(room, weekKey) {
+      const normalizedRoom = room.trim().toLowerCase();
+      return globalComplaintsList.some(item =>
+        item.reportType === 'kendiri' &&
+        String(item.Wing || item.blok || '').trim().toLowerCase() === normalizedRoom &&
+        getIsoWeekKey(item.tarikh) === weekKey
+      );
+    }
+
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Pelayar web anda tidak menyokong notifikasi peranti.");
+        return;
+      }
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          showDeviceNotification("🔔 Notifikasi Diaktifkan!", "Anda akan menerima makluman terus di peranti anda.");
+        } else {
+          alert("Sila benarkan keizinan notifikasi dalam tetapan pelayar anda.");
+        }
+      });
+    }
+
+    function showDeviceNotification(title, bodyText) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+          body: bodyText,
+          icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
+        });
+      }
+    }
+
+    function checkAdminSession() {
+      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
+      const btn = document.getElementById('adminNavBtn');
+      if (isLoggedIn === 'true') {
+        btn.innerText = "⚙️ Dashboard";
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+      } else {
+        btn.innerText = "Admin";
+        btn.classList.add('btn-outline');
+        btn.classList.remove('btn-primary');
+      }
+    }
+
+    function clickAdminNav() {
+      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
+      if (isLoggedIn === 'true') {
+        openDashboard();
+      } else {
+        openAdminModal();
+      }
+    }
+
+    async function fetchLiveComplaints() {
+      const tbody = document.getElementById('adminTableBody');
+      if (tbody) tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 1.5rem;">⏳ Memuat naik data terkini...</td></tr>`;
+      
+      try {
+        const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          const uniqueMap = new Map();
+          data.forEach(item => {
+            if (item && item.id) {
+              uniqueMap.set(item.id.toLowerCase(), item);
+            }
+          });
+          globalComplaintsList = attachSessionImages(Array.from(uniqueMap.values()));
+          complaintDataLoaded = true;
+          saveLocalComplaintList(globalComplaintsList);
+          renderAdminTable();
+        }
+      } catch (err) {
+        console.error("Gagal menarik data dari Google Sheets:", err);
+        complaintDataLoaded = false;
+        const stored = localStorage.getItem('tvet_aduan_list');
+        if (stored) globalComplaintsList = attachSessionImages(JSON.parse(stored));
+        renderAdminTable();
+      }
+    }
+
+    function selectCategory(element, catName) {
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('kategori').value = catName;
+    }
+
+    function previewAndCompressFile(input, previewId = 'imgPreview', uploadTextId = 'uploadText') {
+      const preview = document.getElementById(previewId);
+      const uploadText = document.getElementById(uploadTextId);
+      const imageState = imageUploadStates[input.id];
+      const file = input.files[0];
+      if (!imageState) return;
+
+      const sequence = ++imageState.sequence;
+      if (!file) {
+        imageState.data = "";
+        imageState.processing = Promise.resolve(true);
+        preview.style.display = 'none';
+        uploadText.innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
+        return;
+      }
+
+      input.value = "";
+      imageState.data = "";
+      uploadText.innerText = `⏳ Gambar dipilih: ${file.name || "gambar"} — sedang memproses...`;
+      preview.removeAttribute('src');
+      preview.style.display = 'block';
+
+      imageState.processing = new Promise((resolve) => {
+        let previewUrl = "";
+        let settled = false;
+        let imageFile = file;
+
+        const finishWithError = (message) => {
+          if (settled || sequence !== imageState.sequence) return;
+          settled = true;
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
+          imageState.data = "";
+          preview.style.display = 'none';
+          uploadText.innerText = message;
+          resolve(false);
+        };
+
+        const loadImageFile = (fileToLoad) => {
+          imageFile = fileToLoad;
+          try {
+            previewUrl = URL.createObjectURL(imageFile);
+          } catch (err) {
+            finishWithError("❌ Pelayar tidak dapat membuka gambar ini. Cuba simpan semula sebagai JPEG.");
+            return;
+          }
+
+          preview.src = previewUrl;
+          const objectImage = new Image();
+          objectImage.onerror = decodeWithDataUrl;
+          objectImage.onload = () => processDecodedImage(objectImage);
+          objectImage.src = previewUrl;
+        };
+
+        const convertHeicThenLoad = () => {
+          const looksLikeHeic = /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name || "");
+          if (!looksLikeHeic) {
+            loadImageFile(file);
+            return;
+          }
+          if (typeof window.heic2any !== 'function') {
+            finishWithError("❌ Pelayar iPhone tidak dapat menukar HEIC. Dalam Photos, pilih gambar → Share → Options → Most Compatible, kemudian simpan/hantar semula sebagai JPEG.");
+            return;
+          }
+
+          uploadText.innerText = "⏳ Menukar gambar HEIC iPhone kepada JPEG...";
+          window.heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 })
+            .then(converted => loadImageFile(Array.isArray(converted) ? converted[0] : converted))
+            .catch(() => finishWithError("❌ Gagal menukar gambar HEIC. Cuba kongsi gambar sebagai JPEG melalui Photos dan pilih semula."));
+        };
+
+        const processDecodedImage = (img) => {
+          if (settled || sequence !== imageState.sequence) return;
+          const canvas = document.createElement('canvas');
+          let width = img.naturalWidth;
+          let height = img.naturalHeight;
+          if (!width || !height) {
+            finishWithError("❌ Fail dipilih tetapi imej tidak dapat dinyahkod. Cuba kongsi/simpan semula sebagai JPEG.");
+            return;
+          }
+
+          const max_size = 1600;
+          if (width > height && width > max_size) {
+            height *= max_size / width;
+            width = max_size;
+          } else if (height >= width && height > max_size) {
+            width *= max_size / height;
+            height = max_size;
+          }
+
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            finishWithError("❌ Pelayar tidak dapat memproses gambar. Cuba simpan semula sebagai JPEG.");
+            return;
+          }
+
+          try {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            imageState.data = canvas.toDataURL('image/jpeg', 0.9);
+            settled = true;
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            preview.src = imageState.data;
+            preview.style.display = 'block';
+            uploadText.innerText = "✅ Gambar berjaya diproses dan sedia dihantar.";
+            resolve(true);
+          } catch (err) {
+            finishWithError("❌ Gagal memproses gambar. Cuba simpan semula sebagai JPEG.");
+          }
+        };
+
+        const decodeWithDataUrl = () => {
+          const reader = new FileReader();
+          reader.onerror = () => finishWithError("❌ Gagal membaca fail gambar. Cuba simpan semula sebagai JPEG.");
+          reader.onload = () => {
+            const dataImage = new Image();
+            dataImage.onerror = () => finishWithError("❌ Format gambar ini tidak disokong oleh Safari. Simpan/kongsi sebagai JPEG dan cuba lagi.");
+            dataImage.onload = () => processDecodedImage(dataImage);
+            dataImage.src = reader.result;
+          };
+          reader.readAsDataURL(imageFile);
+        };
+
+        convertHeicThenLoad();
+      });
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "SEDANG MENGHANTAR...";
+
+      if (document.getElementById('gambarInput').files.length > 0) {
+        const imageReady = await imageUploadStates.gambarInput.processing;
+        if (!imageReady || !imageUploadStates.gambarInput.data) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "HANTAR ADUAN SEKARANG";
+          alert("Gambar belum berjaya diproses. Sila pilih gambar JPG/PNG yang boleh dibuka, atau hantar semula tanpa gambar.");
+          return;
+        }
+      }
+
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const ticketId = `#TVET-${randomNum}`;
+
+      const namaVal = document.getElementById('nama').value;
+      const matrikVal = document.getElementById('matrik').value;
+      const WingVal = document.getElementById('Wing').value;
+      const telefonVal = document.getElementById('telefon').value;
+      const kategoriVal = document.getElementById('kategori').value;
+      const keteranganVal = document.getElementById('keterangan').value;
+
+      const finalImage = imageUploadStates.gambarInput.data;
+
+      const newAduan = {
+        id: ticketId,
+        nama: namaVal,
+        matrik: matrikVal,
+        Wing: WingVal,
+        blok: WingVal,
+        telefon: telefonVal,
+        kategori: kategoriVal,
+        keterangan: keteranganVal,
+        reportType: 'aduan',
+        gambarBase64: finalImage,
+        gambar: finalImage,
+        status: 'Pending',
+        tarikh: new Date().toISOString().split('T')[0]
+      };
+
+      globalComplaintsList.unshift(newAduan);
+      saveLocalComplaintList(globalComplaintsList);
+
+      try {
+        const complaintForServer = newAduan;
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(complaintForServer)
+        });
+      } catch(err) {
+        console.error("Gagal hantar ke Sheets:", err);
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = "HANTAR ADUAN SEKARANG";
+
+      showDeviceNotification("🎉 Aduan Berjaya Dihantar!", `ID Tiket anda: ${ticketId}. Pihak pengurusan akan menyemak laporan anda.`);
+
+      document.getElementById('popupTicketCode').innerText = ticketId;
+      document.getElementById('popupNama').innerText = namaVal;
+      document.getElementById('popupKategori').innerText = kategoriVal;
+      document.getElementById('popupWing').innerText = WingVal;
+      document.getElementById('ticketSuccessModal').classList.add('active');
+
+      document.getElementById('aduanForm').reset();
+      document.getElementById('imgPreview').style.display = 'none';
+      document.getElementById('uploadText').innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
+      imageUploadStates.gambarInput.data = "";
+      imageUploadStates.gambarInput.processing = Promise.resolve(true);
+    }
+
+    async function handleRoomReportSubmit(event) {
+      event.preventDefault();
+      if (!complaintDataLoaded) {
+        alert("Rekod belum berjaya dimuatkan. Sila semak sambungan internet dan cuba semula.");
+        return;
+      }
+      const form = document.getElementById('roomReportForm');
+      const submitButton = document.getElementById('roomReportSubmitBtn');
+      const room = document.getElementById('roomReportLocation').value.trim();
+      const selectedCondition = document.querySelector('input[name="roomCondition"]:checked');
+      const note = document.getElementById('roomReportNote').value.trim();
+
+      if (!selectedCondition) {
+        alert("Sila pilih keadaan bilik.");
+        return;
+      }
+      if (selectedCondition.value === 'Perlu perhatian' && !note) {
+        alert("Sila masukkan nota ringkas jika bilik tidak dalam keadaan baik.");
+        return;
+      }
+
+      const date = new Date().toISOString().split('T')[0];
+      const weekKey = getIsoWeekKey(date);
+      if (hasRoomReportThisWeek(room, weekKey)) {
+        alert("Laporan untuk bilik ini sudah dihantar bagi minggu semasa.");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.innerText = "SEDANG MENGHANTAR...";
+      if (document.getElementById('roomImageInput').files.length > 0) {
+        const imageReady = await imageUploadStates.roomImageInput.processing;
+        if (!imageReady || !imageUploadStates.roomImageInput.data) {
+          submitButton.disabled = false;
+          submitButton.innerText = "HANTAR LAPORAN KENDIRI";
+          alert("Gambar belum berjaya diproses. Sila pilih gambar JPG/PNG yang boleh dibuka, atau hantar tanpa gambar.");
+          return;
+        }
+      }
+
+      const reportId = `#BILIK-${Date.now()}`;
+      const image = imageUploadStates.roomImageInput.data;
+
+      const report = {
+        id: reportId,
+        reportType: 'kendiri',
+        nama: '-',
+        matrik: '-',
+        Wing: room,
+        blok: room,
+        telefon: '',
+        kategori: 'Laporan Kendiri',
+        condition: selectedCondition.value,
+        keterangan: note || (selectedCondition.value === 'Baik' ? 'Bilik dalam keadaan baik.' : ''),
+        gambarBase64: image,
+        gambar: image,
+        status: 'Pending',
+        tarikh: date
+      };
+
+      globalComplaintsList.unshift(report);
+      saveLocalComplaintList(globalComplaintsList);
+      try {
+        const reportForServer = report;
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(reportForServer)
+        });
+      } catch (err) {
+        console.error("Gagal hantar laporan kendiri ke Sheets:", err);
+      }
+
+      form.reset();
+      document.getElementById('roomReportNoteGroup').hidden = true;
+      document.getElementById('roomReportNote').required = false;
+      document.getElementById('roomImgPreview').style.display = 'none';
+      document.getElementById('roomUploadText').innerText = "📷 Klik tangkap/pilih gambar (Pilihan)";
+      imageUploadStates.roomImageInput.data = "";
+      imageUploadStates.roomImageInput.processing = Promise.resolve(true);
+      submitButton.disabled = false;
+      submitButton.innerText = "HANTAR LAPORAN KENDIRI";
+      alert(`Laporan kendiri bilik berjaya dihantar. ID laporan: ${reportId}`);
+    }
+
+    function closeTicketPopup() {
+      document.getElementById('ticketSuccessModal').classList.remove('active');
+    }
+
+    function copyTicketCode() {
+      const code = document.getElementById('popupTicketCode').innerText;
+      navigator.clipboard.writeText(code);
+      alert(`ID Tiket ${code} telah disalin!`);
+    }
+
+    function checkStatus() {
+      const query = document.getElementById('trackerInput').value.trim();
+      const resContainer = document.getElementById('trackerResult');
+
+      if (!query) {
+        alert("Sila masukkan ID Tiket.");
+        return;
+      }
+
+      const matches = globalComplaintsList.filter(item => item.id.toLowerCase() === query.toLowerCase());
+
+      resContainer.style.display = 'block';
+      if (matches.length > 0) {
+        const found = matches[matches.length - 1];
+
+        let statusClass = 'status-pending';
+        if (found.status === 'Dalam Tindakan') statusClass = 'status-process';
+        if (found.status === 'Selesai') statusClass = 'status-done';
+
+        resContainer.innerHTML = `
+          <div>
+            <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
+            <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
+            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.blok || found.lokasi || '-'}</p>
+            <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
+          </div>
+        `;
+      } else {
+        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.85rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui dalam pangkalan data.</p>`;
+      }
+    }
+
+    function openAdminModal() {
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginModal').classList.add('active');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('loginModal').classList.remove('active');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const userVal = document.getElementById('adminUsername').value.trim();
+      const passVal = document.getElementById('adminPassword').value.trim();
+      const errBox = document.getElementById('loginError');
+
+      if (userVal === "Tvetmara@Asrama" && passVal === "Asrama2026") {
+        errBox.style.display = 'none';
+        localStorage.setItem('tvet_admin_logged_in', 'true');
+        checkAdminSession();
+        closeAdminModal();
+        openDashboard();
+      } else {
+        errBox.style.display = 'block';
+      }
+    }
+
+    function handleLogout() {
+      if (confirm("Adakah anda pasti nak log keluar?")) {
+        localStorage.removeItem('tvet_admin_logged_in');
+        checkAdminSession();
+        closeDashboard();
+      }
+    }
+
+    function openDashboard() {
+      fetchLiveComplaints();
+      document.getElementById('dashboardModal').classList.add('active');
+    }
+
+    function closeDashboard() {
+      document.getElementById('dashboardModal').classList.remove('active');
+    }
+
+    function filterAdminTable(filterKey, btnElement) {
+      currentFilter = filterKey;
+      document.querySelectorAll('.admin-filter-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      renderAdminTable();
+    }
+
+    function setAdminReportMode(mode, button) {
+      currentAdminReportMode = mode;
+      currentFilter = 'ALL';
+      document.querySelectorAll('.admin-report-tabs .tab-btn').forEach(tab => tab.classList.remove('active'));
+      button.classList.add('active');
+      document.querySelectorAll('.admin-filter-tabs .tab-btn').forEach(tab => tab.classList.remove('active'));
+      document.querySelector('.admin-filter-tabs .tab-btn').classList.add('active');
+      renderAdminTable();
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[character]);
+    }
+
+    function zoomImage(src) {
+      document.getElementById('zoomedImg').src = src;
+      document.getElementById('imageZoomModal').classList.add('active');
+    }
+
+    async function updateStatus(index, newStatus) {
+      globalComplaintsList[index].status = newStatus;
+      saveLocalComplaintList(globalComplaintsList);
+      renderAdminTable();
+
+      showDeviceNotification("⚙️ Status Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
+
+      try {
+        const complaintForServer = { ...globalComplaintsList[index], gambarBase64: "", gambar: "" };
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(complaintForServer)
+        });
+      } catch(err) {
+        console.error("Gagal kemas kini status ke Sheets:", err);
+      }
+    }
+
+    async function deleteAduan(ticketId) {
+      if (confirm(`Adakah anda pasti nak PADAM laporan ${ticketId} terus dari Google Sheets?`)) {
+        sessionStorage.removeItem(getSessionImageKey(ticketId));
+        globalComplaintsList = globalComplaintsList.filter(item => item.id.toLowerCase() !== ticketId.toLowerCase());
+        saveLocalComplaintList(globalComplaintsList);
+        renderAdminTable();
+
+        try {
+          await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              action: "delete",
+              id: ticketId
+            })
+          });
+          
+          alert(`Laporan ${ticketId} telah dipadam sepenuhnya!`);
+          
+          setTimeout(() => {
+            fetchLiveComplaints();
+          }, 1500);
+
+        } catch(err) {
+          console.error("Gagal padam dari Google Sheets:", err);
+          alert("Gagal memadam dari Google Sheets, sila semak sambungan internet.");
+        }
+      }
+    }
+
+    function exportToCSV() {
+      const exportList = globalComplaintsList.filter(item =>
+        currentAdminReportMode === 'kendiri'
+          ? item.reportType === 'kendiri'
+          : item.reportType !== 'kendiri'
+      );
+      if (exportList.length === 0) {
+        alert(currentAdminReportMode === 'kendiri' ? "Tiada laporan kendiri." : "Tiada data aduan.");
+        return;
+      }
+
+      let csvLines = [];
+      if (currentAdminReportMode === 'kendiri') {
+        csvLines.push(["ID Laporan", "Wing / Bilik", "Keadaan", "Nota", "Status", "Tarikh"]);
+        exportList.forEach(item => {
+          const clean = value => `"${String(value || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""')}"`;
+          csvLines.push([
+            clean(item.id),
+            clean(item.Wing || item.blok),
+            clean(item.condition),
+            clean(item.keterangan),
+            clean(item.status),
+            clean(item.tarikh)
+          ].join(","));
+        });
+      } else {
+        csvLines.push(["ID Tiket", "Nama Pelajar", "No Matrik", "Lokasi Bilik", "No Telefon", "Kategori", "Keterangan", "Status", "Tarikh"]);
+
+        exportList.forEach(item => {
+          const cleanKeterangan = (item.keterangan || '').replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
+          const cleanNama = (item.nama || '').replace(/"/g, '""');
+          const cleanWing = ((item.Wing || item.blok || item.lokasi) || '').replace(/"/g, '""');
+
+          const row = [
+            `"${item.id || ''}"`,
+            `"${cleanNama}"`,
+            `"${item.matrik || ''}"`,
+            `"${cleanWing}"`,
+            `"${item.telefon || ''}"`,
+            `"${item.kategori || ''}"`,
+            `"${cleanKeterangan}"`,
+            `"${item.status || ''}"`,
+            `"${item.tarikh || ''}"`
+          ];
+          csvLines.push(row.join(","));
+        });
+      }
+
+      const csvString = csvLines.join("\n");
+      const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      const exportPrefix = currentAdminReportMode === 'kendiri' ? 'Laporan_Kendiri_Bilik' : 'Laporan_Aduan_Asrama';
+      link.setAttribute("download", `${exportPrefix}_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function getEvidenceImageSource(value) {
+      const imageValue = String(value || "").trim();
+      if (imageValue.indexOf("data:image/") === 0) return imageValue;
+
+      try {
+        const url = new URL(imageValue);
+        if (url.protocol !== "https:") return "";
+
+        if (url.hostname === "drive.google.com") {
+          const filePathMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
+          const fileId = filePathMatch ? filePathMatch[1] : url.searchParams.get("id");
+          if (fileId) {
+            return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w2000`;
+          }
+        }
+
+        return url.href;
+      } catch (err) {
+        return "";
+      }
+    }
+
+    function createEvidenceImage(item) {
+      const rawImage = String(item.gambarBase64 || item.gambar || item.image || "").trim();
+      const imageSource = getEvidenceImageSource(rawImage);
+      if (rawImage.indexOf("Gagal Simpan Gambar") === 0) {
+        const error = document.createElement("span");
+        error.className = "no-img";
+        error.textContent = rawImage;
+        return error;
+      }
+
+      if (!imageSource || rawImage === "Tiada Gambar") {
+        const noImage = document.createElement("span");
+        noImage.className = "no-img";
+        noImage.textContent = "Tiada Gambar";
+        return noImage;
+      }
+
+      const image = document.createElement("img");
+      image.src = imageSource;
+      image.alt = "Bukti Pelajar";
+      image.className = "img-thumbnail";
+      image.addEventListener("click", () => zoomImage(imageSource));
+      image.onerror = function() {
+        if (rawImage.indexOf("https://") === 0) {
+          const link = document.createElement("a");
+          link.href = rawImage;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = "🖼️ Buka gambar";
+          link.style.color = "var(--status-process)";
+          link.style.fontWeight = "bold";
+          link.style.fontSize = "0.8rem";
+          this.parentNode.replaceChild(link, this);
+        } else {
+          const unavailable = document.createElement("span");
+          unavailable.className = "no-img";
+          unavailable.textContent = "Gambar tidak dapat dipaparkan";
+          this.parentNode.replaceChild(unavailable, this);
+        }
+      };
+      return image;
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const reportList = globalComplaintsList.filter(item =>
+        currentAdminReportMode === 'kendiri'
+          ? item.reportType === 'kendiri'
+          : item.reportType !== 'kendiri'
+      );
+      const headRow = document.getElementById('adminTableHeadRow');
+      headRow.innerHTML = currentAdminReportMode === 'kendiri'
+        ? '<th>ID Laporan</th><th>Wing / Bilik</th><th>Keadaan</th><th>Gambar (tab penghantar)</th><th>Nota</th><th>Tarikh</th><th>Status</th><th>Tindakan Status</th><th>Padam</th>'
+        : '<th>ID Tiket</th><th>Nama Pelajar</th><th>No. Matrik</th><th>Lokasi Bilik</th><th>No. Tel</th><th>Kategori</th><th>Bukti Gambar</th><th>Keterangan</th><th>Status</th><th>Tindakan Status</th><th>Padam</th>';
+
+      const pendingCount = reportList.filter(i => i.status === 'Pending').length;
+      const processCount = reportList.filter(i => i.status === 'Dalam Tindakan').length;
+      const doneCount = reportList.filter(i => i.status === 'Selesai').length;
+
+      document.getElementById('statTotal').innerText = reportList.length;
+      document.getElementById('statPending').innerText = pendingCount;
+      document.getElementById('statProcess').innerText = processCount;
+      document.getElementById('statDone').innerText = doneCount;
+
+      let filteredList = reportList;
+      if (currentFilter === 'Pending' || currentFilter === 'Dalam Tindakan' || currentFilter === 'Selesai') {
+        filteredList = reportList.filter(item => item.status === currentFilter);
+      }
+
+      if (filteredList.length === 0) {
+        const colspan = currentAdminReportMode === 'kendiri' ? 9 : 11;
+        const emptyText = currentAdminReportMode === 'kendiri' ? 'Tiada laporan kendiri bilik.' : 'Tiada rekod aduan.';
+        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: var(--color-text-muted); padding: 1.5rem;">${emptyText}</td></tr>`;
+        return;
+      }
+
+      filteredList.forEach((item) => {
+        const mainIndex = globalComplaintsList.findIndex(i => i.id === item.id);
+
+        const tr = document.createElement('tr');
+        if (currentAdminReportMode === 'kendiri') {
+          tr.innerHTML = `
+            <td><strong>${escapeHtml(item.id)}</strong></td>
+            <td>${escapeHtml(item.Wing || item.blok || '-')}</td>
+            <td>${escapeHtml(item.condition || '-')}</td>
+            <td style="text-align: center;"></td>
+            <td>${escapeHtml(item.keterangan || '-')}</td>
+            <td>${escapeHtml(item.tarikh || '-')}</td>
+            <td><span class="status-badge ${item.status === 'Pending' ? 'status-pending' : item.status === 'Dalam Tindakan' ? 'status-process' : 'status-done'}">${escapeHtml(item.status || 'Pending')}</span></td>
+            <td>
+              <select onchange="updateStatus(${mainIndex}, this.value)" style="padding: 0.3rem; font-size: 0.8rem; border: 1px solid var(--color-border-dark);">
+                <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                <option value="Dalam Tindakan" ${item.status === 'Dalam Tindakan' ? 'selected' : ''}>Dalam Tindakan</option>
+                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+              </select>
+            </td>
+            <td style="text-align: center;"><button class="btn btn-danger" onclick="deleteAduan('${escapeHtml(item.id)}')">🗑️</button></td>
+          `;
+          tr.cells[3].appendChild(createEvidenceImage(item));
+          tbody.appendChild(tr);
+          return;
+        }
+
+        tr.innerHTML = `
+          <td><strong>${item.id}</strong></td>
+          <td><strong>${item.nama}</strong></td>
+          <td>${item.matrik}</td>
+          <td>${item.Wing || item.blok || item.lokasi || '-'}</td>
+          <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
+          <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
+          <td style="text-align: center;"></td>
+          <td>${item.keterangan}</td>
+          <td>
+            <span class="status-badge ${item.status === 'Pending' ? 'status-pending' : item.status === 'Dalam Tindakan' ? 'status-process' : 'status-done'}">
+              ${item.status}
+            </span>
+          </td>
+          <td>
+            <select onchange="updateStatus(${mainIndex}, this.value)" style="padding: 0.3rem; font-size: 0.8rem; border: 1px solid var(--color-border-dark);">
+              <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Dalam Tindakan" ${item.status === 'Dalam Tindakan' ? 'selected' : ''}>Dalam Tindakan</option>
+              <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+            </select>
+          </td>
+          <td style="text-align: center;">
+            <button class="btn btn-danger" onclick="deleteAduan('${item.id}')">🗑️</button>
+          </td>
+        `;
+        tr.cells[6].appendChild(createEvidenceImage(item));
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
 </html>
