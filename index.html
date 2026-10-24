@@ -32,6 +32,8 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: var(--font-body);
       background-color: var(--color-bg);
@@ -135,6 +137,18 @@
     }
 
     .hero-desc { font-size: 1.05rem; color: var(--color-text-muted); margin-bottom: 2rem; }
+
+    .hero-cta-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--color-brand);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    #hantar-aduan, #semak-status { scroll-margin-top: 90px; }
 
     .hero-stats {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
@@ -247,6 +261,10 @@
       .admin-action-bar { flex-direction: column; align-items: stretch; }
       .admin-filter-tabs { overflow-x: auto; padding-bottom: 0.5rem; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
@@ -290,6 +308,7 @@
           <span class="hero-tag">Portal Aduan Asrama</span>
           <h1 class="hero-title">Aduan Kerosakan Asrama Pantas & Telus.</h1>
           <p class="hero-desc">Laporkan isu fasiliti, kebersihan, atau utiliti di asrama anda. Pengurusan Asrama TVETMARA Lenggong sedia bertindak dengan pantas.</p>
+          <span class="hero-cta-label">TEKAN DI SINI</span>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="#hantar-aduan" class="btn btn-primary" style="flex:1;">Hantar Aduan</a>
             <a href="#semak-status" class="btn btn-outline" style="flex:1;">Semak Status</a>
