@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#b91c1c">
+  <title>Dalam Penyelenggaraan | TVETMARA Lenggong</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --brand: #b91c1c;
+      --brand-dark: #991b1b;
+      --brand-light: #fef2f2;
+      --ink: #111827;
+      --muted: #4b5563;
+      --line: #e5e7eb;
+      --surface: #ffffff;
+      --background: #f8f9fa;
+      --heading: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--background);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.6;
+    }
+
+    .site-header, .site-footer {
+      background: var(--surface);
+    }
+
+    .site-header { border-bottom: 2px solid var(--ink); }
+    .site-footer { border-top: 2px solid var(--ink); }
+
+    .container {
+      width: min(100% - 2rem, 1100px);
+      margin-inline: auto;
+    }
+
+    .header-inner {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand);
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      aspect-ratio: 1;
+      place-items: center;
+      background: var(--brand);
+      color: white;
+      font-family: var(--heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .brand-name {
+      font-family: var(--heading);
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .brand-name span {
+      display: block;
+      margin-top: 0.15rem;
+      color: var(--brand);
+      font-family: var(--body);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+    }
+
+    main {
+      display: grid;
+      place-items: center;
+      padding-block: 4rem;
+    }
+
+    .maintenance-card {
+      width: min(100%, 700px);
+      padding: clamp(1.5rem, 5vw, 3.5rem);
+      border: 2px solid var(--ink);
+      background: var(--surface);
+      box-shadow: 8px 8px 0 var(--ink);
+      text-align: center;
+    }
+
+    .icon-wrap {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1.5rem;
+      border: 2px solid var(--brand);
+      background: var(--brand-light);
+      color: var(--brand);
+    }
+
+    .icon-wrap svg { width: 40px; height: 40px; }
+
+    .eyebrow {
+      margin: 0 0 0.6rem;
+      color: var(--brand);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--heading);
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.12;
+    }
+
+    .message {
+      max-width: 510px;
+      margin: 1rem auto 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .status-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 1.75rem;
+      padding: 0.55rem 0.85rem;
+      border: 1px solid #fca5a5;
+      background: var(--brand-light);
+      color: var(--brand-dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brand);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 2rem 0 1.25rem;
+      background: var(--line);
+    }
+
+    .thanks {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .site-footer {
+      padding-block: 1.25rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .site-footer strong { color: var(--ink); }
+
+    @keyframes pulse {
+      50% { opacity: 0.35; transform: scale(0.82); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#" aria-label="TVETMARA Lenggong">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-name">
+          PORTAL ADUAN ASRAMA
+          <span>TVETMARA LENGGONG</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="maintenance-card" aria-labelledby="maintenance-title">
+      <div class="icon-wrap" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a5 5 0 0 0-6.6 6.6L3 18l3 3 5.1-5.1a5 5 0 0 0 6.6-6.6L14 13l-3-3 3.7-3.7Z"/>
+          <path d="m4 4 3 3"/>
+        </svg>
+      </div>
+      <p class="eyebrow">Makluman penyelenggaraan</p>
+      <h1 id="maintenance-title">Laman web sedang diselenggara</h1>
+      <p class="message">
+        Kami sedang membuat penambahbaikan supaya portal ini dapat berfungsi dengan lebih baik.
+        Sila cuba lagi sebentar nanti.
+      </p>
+      <div class="status-note"><span class="status-dot"></span>Penyelenggaraan sedang dijalankan</div>
+      <div class="divider"></div>
+      <p class="thanks">Terima kasih atas kesabaran dan kerjasama anda.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><strong>TVETMARA Lenggong</strong> — Unit Pengurusan Asrama &amp; Kebajikan Pelajar.</div>
+  </footer>
+</body>
+</html>
