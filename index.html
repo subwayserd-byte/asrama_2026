@@ -587,7 +587,10 @@
           <button class="tab-btn" onclick="filterAdminTable('Selesai', this)">Selesai</button>
         </div>
         
-        <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport Excel / CSV</button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-danger btn-sm" onclick="deleteAllVisibleReports()">🗑️ Padam Semua</button>
+          <button class="btn btn-primary btn-sm" onclick="exportToCSV()">📥 Eksport Excel / CSV</button>
+        </div>
       </div>
 
       <div class="admin-table-container">
@@ -1215,6 +1218,52 @@
           console.error("Gagal padam dari Google Sheets:", err);
           alert("Gagal memadam dari Google Sheets, sila semak sambungan internet.");
         }
+      }
+    }
+
+    async function deleteAllVisibleReports() {
+      const visibleList = (currentAdminReportMode === 'kendiri'
+        ? globalComplaintsList.filter(item => item.reportType === 'kendiri')
+        : globalComplaintsList.filter(item => item.reportType !== 'kendiri')
+      ).filter(item => currentFilter === 'ALL' || item.status === currentFilter);
+
+      if (!visibleList.length) {
+        alert(currentAdminReportMode === 'kendiri'
+          ? 'Tiada laporan kendiri untuk dipadam pada filter semasa.'
+          : 'Tiada laporan aduan untuk dipadam pada filter semasa.');
+        return;
+      }
+
+      const modeLabel = currentAdminReportMode === 'kendiri' ? 'laporan kendiri' : 'laporan aduan';
+      if (!confirm(`Padam ${visibleList.length} ${modeLabel} dalam tab dan filter semasa?\n\nRekod akan dipadam daripada Google Sheets dan gambar berkaitan akan dialihkan ke Sampah Google Drive.\n\nTeruskan?`)) {
+        return;
+      }
+
+      const idsToDelete = visibleList.map(item => item.id);
+      const idSet = new Set(idsToDelete.map(id => String(id).toLowerCase()));
+
+      globalComplaintsList = globalComplaintsList.filter(item => !idSet.has(String(item.id).toLowerCase()));
+      saveLocalComplaintList(globalComplaintsList);
+      renderAdminTable();
+
+      try {
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "deleteAll",
+            ids: idsToDelete
+          })
+        });
+
+        alert(`Berjaya padam ${visibleList.length} ${modeLabel}.`);
+        setTimeout(() => {
+          fetchLiveComplaints();
+        }, 1500);
+      } catch(err) {
+        console.error("Gagal padam semua rekod:", err);
+        alert("Gagal memadam semua rekod. Sila semak sambungan internet dan cuba semula.");
       }
     }
 
