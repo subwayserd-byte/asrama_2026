@@ -619,6 +619,10 @@
     let currentFilter = 'ALL';
     let currentAdminReportMode = 'aduan';
     let adminSessionToken = '';
+    let adminDataLoaded = false;
+    let adminDataLoadedAt = 0;
+    let adminLoginInProgress = false;
+    const ADMIN_DATA_CACHE_MS = 30000;
     const imageUploadStates = {
       gambarInput: { data: "", processing: Promise.resolve(true), sequence: 0 },
       roomImageInput: { data: "", processing: Promise.resolve(true), sequence: 0 }
@@ -730,18 +734,22 @@
             }
           });
           globalComplaintsList = attachSessionImages(Array.from(uniqueMap.values()));
+          adminDataLoaded = true;
+          adminDataLoadedAt = Date.now();
           saveLocalComplaintList(globalComplaintsList);
           renderAdminTable();
           return true;
         }
         if (data && data.result === 'unauthorized') {
           adminSessionToken = '';
+          adminDataLoaded = false;
           checkAdminSession();
           throw new Error('Sesi admin tamat atau tidak sah.');
         }
         throw new Error('Respons data admin tidak sah.');
       } catch (err) {
         console.error("Gagal menarik data dari Google Sheets:", err);
+        adminDataLoaded = false;
         globalComplaintsList = [];
         renderAdminTable();
         return false;
@@ -1111,15 +1119,28 @@
 
     async function handleLogin(e) {
       e.preventDefault();
+      if (adminLoginInProgress) return;
+      adminLoginInProgress = true;
       const userVal = document.getElementById('adminUsername').value.trim();
       const passVal = document.getElementById('adminPassword').value;
       const errBox = document.getElementById('loginError');
+      const submitButton = document.querySelector('#loginModal button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerText = "MENGESAHKAN...";
 
       const tokenBytes = new Uint8Array(32);
       crypto.getRandomValues(tokenBytes);
       const loginToken = Array.from(tokenBytes, byte => byte.toString(16).padStart(2, '0')).join('');
 
       try {
+        closeAdminModal();
+        const dashboard = document.getElementById('dashboardModal');
+        dashboard.classList.add('active');
+        const tbody = document.getElementById('adminTableBody');
+        if (tbody) {
+          tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 1.5rem;">🔐 Mengesahkan akses admin...</td></tr>';
+        }
+
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
           mode: "no-cors",
@@ -1133,20 +1154,26 @@
         });
 
         adminSessionToken = loginToken;
+        adminDataLoaded = false;
         const sessionReady = await fetchLiveComplaints();
         document.getElementById('adminPassword').value = '';
         if (!sessionReady) throw new Error("Username/kata laluan tidak sah atau sesi admin belum dikonfigurasi.");
 
         errBox.style.display = 'none';
         checkAdminSession();
-        closeAdminModal();
-        document.getElementById('dashboardModal').classList.add('active');
       } catch (err) {
         adminSessionToken = '';
+        adminDataLoaded = false;
         checkAdminSession();
+        document.getElementById('dashboardModal').classList.remove('active');
         document.getElementById('adminPassword').value = '';
         errBox.textContent = `❌ ${err.message}`;
         errBox.style.display = 'block';
+        document.getElementById('loginModal').classList.add('active');
+      } finally {
+        adminLoginInProgress = false;
+        submitButton.disabled = false;
+        submitButton.innerText = "MASUK DASHBOARD";
       }
     }
 
@@ -1162,6 +1189,8 @@
         }
         adminSessionToken = '';
         globalComplaintsList = [];
+        adminDataLoaded = false;
+        adminDataLoadedAt = 0;
         renderAdminTable();
         checkAdminSession();
         closeDashboard();
@@ -1169,6 +1198,10 @@
     }
 
     async function openDashboard() {
+      if (adminDataLoaded && Date.now() - adminDataLoadedAt < ADMIN_DATA_CACHE_MS) {
+        document.getElementById('dashboardModal').classList.add('active');
+        return;
+      }
       if (!await fetchLiveComplaints()) {
         alert("Sesi admin tidak sah atau telah tamat. Sila log masuk semula.");
         adminSessionToken = '';
