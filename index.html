@@ -620,7 +620,7 @@
     let globalComplaintsList = [];
     let currentFilter = 'ALL';
     let currentAdminReportMode = 'aduan';
-    let complaintDataLoaded = false;
+    let adminSessionToken = '';
     const imageUploadStates = {
       gambarInput: { data: "", processing: Promise.resolve(true), sequence: 0 },
       roomImageInput: { data: "", processing: Promise.resolve(true), sequence: 0 }
@@ -638,13 +638,12 @@
     }
 
     function saveLocalComplaintList(complaints) {
-      const complaintsWithoutImages = complaints.map(({ gambarBase64, gambar, image, ...item }) => item);
-      localStorage.setItem('tvet_aduan_list', JSON.stringify(complaintsWithoutImages));
+      localStorage.removeItem('tvet_aduan_list');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      localStorage.removeItem('tvet_aduan_list');
       checkAdminSession();
-      fetchLiveComplaints();
       document.querySelectorAll('input[name="roomCondition"]').forEach(input => {
         input.addEventListener('change', updateRoomReportNoteRequirement);
       });
@@ -671,15 +670,6 @@
       return `${date.getUTCFullYear()}-${String(week).padStart(2, '0')}`;
     }
 
-    function hasRoomReportThisWeek(room, weekKey) {
-      const normalizedRoom = room.trim().toLowerCase();
-      return globalComplaintsList.some(item =>
-        item.reportType === 'kendiri' &&
-        String(item.Wing || item.blok || '').trim().toLowerCase() === normalizedRoom &&
-        getIsoWeekKey(item.tarikh) === weekKey
-      );
-    }
-
     function requestNotificationPermission() {
       if (!("Notification" in window)) {
         alert("Pelayar web anda tidak menyokong notifikasi peranti.");
@@ -704,9 +694,8 @@
     }
 
     function checkAdminSession() {
-      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
       const btn = document.getElementById('adminNavBtn');
-      if (isLoggedIn === 'true') {
+      if (adminSessionToken) {
         btn.innerText = "⚙️ Dashboard";
         btn.classList.add('btn-primary');
         btn.classList.remove('btn-outline');
@@ -718,8 +707,7 @@
     }
 
     function clickAdminNav() {
-      const isLoggedIn = localStorage.getItem('tvet_admin_logged_in');
-      if (isLoggedIn === 'true') {
+      if (adminSessionToken) {
         openDashboard();
       } else {
         openAdminModal();
@@ -728,10 +716,13 @@
 
     async function fetchLiveComplaints() {
       const tbody = document.getElementById('adminTableBody');
+      if (!adminSessionToken) {
+        return false;
+      }
       if (tbody) tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 1.5rem;">⏳ Memuat naik data terkini...</td></tr>`;
       
       try {
-        const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL);
+        const response = await fetch(`${GOOGLE_SHEETS_WEBHOOK_URL}?action=admin&token=${encodeURIComponent(adminSessionToken)}`);
         const data = await response.json();
         if (Array.isArray(data)) {
           const uniqueMap = new Map();
@@ -741,16 +732,21 @@
             }
           });
           globalComplaintsList = attachSessionImages(Array.from(uniqueMap.values()));
-          complaintDataLoaded = true;
           saveLocalComplaintList(globalComplaintsList);
           renderAdminTable();
+          return true;
         }
+        if (data && data.result === 'unauthorized') {
+          adminSessionToken = '';
+          checkAdminSession();
+          throw new Error('Sesi admin tamat atau tidak sah.');
+        }
+        throw new Error('Respons data admin tidak sah.');
       } catch (err) {
         console.error("Gagal menarik data dari Google Sheets:", err);
-        complaintDataLoaded = false;
-        const stored = localStorage.getItem('tvet_aduan_list');
-        if (stored) globalComplaintsList = attachSessionImages(JSON.parse(stored));
+        globalComplaintsList = [];
         renderAdminTable();
+        return false;
       }
     }
 
@@ -967,10 +963,6 @@
 
     async function handleRoomReportSubmit(event) {
       event.preventDefault();
-      if (!complaintDataLoaded) {
-        alert("Rekod belum berjaya dimuatkan. Sila semak sambungan internet dan cuba semula.");
-        return;
-      }
       const form = document.getElementById('roomReportForm');
       const submitButton = document.getElementById('roomReportSubmitBtn');
       const room = document.getElementById('roomReportLocation').value.trim();
@@ -988,7 +980,23 @@
 
       const date = new Date().toISOString().split('T')[0];
       const weekKey = getIsoWeekKey(date);
-      if (hasRoomReportThisWeek(room, weekKey)) {
+      const duplicateCheckUrl = new URL(GOOGLE_SHEETS_WEBHOOK_URL);
+      duplicateCheckUrl.searchParams.set('action', 'checkRoomReport');
+      duplicateCheckUrl.searchParams.set('room', room);
+      duplicateCheckUrl.searchParams.set('week', weekKey);
+      let duplicateCheck;
+      try {
+        const duplicateResponse = await fetch(duplicateCheckUrl);
+        duplicateCheck = await duplicateResponse.json();
+      } catch (err) {
+        alert("Gagal menyemak laporan bilik. Sila semak sambungan internet dan cuba semula.");
+        return;
+      }
+      if (duplicateCheck.result !== 'success') {
+        alert("Gagal mengesahkan laporan bilik. Sila cuba semula.");
+        return;
+      }
+      if (duplicateCheck.exists) {
         alert("Laporan untuk bilik ini sudah dihantar bagi minggu semasa.");
         return;
       }
@@ -1061,7 +1069,7 @@
       alert(`ID Tiket ${code} telah disalin!`);
     }
 
-    function checkStatus() {
+    async function checkStatus() {
       const query = document.getElementById('trackerInput').value.trim();
       const resContainer = document.getElementById('trackerResult');
 
@@ -1070,26 +1078,25 @@
         return;
       }
 
-      const matches = globalComplaintsList.filter(item => item.id.toLowerCase() === query.toLowerCase());
-
       resContainer.style.display = 'block';
-      if (matches.length > 0) {
-        const found = matches[matches.length - 1];
-
-        let statusClass = 'status-pending';
-        if (found.status === 'Dalam Tindakan') statusClass = 'status-process';
-        if (found.status === 'Selesai') statusClass = 'status-done';
-
-        resContainer.innerHTML = `
-          <div>
-            <strong>${found.id}</strong> — <span class="status-badge ${statusClass}">${found.status}</span>
-            <p style="font-size: 0.85rem; margin-top:0.4rem;"><strong>Nama:</strong> ${found.nama} (${found.matrik})</p>
-            <p style="font-size: 0.85rem;"><strong>Lokasi:</strong> ${found.Wing || found.blok || found.lokasi || '-'}</p>
-            <p style="font-size: 0.85rem; background: var(--color-bg); padding:0.5rem; margin-top:0.5rem; border: 1px solid var(--color-border-dark);">"${found.keterangan}"</p>
-          </div>
-        `;
-      } else {
-        resContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.85rem;">❌ Rekod ID Tiket <strong>${query}</strong> tidak ditemui dalam pangkalan data.</p>`;
+      resContainer.textContent = "⏳ Menyemak status...";
+      try {
+        const statusUrl = new URL(GOOGLE_SHEETS_WEBHOOK_URL);
+        statusUrl.searchParams.set('action', 'track');
+        statusUrl.searchParams.set('id', query);
+        const response = await fetch(statusUrl);
+        const result = await response.json();
+        if (result.result === 'success') {
+          const statusClass = result.status === 'Selesai'
+            ? 'status-done'
+            : result.status === 'Dalam Tindakan' ? 'status-process' : 'status-pending';
+          resContainer.innerHTML = `<strong>${escapeHtml(result.id)}</strong> — <span class="status-badge ${statusClass}">${escapeHtml(result.status)}</span>`;
+        } else {
+          resContainer.textContent = "❌ Rekod ID Tiket tidak ditemui dalam pangkalan data.";
+        }
+      } catch (err) {
+        console.error("Gagal menyemak status tiket:", err);
+        resContainer.textContent = "Gagal menyemak status. Sila cuba semula.";
       }
     }
 
@@ -1104,33 +1111,73 @@
       document.getElementById('loginModal').classList.remove('active');
     }
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       const userVal = document.getElementById('adminUsername').value.trim();
-      const passVal = document.getElementById('adminPassword').value.trim();
+      const passVal = document.getElementById('adminPassword').value;
       const errBox = document.getElementById('loginError');
 
-      if (userVal === "Tvetmara@Asrama" && passVal === "Asrama2026") {
+      const tokenBytes = new Uint8Array(32);
+      crypto.getRandomValues(tokenBytes);
+      const loginToken = Array.from(tokenBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+
+      try {
+        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "login",
+            username: userVal,
+            password: passVal,
+            token: loginToken
+          })
+        });
+
+        adminSessionToken = loginToken;
+        const sessionReady = await fetchLiveComplaints();
+        document.getElementById('adminPassword').value = '';
+        if (!sessionReady) throw new Error("Username/kata laluan tidak sah atau sesi admin belum dikonfigurasi.");
+
         errBox.style.display = 'none';
-        localStorage.setItem('tvet_admin_logged_in', 'true');
         checkAdminSession();
         closeAdminModal();
-        openDashboard();
-      } else {
+        document.getElementById('dashboardModal').classList.add('active');
+      } catch (err) {
+        adminSessionToken = '';
+        checkAdminSession();
+        document.getElementById('adminPassword').value = '';
+        errBox.textContent = `❌ ${err.message}`;
         errBox.style.display = 'block';
       }
     }
 
     function handleLogout() {
       if (confirm("Adakah anda pasti nak log keluar?")) {
-        localStorage.removeItem('tvet_admin_logged_in');
+        if (adminSessionToken) {
+          fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "logout", token: adminSessionToken })
+          }).catch(err => console.error("Gagal tamatkan sesi admin:", err));
+        }
+        adminSessionToken = '';
+        globalComplaintsList = [];
+        renderAdminTable();
         checkAdminSession();
         closeDashboard();
       }
     }
 
-    function openDashboard() {
-      fetchLiveComplaints();
+    async function openDashboard() {
+      if (!await fetchLiveComplaints()) {
+        alert("Sesi admin tidak sah atau telah tamat. Sila log masuk semula.");
+        adminSessionToken = '';
+        checkAdminSession();
+        openAdminModal();
+        return;
+      }
       document.getElementById('dashboardModal').classList.add('active');
     }
 
@@ -1178,7 +1225,13 @@
       showDeviceNotification("⚙️ Status Dikemas Kini", `Tiket ${globalComplaintsList[index].id} kini ditukar kepada status: ${newStatus}`);
 
       try {
-        const complaintForServer = { ...globalComplaintsList[index], gambarBase64: "", gambar: "" };
+        const complaintForServer = {
+          ...globalComplaintsList[index],
+          action: "update",
+          token: adminSessionToken,
+          gambarBase64: "",
+          gambar: ""
+        };
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
           mode: "no-cors",
@@ -1204,6 +1257,7 @@
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({
               action: "delete",
+              token: adminSessionToken,
               id: ticketId
             })
           });
@@ -1253,6 +1307,7 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
             action: "deleteAll",
+            token: adminSessionToken,
             ids: idsToDelete
           })
         });
@@ -1450,25 +1505,26 @@
                 <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
               </select>
             </td>
-            <td style="text-align: center;"><button class="btn btn-danger" onclick="deleteAduan('${escapeHtml(item.id)}')">🗑️</button></td>
+            <td style="text-align: center;"><button class="btn btn-danger delete-report-btn" type="button" aria-label="Padam laporan">🗑️</button></td>
           `;
           tr.cells[3].appendChild(createEvidenceImage(item));
+          tr.querySelector('.delete-report-btn').addEventListener('click', () => deleteAduan(item.id));
           tbody.appendChild(tr);
           return;
         }
 
         tr.innerHTML = `
-          <td><strong>${item.id}</strong></td>
-          <td><strong>${item.nama}</strong></td>
-          <td>${item.matrik}</td>
-          <td>${item.Wing || item.blok || item.lokasi || '-'}</td>
-          <td><a href="https://wa.me/6${item.telefon}" target="_blank" style="color: var(--status-process); font-weight:700;">${item.telefon}</a></td>
-          <td><span style="font-size: 0.75rem; font-weight: 700;">${item.kategori}</span></td>
+          <td><strong>${escapeHtml(item.id)}</strong></td>
+          <td><strong>${escapeHtml(item.nama)}</strong></td>
+          <td>${escapeHtml(item.matrik)}</td>
+          <td>${escapeHtml(item.Wing || item.blok || item.lokasi || '-')}</td>
+          <td><a href="https://wa.me/6${String(item.telefon || '').replace(/\D/g, '')}" target="_blank" rel="noopener noreferrer" style="color: var(--status-process); font-weight:700;">${escapeHtml(item.telefon || '-')}</a></td>
+          <td><span style="font-size: 0.75rem; font-weight: 700;">${escapeHtml(item.kategori)}</span></td>
           <td style="text-align: center;"></td>
-          <td>${item.keterangan}</td>
+          <td>${escapeHtml(item.keterangan)}</td>
           <td>
             <span class="status-badge ${item.status === 'Pending' ? 'status-pending' : item.status === 'Dalam Tindakan' ? 'status-process' : 'status-done'}">
-              ${item.status}
+              ${escapeHtml(item.status)}
             </span>
           </td>
           <td>
@@ -1479,10 +1535,11 @@
             </select>
           </td>
           <td style="text-align: center;">
-            <button class="btn btn-danger" onclick="deleteAduan('${item.id}')">🗑️</button>
+            <button class="btn btn-danger delete-report-btn" type="button" aria-label="Padam aduan">🗑️</button>
           </td>
         `;
         tr.cells[6].appendChild(createEvidenceImage(item));
+        tr.querySelector('.delete-report-btn').addEventListener('click', () => deleteAduan(item.id));
         tbody.appendChild(tr);
       });
     }
