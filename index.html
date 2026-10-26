@@ -1135,13 +1135,8 @@
       const loginToken = Array.from(tokenBytes, byte => byte.toString(16).padStart(2, '0')).join('');
 
       try {
-        closeAdminModal();
         const dashboard = document.getElementById('dashboardModal');
-        dashboard.classList.add('active');
-        const tbody = document.getElementById('adminTableBody');
-        if (tbody) {
-          tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 1.5rem;">🔐 Mengesahkan akses admin...</td></tr>';
-        }
+        dashboard.classList.remove('active');
 
         await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
@@ -1163,6 +1158,8 @@
 
         errBox.style.display = 'none';
         checkAdminSession();
+        closeAdminModal();
+        dashboard.classList.add('active');
       } catch (err) {
         adminSessionToken = '';
         adminDataLoaded = false;
